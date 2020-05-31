@@ -1,0 +1,28 @@
+var appData = {
+  gm: null,
+  battle: null,
+  //message: 'hello',
+  bestIVCSV: null,
+  pokemonNameTW: {},
+  pokemonName: {},
+  dexToID: {},
+  topLimit: 50,
+  //top1500: [],
+  //top2500: [],
+  rankings1500: [],
+  rankings2500: [],
+  evolutionFamily: {},
+  lvStarDust: {},
+  lvCandy: {},
+  //starClassList: [],
+  //starClassDexList: {}
+  //starClass1: [],
+  //starClass12: [],
+  //starClass2: [],
+  //starClass3: [],
+  //querySpeciesId: 'cobalion',
+  querySpeciesId: '', // speciesId
+  queryATK: 0,
+  queryDEF: 0,
+  queryHP: 0,
+}

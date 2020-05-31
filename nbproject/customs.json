@@ -1,0 +1,24 @@
+{
+  "elements": {},
+  "attributes": {
+    "v-bind:value": {
+      "context": "input"
+    },
+    "ref": {
+      "context": "textarea"
+    },
+    "v-if": {},
+    "v-model.number": {
+      "context": "input"
+    },
+    "v-on:click": {
+      "context": "div"
+    },
+    "v-for": {
+      "context": "div"
+    },
+    "v-model": {
+      "context": "input"
+    }
+  }
+}

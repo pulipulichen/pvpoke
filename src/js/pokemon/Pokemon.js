@@ -174,7 +174,7 @@ function Pokemon(id, i, b){
 		defaultMode = typeof defaultMode !== 'undefined' ? defaultMode : "gamemaster";
 
 		this.cp = self.calculateCP();
-
+    //console.log(this.cp)
 		var maxCP = 10000;
 
 		if(battle){
@@ -215,11 +215,13 @@ function Pokemon(id, i, b){
 				break;
 
 				case "gamemaster":
+          //console.log(self.ivs)
 					if(maxCP == 10000){
 						self.ivs.atk = self.ivs.def = self.ivs.hp = 15;
 						self.setLevel(40, false);
 					} else{
 						var combination = data.defaultIVs["cp"+maxCP];
+            //console.log(combination)
 						self.ivs.atk = combination[1];
 						self.ivs.def = combination[2];
 						self.ivs.hp = combination[3];
@@ -231,8 +233,9 @@ function Pokemon(id, i, b){
 		}
 
 		//Set effective stats
-
+    //console.log(this.stats.atk)
 		this.stats.atk = this.cpm * (this.baseStats.atk+this.ivs.atk);
+    //console.log(this.stats.atk)
 		this.stats.def = this.cpm * (this.baseStats.def+this.ivs.def);
 		this.stats.hp = Math.max(Math.floor(this.cpm * (this.baseStats.hp+this.ivs.hp)), 10);
 		this.hp = this.stats.hp;
@@ -295,6 +298,17 @@ function Pokemon(id, i, b){
 
 		self.isCustom = true;
 	}
+  
+  this.updateStats = function () {
+    let hp = this.stats.hp
+    
+    this.stats.atk = this.cpm * (this.baseStats.atk+this.ivs.atk);
+    this.stats.def = this.cpm * (this.baseStats.def+this.ivs.def);
+    this.stats.hp = Math.max(Math.floor(this.cpm * (this.baseStats.hp+this.ivs.hp)), 10);
+    this.cp = self.calculateCP();
+    
+    //console.log(hp, this.stats.hp)
+  }
 
 	// Generate an array of IV combinations sorted by stat
 
@@ -368,7 +382,7 @@ function Pokemon(id, i, b){
                         let def = cpm * (self.baseStats.def + defIV) * self.shadowDefMult;
                         let hp = Math.floor(cpm * (self.baseStats.hp + hpIV));
                         overall = (hp * atk * def);
-
+                        //console.log({atk, def, hp, overall})
 						if(self.shadowType == "shadow"){
 
 						}
@@ -386,6 +400,7 @@ function Pokemon(id, i, b){
 							overall: overall,
 							cp: calcCP
 						};
+            //console.log(combination)
 
 						var valid = true;
 

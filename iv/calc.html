@@ -1,0 +1,425 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Calc</title>
+<meta name="description" content="Pit two custom Pokemon against each other in the Trainer Battle simulator. You can choose from any league, and customize movesets, levels, IV's, and shields." />
+
+	<link rel="canonical" href="/battle/" /><!--Prevents Google from indexing hundreds of different versions of the same page-->
+
+<!--OG tags for social-->
+<meta property="og:title" content="Battle | PvPoke" />
+<meta property="og:description" content="Pit two custom Pokemon against each other in the Trainer Battle simulator. You can choose from any league, and customize movesets, levels, IV's, and shields." />
+<meta property="og:image" content="https://pvpoke.com/img/og.jpg" />
+
+<meta name="apple-mobile-web-app-capable">
+<meta name="mobile-web-app-capable">
+
+<link rel="icon" href="../src/img/favicon.png">
+<link rel="stylesheet" type="text/css" href="../src/css/style.css?v=79">
+
+
+
+<script src="../src/js/libs/jquery-3.3.1.min.js"></script>
+
+<script src="scripts/base-config.js"></script>
+
+    <link rel="stylesheet" href="vendors/semantic-ui/semantic.min.css" />
+    <script src="vendors/semantic-ui/semantic.min.js"></script>
+    
+    <script src="vendors/vue/vue.min.js"></script>
+    <script src="vendors/date-helper.js"></script>
+    <script src="vendors/jszip/FileSaver.min.js"></script>
+    
+<link rel="stylesheet/less" type="text/css" href="styles/styles.less" />
+<script>less = {env: 'production'};</script>
+<script src="vendors/less/less.min.js"></script>
+
+
+
+</head>
+
+<body>
+  <!-- ============================================= -->
+  
+  
+  
+  <div id="app">
+    <div class="ui top fixed menu">
+      <div class="item name">
+        <div class="name field">
+          <label>Pokemon</label>
+          <div class="ui category search"
+                   ref="QuerySpeciesId">
+            <input class="prompt" type="text" placeholder="Search pokemon..." autocomplete="off">
+          </div>
+        </div>
+        <input type="text" 
+                 v-model="querySpeciesId"
+                 style="display: none"/>
+      </div>
+      <a class="item iv">
+        <div class="field">
+          <label>ATK</label>
+          <input type="number"
+                 min="0"
+                 max="15"
+                 v-model.number="queryATK" />
+        </div>
+      </a>
+      <a class="item iv">
+        <div class="field">
+          <label>DEF</label>
+          <input type="number"
+                 min="0"
+                 max="15"
+                 v-model.number="queryDEF" />
+        </div>
+      </a>
+      <a class="item iv">
+        <div class="field">
+          <label>HP</label>
+          <input type="number"
+                 min="0"
+                 max="15"
+                 v-model.number="queryHP" />
+        </div>
+      </a>
+      <a class="item" v-if="rankingBest"
+         v-on:click="copyText(rankingBest)">
+        {{ rankingBest }}
+      </a>
+    </div>
+    
+    
+    <!-- 表格 -->
+    
+    <div class="ui grid unstackable two columns">
+      
+      <div class="column">
+        <table class="ui blue unstackable table">
+          <caption>
+            Great League PvP Rankings
+          </caption>
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>A/D/H(S)</th>
+              <th>LV(S&C)</th>
+              <th>CP</th>
+              <th>Ex</th>
+              <th>Lu</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="item in match1500ranking"
+                class="warning">
+              <td>{{ item.rank }}</td>
+              <td>
+                {{ item.atk }}
+                /
+                {{ item.def }}
+                /
+                {{ item.hp }}
+                ({{ item.starClass }})
+              </td>
+              <td>
+                {{ item.level }}
+                <template v-if="item.level < 40">
+                  ({{ item.stardust }}&{{ item.candy }})
+                </template>
+              </td>
+              <td>
+                {{ item.cp }}
+              </td>
+              <td>
+                {{ item.exchange }}
+              </td>
+              <td>
+                {{ item.lucky }}
+              </td>
+            </tr>
+            <tr v-if="match1500ranking.length === 0"
+              class="warning">
+              <td colspan="6" align="center">
+                (No Ranking)
+              </td>
+            </tr>
+            <tr v-for="item in best1500ranking"
+                class="positive">
+              <td>{{ item.rank }}</td>
+              <td>
+                {{ item.atk }}
+                /
+                {{ item.def }}
+                /
+                {{ item.hp }}
+                ({{ item.starClass }})
+              </td>
+              <td>
+                {{ item.level }}
+                <template v-if="item.level < 40">
+                  ({{ item.stardust }}&{{ item.candy }})
+                </template>
+              </td>
+              <td>
+                {{ item.cp }}
+              </td>
+              <td>
+                {{ item.exchange }}
+              </td>
+              <td>
+                {{ item.lucky }}
+              </td>
+            </tr>
+            <tr v-for="item in max1500ranking"
+                class="negative">
+              <td>{{ item.rank }}</td>
+              <td>
+                {{ item.atk }}
+                /
+                {{ item.def }}
+                /
+                {{ item.hp }}
+                ({{ item.starClass }})
+              </td>
+              <td>
+                {{ item.level }}
+                <template v-if="item.level < 40">
+                  ({{ item.stardust }}&{{ item.candy }})
+                </template>
+              </td>
+              <td>
+                {{ item.cp }}
+              </td>
+              <td>
+                {{ item.exchange }}
+              </td>
+              <td>
+                {{ item.lucky }}
+              </td>
+            </tr>
+            <tr v-for="item in calc1500list">
+              <td>
+                {{ item.rank }}
+              </td>
+              <td>
+                {{ item.atk }}
+                /
+                {{ item.def }}
+                /
+                {{ item.hp }}
+                ({{ item.starClass }})
+              </td>
+              <td>
+                {{ item.level }}
+                <template v-if="item.level < 40">
+                  ({{ item.stardust }}&{{ item.candy }})
+                </template>
+              </td>
+              <td>
+                {{ item.cp }}
+              </td>
+              <td>
+                {{ item.exchange }}
+              </td>
+              <td>
+                {{ item.lucky }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- ================= -->
+      
+      <div class="column">
+        <table class="ui grey unstackable table">
+          <caption>
+            Ultra League PvP Rankings
+          </caption>
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>A/D/H(S)</th>
+              <th>LV(S&C)</th>
+              <th>CP</th>
+              <th>Ex</th>
+              <th>Lu</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="item in match2500ranking"
+                class="warning">
+              <td>
+                {{ item.rank }}
+              </td>
+              <td>
+                {{ item.atk }}
+                /
+                {{ item.def }}
+                /
+                {{ item.hp }}
+                ({{ item.starClass }})
+              </td>
+              <td>
+                {{ item.level }}
+                <template v-if="item.level < 40">
+                  ({{ item.stardust }}&{{ item.candy }})
+                </template>
+              </td>
+              <td>
+                {{ item.cp }}
+              </td>
+              <td>
+                {{ item.exchange }}
+              </td>
+              <td>
+                {{ item.lucky }}
+              </td>
+            </tr>
+            <tr v-if="match2500ranking.length === 0"
+              class="warning">
+              <td colspan="6" align="center">
+                (No Ranking)
+              </td>
+            </tr>
+            <tr v-for="item in best2500ranking"
+                class="positive">
+              <td>{{ item.rank }}</td>
+              <td>
+                {{ item.atk }}
+                /
+                {{ item.def }}
+                /
+                {{ item.hp }}
+                ({{ item.starClass }})
+              </td>
+              <td>
+                {{ item.level }}
+                <template v-if="item.level < 40">
+                  ({{ item.stardust }}&{{ item.candy }})
+                </template>
+              </td>
+              <td>
+                {{ item.cp }}
+              </td>
+              <td>
+                {{ item.exchange }}
+              </td>
+              <td>
+                {{ item.lucky }}
+              </td>
+            </tr>
+            <tr v-for="item in max2500ranking"
+                class="negative">
+              <td>{{ item.rank }}</td>
+              <td>
+                {{ item.atk }}
+                /
+                {{ item.def }}
+                /
+                {{ item.hp }}
+                ({{ item.starClass }})
+              </td>
+              <td>
+                {{ item.level }}
+                <template v-if="item.level < 40">
+                  ({{ item.stardust }}&{{ item.candy }})
+                </template>
+              </td>
+              <td>
+                {{ item.cp }}
+              </td>
+              <td>
+                {{ item.exchange }}
+              </td>
+              <td>
+                {{ item.lucky }}
+              </td>
+            </tr>
+            <tr v-for="item in calc2500list">
+              <td>{{ item.rank }}</td>
+              <td>
+                {{ item.atk }}
+                /
+                {{ item.def }}
+                /
+                {{ item.hp }}
+                ({{ item.starClass }})
+              </td>
+              <td>
+                {{ item.level }}
+                <template v-if="item.level < 40">
+                  ({{ item.stardust }} + {{ item.candy }})
+                </template>
+              </td>
+              <td>
+                {{ item.cp }}
+              </td>
+              <td>
+                {{ item.exchange }}
+              </td>
+              <td>
+                {{ item.lucky }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+    </div>
+    
+    
+    
+    <!-- ================================== -->
+    
+    <textarea 
+        class="copy-textarea" 
+        ref="copyTextarea"></textarea>
+  </div>
+  
+  
+  
+  <!-- ============================================= -->
+  
+<div class="section league-select-container white"
+     style="display: none;">
+	<select class="league-select">
+	<option value="1500">Great League (CP 1500)</option>
+	<option value="2500">Ultra League (CP 2500)</option>
+	<option value="10000">Master League (Unlimited)</option>
+</select>	<select class="mode-select">
+		<option value="single">Single Battle</option>
+		<option value="multi">Multi Battle</option>
+		<option value="matrix">Matrix Battle</option>
+	</select>
+</div>
+  
+<!--test 2-->
+<script src="../src/js/GameMaster.js?v=758.77.96"></script>
+<script src="../src/js/pokemon/Pokemon.js?v=758.77.96"></script>
+<script src="../src/js/interface/Interface.js?v=758.77.96"></script>
+<script src="../src/js/interface/PokeSearch.js?v=758.77.96"></script>
+<script src="../src/js/interface/PokeSelect.js?v=758.77.96"></script>
+<script src="../src/js/interface/FileSaver.min.js?v=758.77.96"></script>
+<script src="../src/js/interface/PokeMultiSelect.js?=758.77.96"></script>
+<script src="../src/js/interface/BattleHistogram.js?v=758.77.96"></script>
+<script src="../src/js/interface/ModalWindow.js?v=758.77.96"></script>
+<script src="../src/js/battle/TimelineEvent.js?v=758.77.96"></script>
+<script src="../src/js/battle/TimelineAction.js?v=758.77.96"></script>
+<script src="../src/js/battle/Battle.js?v=758.77.96"></script>
+<script src="../src/js/battle/TeamRanker.js?v=758.77.96"></script>
+<script src="../src/js/Main.js?v=758.77.96"></script>
+
+ <script src="scripts/vue-app-data.js"></script>
+<script src="scripts/vue-app-mounted-calc.js"></script>
+<script src="scripts/vue-app-computed.js"></script>
+<script src="scripts/vue-app-watch.js"></script>
+<script src="scripts/vue-app-methods.js"></script>
+
+<script src="scripts/vue-app.js"></script>
+</body>
+</html>

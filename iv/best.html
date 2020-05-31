@@ -1,0 +1,129 @@
+
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Best IV</title>
+<meta name="description" content="Pit two custom Pokemon against each other in the Trainer Battle simulator. You can choose from any league, and customize movesets, levels, IV's, and shields." />
+
+	<link rel="canonical" href="/battle/" /><!--Prevents Google from indexing hundreds of different versions of the same page-->
+
+<!--OG tags for social-->
+<meta property="og:title" content="Battle | PvPoke" />
+<meta property="og:description" content="Pit two custom Pokemon against each other in the Trainer Battle simulator. You can choose from any league, and customize movesets, levels, IV's, and shields." />
+<meta property="og:image" content="https://pvpoke.com/img/og.jpg" />
+
+<meta name="apple-mobile-web-app-capable">
+<meta name="mobile-web-app-capable">
+
+<link rel="icon" href="../src/img/favicon.png">
+<link rel="stylesheet" type="text/css" href="../src/css/style.css?v=79">
+
+
+
+<script src="../src/js/libs/jquery-3.3.1.min.js"></script>
+
+<script src="scripts/base-config.js"></script>
+
+
+    <link rel="stylesheet" href="vendors/semantic-ui/semantic.min.css" />
+    <script src="vendors/semantic-ui/semantic.min.js"></script>
+    
+    <script src="vendors/vue/vue.min.js"></script>
+    <script src="vendors/date-helper.js"></script>
+    <script src="vendors/jszip/FileSaver.min.js"></script>
+    
+<link rel="stylesheet/less" type="text/css" href="styles/styles.less" />
+<script>less = {env: 'production'};</script>
+<script src="vendors/less/less.min.js"></script>
+
+
+
+</head>
+
+<body>
+  <!-- ============================================= -->
+  
+  <div id="app">
+    <form class="ui form">
+      <div class="ui button positive"
+           v-on:click="downloadBeskIV">
+        DOWNLOAD
+      </div>
+    
+    
+      <div class="ui field">
+        <label>
+          Removable (out of ranking)
+        </label>
+        <input type="text"
+               v-bind:value="removableOutOfRanking"
+               v-on:click="onInputFocus" />
+      </div>
+      
+      {{ topOverlap }}
+      
+      <div class="ui field"
+           v-for="item in removableOutOfStarClassList">
+        <label>
+          Removable (in rankings but not {{ item.starClass }})
+        </label>
+        <input type="text"
+               v-bind:value="item.query"
+               v-on:click="onInputFocus" />
+      </div>
+      
+      <textarea 
+        class="copy-textarea" 
+        ref="copyTextarea"></textarea>
+      
+    </form>
+      
+      
+    <div class="section league-select-container white"
+     style="display: none;">
+      <select class="league-select">
+      <option value="1500">Great League (CP 1500)</option>
+      <option value="2500">Ultra League (CP 2500)</option>
+      <option value="10000">Master League (Unlimited)</option>
+    </select>	
+      <select class="mode-select">
+        <option value="single">Single Battle</option>
+        <option value="multi">Multi Battle</option>
+        <option value="matrix">Matrix Battle</option>
+      </select>
+    </div>
+  </div>
+  
+  
+  
+  <!-- ============================================= -->
+
+  
+<!--test 2-->
+<script src="../src/js/GameMaster.js?v=758.77.96"></script>
+<script src="../src/js/pokemon/Pokemon.js?v=758.77.96"></script>
+<script src="../src/js/interface/Interface.js?v=758.77.96"></script>
+<script src="../src/js/interface/PokeSearch.js?v=758.77.96"></script>
+<script src="../src/js/interface/PokeSelect.js?v=758.77.96"></script>
+<script src="../src/js/interface/FileSaver.min.js?v=758.77.96"></script>
+<script src="../src/js/interface/PokeMultiSelect.js?=758.77.96"></script>
+<script src="../src/js/interface/BattleHistogram.js?v=758.77.96"></script>
+<script src="../src/js/interface/ModalWindow.js?v=758.77.96"></script>
+<script src="../src/js/battle/TimelineEvent.js?v=758.77.96"></script>
+<script src="../src/js/battle/TimelineAction.js?v=758.77.96"></script>
+<script src="../src/js/battle/Battle.js?v=758.77.96"></script>
+<script src="../src/js/battle/TeamRanker.js?v=758.77.96"></script>
+<script src="../src/js/Main.js?v=758.77.96"></script>
+
+ <script src="scripts/vue-app-data.js"></script>
+<script src="scripts/vue-app-mounted-best.js"></script>
+<script src="scripts/vue-app-computed.js"></script>
+<script src="scripts/vue-app-watch.js"></script>
+<script src="scripts/vue-app-methods.js"></script>
+
+<script src="scripts/vue-app.js"></script>
+</body>
+</html>

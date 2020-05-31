@@ -46,7 +46,7 @@ function BattleHistogram($element){
 	});
 	
 	this.generate = function(pokemon, ratings, scaleOverride){
-		
+		console.log('a')
 		// Store previous data
 		
 		if(currentData){

@@ -409,6 +409,7 @@ var InterfaceMaster = (function () {
 					return '';
 				}
 				var atk = getStatusEffectStatString(move.buffs[0], 'Atk');
+        console.log(atk)
 				var def = getStatusEffectStatString(move.buffs[1], 'Def');
 				var buffApplyChance = parseFloat(move.buffApplyChance)*100 + '%';
 				var buffTarget = move.buffTarget;

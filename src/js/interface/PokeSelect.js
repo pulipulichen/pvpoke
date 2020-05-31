@@ -39,16 +39,19 @@ function PokeSelect(element, i){
 	this.update = function(){
 
 		if(selectedPokemon){
-
+      //console.log(selectedPokemon.stats.atk)
+      
 			selectedPokemon.reset();
 
 			$el.find(".poke-stats").show();
 
 			$el.find(".stat").removeClass("buff debuff");
 
+      //console.log(selectedPokemon.stats.atk)
 			$el.find(".attack .stat").html(Math.floor(selectedPokemon.getEffectiveStat(0)*10)/10);
 			$el.find(".defense .stat").html(Math.floor(selectedPokemon.getEffectiveStat(1)*10)/10);
 			$el.find(".stamina .stat").html(selectedPokemon.stats.hp);
+      //console.log(selectedPokemon.stats.atk)
 
 			if(selectedPokemon.getEffectiveStat(0) > selectedPokemon.stats.atk){
 				$el.find(".attack .stat").addClass("buff");
@@ -66,18 +69,29 @@ function PokeSelect(element, i){
 			var effectiveOverall = Math.round((selectedPokemon.stats.hp * selectedPokemon.getEffectiveStat(0) * selectedPokemon.getEffectiveStat(1)) / 1000);
 
 			$el.find(".overall .stat").html(effectiveOverall);
+      OVERALL_STAT = effectiveOverall
 
 			if(effectiveOverall > overall){
 				$el.find(".overall .stat").addClass("buff");
 			} else if(effectiveOverall < overall){
 				$el.find(".overall .stat").addClass("debuff");
 			}
+      
+      /*
+      console.log({
+        overall,
+        hp: selectedPokemon.stats.hp,
+        atk: selectedPokemon.stats.atk,
+        def: selectedPokemon.stats.def,
+      })
+      */
 
-			$el.find(".attack .bar").css("width", (selectedPokemon.stats.atk / 4)+"%");
-			$el.find(".defense .bar").css("width", (selectedPokemon.stats.def / 4)+"%");
-			$el.find(".stamina .bar").css("width", (selectedPokemon.stats.hp / 4)+"%");
+			//$el.find(".attack .bar").css("width", (selectedPokemon.stats.atk / 4)+"%");
+			//$el.find(".defense .bar").css("width", (selectedPokemon.stats.def / 4)+"%");
+			//$el.find(".stamina .bar").css("width", (selectedPokemon.stats.hp / 4)+"%");
 
 			$el.find(".cp .stat").html(selectedPokemon.cp);
+      CURRENT_CP = selectedPokemon.cp
 
 			$el.find(".hp .bar").css("width", ((selectedPokemon.hp / selectedPokemon.stats.hp)*100)+"%");
 			$el.find(".hp .stat").html(selectedPokemon.hp+" / "+selectedPokemon.stats.hp);
@@ -410,7 +424,156 @@ function PokeSelect(element, i){
 		$el.find("input.iv[iv='atk']").val(selectedPokemon.ivs.atk);
 		$el.find("input.iv[iv='def']").val(selectedPokemon.ivs.def);
 		$el.find("input.iv[iv='hp']").val(selectedPokemon.ivs.hp);
+    
+    gatherData(selectedPokemon)
 	});
+  
+  let gatherData = async function (selectedPokemon) {
+    console.log(selectedPokemon.generateIVCombinations("overall", 1, 4096, null, 5))
+    return
+    
+    let beforeTime = (new Date()).getTime()
+    
+    //console.log($el.find('.overall .stat').html())
+    let output1500 = []
+    let output2500 = []
+    let maxLv = 2
+    selectedPokemon.isCustom = true;
+    
+    for (let lvIndex = 1; lvIndex <= maxLv; lvIndex = lvIndex + 0.5) {
+      
+      //$el.find("input.level").val(lvIndex).change()
+      selectedPokemon.setLevel(lvIndex)
+      
+      //$el.find("input.iv[iv='atk']").val(0).change()
+      //$el.find("input.iv[iv='def']").val(0).change()
+      //$el.find("input.iv[iv='hp']").val(0).change()
+      selectedPokemon.setIV('atk', 0)
+      selectedPokemon.setIV('def', 0)
+      selectedPokemon.setIV('hp', 0)
+      
+      if (getCpScore() > 2500) {
+        continue
+      }
+      
+      console.log(Math.round((lvIndex / maxLv) * 100) + '%')
+      //console.log(getOverallScore())
+    
+      for (let atkIndex = 0; atkIndex <= 15; atkIndex++) {
+        if (atkIndex > 0) {
+          selectedPokemon.setIV('atk', atkIndex)
+        }
+        
+        if (getCpScore() > 2500) {
+          continue
+        }
+        
+        for (let defIndex = 0; defIndex <= 15; defIndex++) {
+          //$el.find("input.iv[iv='def']").val(defIndex).change()
+          if (atkIndex > 0) {
+            selectedPokemon.setIV('def', defIndex)
+          }
+          
+          if (getCpScore() > 2500) {
+            continue
+          }
+          
+          for (let hpIndex = 0; hpIndex <= 15; hpIndex++) {
+            //$el.find("input.iv[iv='hp']").val(hpIndex).change()
+            if (hpIndex > 0) {
+              selectedPokemon.setIV('hp', hpIndex)
+            }
+            
+            if (getCpScore() > 2500) {
+              continue
+            }
+            
+            let is1500 = 1
+            let cp = selectedPokemon.cp
+            if (cp > 1500) {
+              is1500 = 0
+            }
+            
+            //selectedPokemon.reset()
+            //selectedPokemon.maximizeStat('overall')
+            //selectedPokemon.initialize(1500, 'gamemaster')
+            //await sleep()
+            
+            selectedPokemon.updateStats()
+            
+            var effectiveOverall = Math.round((selectedPokemon.stats.hp * selectedPokemon.getEffectiveStat(0) * selectedPokemon.getEffectiveStat(1)) / 1000);
+            var overall = Math.round((selectedPokemon.stats.hp * selectedPokemon.stats.atk * selectedPokemon.stats.def) / 1000);
+            
+            if (cp <= 1500) {
+              output1500.push([
+                overall,
+                lvIndex,
+                atkIndex,
+                defIndex,
+                hpIndex,
+                cp,
+                selectedPokemon.stats.hp
+              ])
+            }
+            
+            output2500.push([
+              overall,
+              lvIndex,
+              atkIndex,
+              defIndex,
+              hpIndex,
+              cp,
+              selectedPokemon.stats.hp
+            ])
+            
+          }
+        }
+        //await sleep()
+      }
+      
+      //if (lvIndex % 2 === 0) {
+        await sleep()
+      //}
+    } // lvIndex
+    
+    // 排序
+    //console.log(output[0], output.length)
+    output1500.sort((a, b) => {
+      return (b[0] - a[0])
+    })
+    output1500 = output1500.slice(0, 30)
+    
+    output2500.sort((a, b) => {
+      return (b[0] - a[0])
+    })
+    output2500 = output2500.slice(0, 3000)
+    
+    console.log(output1500[0])
+    console.log(output1500[output1500.length - 1])
+    console.log(output1500.length)
+    console.log(output1500.map(i => i[6]))
+    
+    let afterTime = (new Date()).getTime()
+    console.log('花費時間: ' + Math.round((afterTime - beforeTime) / 1000 / 60 * 10) / 10 + '分')
+  }
+  
+  let sleep = (ms = 0) => {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve(true)
+      }, ms)
+    })
+  }
+  
+  let getOverallScore = () => {
+    //return Number($el.find('.overall .stat').html())
+    return OVERALL_STAT
+  }
+  
+  let getCpScore = () => {
+    //return Number($el.find('.cp .stat').html())
+    return CURRENT_CP
+  }
 
 	// Select different move
 
