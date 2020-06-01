@@ -107,11 +107,16 @@ var appMethods = {
     //console.log(gm.data.pokemon.length)
 
     let header = [
+      'name_tw',
       'dex',
+      'family_tw',
+      'g_ivs',
+      'g_lv',
+      'u_ivs',
+      'u_lv',
+      'url',
       'name',
       'family',
-      'name_tw',
-      'family_tw',
       'shadow',
       'special',
       'in_top',
@@ -199,12 +204,27 @@ var appMethods = {
               && (isSpecial === false)
               )
 
+      let glvInfo = gBestIV.level
+      if (glvInfo < 40) {
+        glvInfo = glvInfo + ' (' + this.lvStarDust[(gBestIV.level + '')] + '&' + this.lvCandy[(gBestIV.level + '')] + ')'
+      }
+      
+      let ulvInfo = uBestIV.level
+      if (ulvInfo < 40) {
+        ulvInfo = ulvInfo + ' (' + this.lvStarDust[(uBestIV.level + '')] + '&' + this.lvCandy[(uBestIV.level + '')] + ')'
+      }
+
       rows.push([
-        dataPokemon.dex,
+        this.pokemonNameTW[dataPokemon.speciesId],
+        '#' + dataPokemon.dex,
+        this.getFamilyNameTW(dataPokemon.dex, dataPokemon.speciesId),
+        `${rank1500}: ${gBestIV.ivs.atk}/${gBestIV.ivs.def}/${gBestIV.ivs.hp} (${gStar})`,
+        glvInfo,
+        `${rank2500}: ${uBestIV.ivs.atk}/${uBestIV.ivs.def}/${uBestIV.ivs.hp} (${uStar})`,
+        ulvInfo,
+        this.buildQueryURL(dataPokemon.speciesId, gBestIV.ivs),
         dataPokemon.speciesName,
         this.getFamilyName(dataPokemon.dex, dataPokemon.speciesId),
-        this.pokemonNameTW[dataPokemon.speciesId],
-        this.getFamilyNameTW(dataPokemon.dex, dataPokemon.speciesId),
         //dataPokemon.speciesId,
         isShadow,
         isSpecial,
@@ -220,7 +240,7 @@ var appMethods = {
         this.lvStarDust[(gBestIV.level + '')],
         this.lvCandy[(gBestIV.level + '')],
         gBestIV.cp,
-        this.buildQueryURL(gBestIV.speciesId, gBestIV.ivs),
+        this.buildQueryURL(dataPokemon.speciesId, gBestIV.ivs),
         rank2500,
         uStar,
         this.calcIncludeExchange(uBestIV.ivs),
@@ -232,7 +252,7 @@ var appMethods = {
         this.lvStarDust[(uBestIV.level + '')],
         this.lvCandy[(uBestIV.level + '')],
         uBestIV.cp,
-        this.buildQueryURL(gBestIV.speciesId, gBestIV.ivs),
+        this.buildQueryURL(dataPokemon.speciesId, uBestIV.ivs),
       ])
 
       // ---------------
@@ -260,6 +280,7 @@ var appMethods = {
                   && gStar !== '4*') {
             //rankings1500[(rank1500 - 1)].starClass = starClass
             rankings1500[(rank1500 - 1)].starClass = gStar
+            rankings1500[(rank1500 - 1)].exchange = this.calcIncludeExchange(gBestIV.ivs)
           }
 
         }
@@ -270,6 +291,7 @@ var appMethods = {
                   && uStar !== '4*') {
             //rankings2500[(rank2500 - 1)].starClass = starClass
             rankings2500[(rank2500 - 1)].starClass = uStar
+            rankings2500[(rank2500 - 1)].exchange = this.calcIncludeExchange(uBestIV.ivs)
           }
         }
 
@@ -284,8 +306,9 @@ var appMethods = {
       }
     }
 
+    let dexFieldIndex = 1
     rows.sort((a, b) => {
-      return a[0] - b[0]
+      return Number(a[dexFieldIndex].slice(1)) - Number(b[dexFieldIndex].slice(1))
     })
 
     this.rankings1500 = this.rankings1500.slice(0, 0).concat(rankings1500)
@@ -347,10 +370,22 @@ var appMethods = {
   },
   copyText(text) {
     setTimeout(() => {
-      console.log(text)
+      //console.log(text)
       this.$refs.copyTextarea.value = text
       this.$refs.copyTextarea.select();
       document.execCommand("Copy");
+    }, 0)
+  },
+  copyRichText(text) {
+    setTimeout(() => {
+      function listener(e) {
+        e.clipboardData.setData("text/html", text);
+        e.clipboardData.setData("text/plain", text);
+        e.preventDefault();
+      }
+      document.addEventListener("copy", listener);
+      document.execCommand("copy");
+      document.removeEventListener("copy", listener);
     }, 0)
   },
   getFamilyName(dex) {
@@ -423,6 +458,47 @@ var appMethods = {
         
       }
     }, 500)
+  },
+  copyInRankQuery () {
+    let output = [
+      ['starClass','remove','[]']
+    ]
+    
+    for (let i = 0; i < this.removableOutOfStarClassList.length; i++) {
+      let remove = this.removableOutOfStarClassList[i]
+      
+      
+      output.push([
+        'remove ' + remove.starClass + ` [${remove.count}]`,
+        remove.query,
+        `[${remove.count}]`,
+      ])
+    }
+    
+    for (let i = 0; i < this.exchangableOutOfStarClassList.length; i++) {
+      let remove = this.exchangableOutOfStarClassList[i]
+      
+      output.push([
+        'ex ' + remove.starClass + ` [${remove.count}]`,
+        remove.query,
+        `[${remove.count}]`,
+      ])
+    }
+    
+    for (let i = 0; i < this.checkInStarClassList.length; i++) {
+      let remove = this.checkInStarClassList[i]
+      
+      output.push([
+        'check ' + remove.starClass + ` [${remove.count}]`,
+        remove.query,
+        `[${remove.count}]`,
+      ])
+    }
+    
+    output = output.map(row => '<td>' + row.join('</td><td>') + '</td>').join('</tr><tr>')
+    output = `<table><tr>${output}</tr></table>`
+    
+    this.copyRichText(output)
   },
   initQuerySearch () {
     

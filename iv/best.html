@@ -46,34 +46,80 @@
 <body>
   <!-- ============================================= -->
   
-  <div id="app">
-    <form class="ui form">
+  <div id="app" class="ui container">
+    <form class="ui form"
+          v-if="removableOutOfRanking">
       <div class="ui button positive"
            v-on:click="downloadBeskIV">
         DOWNLOAD
       </div>
     
-    
-      <div class="ui field">
+      <div class="ui field"
+           v-if="removableOutOfRanking">
         <label>
-          Removable (out of ranking)
+          <h1>Removable (out of ranking)</h1>
         </label>
         <input type="text"
                v-bind:value="removableOutOfRanking"
                v-on:click="onInputFocus" />
       </div>
       
-      {{ topOverlap }}
-      
-      <div class="ui field"
-           v-for="item in removableOutOfStarClassList">
-        <label>
-          Removable (in rankings but not {{ item.starClass }})
-        </label>
-        <input type="text"
-               v-bind:value="item.query"
-               v-on:click="onInputFocus" />
+      <div class="ui button positive"
+           v-if="checkInStarClassList.length > 0"
+           v-on:click="copyInRankQuery">
+        COPY
       </div>
+      
+      <div class="ui equal width grid" v-if="checkInStarClassList.length > 0">
+          <div class="column"
+               v-if="removableOutOfStarClassList.length > 0">
+            <h1>
+              Remove
+            </h1>
+            <div class="ui field"
+                  v-for="(item, i) in removableOutOfStarClassList">
+               <label>
+                 {{ item.count }} Removable (in rankings but not {{ item.starClass }})
+               </label>
+               <input type="text"
+                      v-bind:value="item.query"
+                      v-on:click="onInputFocus" />
+             </div>
+          </div>
+          <div class="column"
+               v-if="exchangableOutOfStarClassList.length > 0">
+            <h1>
+              Exchange
+            </h1>
+            <div class="ui field"
+                  v-for="(item, i) in exchangableOutOfStarClassList">
+               <label>
+                 {{ item.count }} Check (in rankings and in {{ item.starClass }})
+               </label>
+               <input type="text"
+                      v-bind:value="item.query"
+                      v-on:click="onInputFocus" />
+             </div>
+          </div>
+          <div class="column"
+               v-if="checkInStarClassList.length > 0">
+            <h1>
+              Check
+            </h1>
+            <div class="ui field"
+                  v-for="(item, i) in checkInStarClassList">
+               <label>
+                 {{ item.count }} Check (in rankings and in {{ item.starClass }})
+               </label>
+               <input type="text"
+                      v-bind:value="item.query"
+                      v-on:click="onInputFocus" />
+             </div>
+          </div>
+      </div>
+      
+      
+      
       
       <textarea 
         class="copy-textarea" 
