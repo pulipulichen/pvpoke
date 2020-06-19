@@ -47,87 +47,32 @@
   <!-- ============================================= -->
   
   <div id="app" class="ui container">
-    <form class="ui form"
-          v-if="removableOutOfRanking">
-      <div class="ui button positive"
-           v-on:click="downloadBeskIV">
-        DOWNLOAD
-      </div>
-    
-      <div class="ui field"
-           v-if="removableOutOfRanking">
-        <label>
-          <h1>Removable (out of ranking)</h1>
-        </label>
-        <input type="text"
-               v-bind:value="removableOutOfRanking"
-               v-on:click="onInputFocus" />
-      </div>
-      
-      <div class="ui button positive"
-           v-if="checkInStarClassList.length > 0"
-           v-on:click="copyInRankQuery">
-        COPY
-      </div>
-      
-      <div class="ui equal width grid" v-if="checkInStarClassList.length > 0">
-          <div class="column"
-               v-if="removableOutOfStarClassList.length > 0">
-            <h1>
-              Remove
-            </h1>
-            <div class="ui field"
-                  v-for="(item, i) in removableOutOfStarClassList">
-               <label>
-                 {{ item.count }} Removable (in rankings but not {{ item.starClass }})
-               </label>
-               <input type="text"
-                      v-bind:value="item.query"
-                      v-on:click="onInputFocus" />
-             </div>
-          </div>
-          <div class="column"
-               v-if="exchangableOutOfStarClassList.length > 0">
-            <h1>
-              Exchange
-            </h1>
-            <div class="ui field"
-                  v-for="(item, i) in exchangableOutOfStarClassList">
-               <label>
-                 {{ item.count }} Check (in rankings and in {{ item.starClass }})
-               </label>
-               <input type="text"
-                      v-bind:value="item.query"
-                      v-on:click="onInputFocus" />
-             </div>
-          </div>
-          <div class="column"
-               v-if="checkInStarClassList.length > 0">
-            <h1>
-              Check
-            </h1>
-            <div class="ui field"
-                  v-for="(item, i) in checkInStarClassList">
-               <label>
-                 {{ item.count }} Check (in rankings and in {{ item.starClass }})
-               </label>
-               <input type="text"
-                      v-bind:value="item.query"
-                      v-on:click="onInputFocus" />
-             </div>
-          </div>
-      </div>
-      
-      
-      
-      
+    <form class="ui form">
+      位於臺北
       <textarea 
-        class="copy-textarea" 
-        ref="copyTextarea"></textarea>
+        v-model="bestIVCells"></textarea>
       
+      
+      位於臺南
+      <textarea 
+        v-model="bestIVCellsTainan"></textarea>
+      
+      
+      位於臺中
+      <textarea 
+        v-model="bestIVCellsTaichung"></textarea>
     </form>
       
-      
+    
+  </div>
+  
+  
+  
+  <!-- ============================================= -->
+
+    
+    
+    <!-- 這一段不能移除 -->
     <div class="section league-select-container white"
      style="display: none;">
       <select class="league-select">
@@ -141,12 +86,7 @@
         <option value="matrix">Matrix Battle</option>
       </select>
     </div>
-  </div>
-  
-  
-  
-  <!-- ============================================= -->
-
+    <!-- 這一段不能移除 -->
   
 <!--test 2-->
 <script src="../src/js/GameMaster.js?v=758.77.96"></script>

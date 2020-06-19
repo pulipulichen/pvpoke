@@ -5,7 +5,14 @@ var appMethods = {
 
   },
   calcStar: function (ivs) {
-    let sum = ivs.atk + ivs.def + ivs.hp
+    let sum = 0
+    if (Array.isArray(ivs)) {
+      ivs.forEach(iv => sum = sum + iv)
+    }
+    else {
+      sum = ivs.atk + ivs.def + ivs.hp
+    }
+    
     if (sum === 45) {
       return '4*'
     } else if (sum <= 44 && sum >= 37) {
@@ -14,6 +21,9 @@ var appMethods = {
       return '2*'
     } else if (sum <= 29 && sum >= 23) {
       return '1*'
+    }
+    else {
+      //console.log('0*', ivs)
     }
     return '0*'
   },
@@ -85,6 +95,7 @@ var appMethods = {
 
             this.lvStarDust = stardust
             this.lvCandy = candy
+            
             resolve(true)
           })
 
@@ -105,6 +116,7 @@ var appMethods = {
   },
   initBestIV: async function () {
     await this.initRanks()
+    return false
 
 
     var gm = this.gm
@@ -329,10 +341,11 @@ var appMethods = {
 
   },
   calcGStar: function (pokemon) {
-    return this.calcStar(pokemon.pokemon.defaultIVs.cp1500.slice(1))
+    //console.log(pokemon.defaultIVs.cp1500.slice(1))
+    return this.calcStar(pokemon.defaultIVs.cp1500.slice(1))
   },
   calcUStar: function (pokemon) {
-    return this.calcStar(pokemon.pokemon.defaultIVs.cp2500.slice(1))
+    return this.calcStar(pokemon.defaultIVs.cp2500.slice(1))
   },
   isTopIncludable: function (pokemon) {
     let isShadow = false
@@ -343,13 +356,16 @@ var appMethods = {
               || pokemon.tags.indexOf('untradeable') > -1
               || pokemon.tags.indexOf('mythical') > -1)
     }
+    else {
+      //console.log(pokemon, '沒有tags?')
+    }
 
     let gStar = this.calcGStar(pokemon)
     let uStar = this.calcUStar(pokemon)
     
     return (
-              (gStar !== '4*') // 1500不是100%
-              && (uStar !== '4*')
+              ((gStar !== '4*') // 1500不是100%
+              || (uStar !== '4*'))
               && (isShadow === false)
               && (isSpecial === false)
               )
@@ -563,10 +579,14 @@ var appMethods = {
     //console.log(this.searchSpeciesIdContent[0])
   },
   computedBuildTopPokemons: function (sourceRankings) {
+    if (this.ready === false) {
+      return {}
+    }
+    
     let ranking = {
-      "normal": [],
-      "alolan": [],
-      "galarian": []
+      //"normal": [],
+      //"alolan": [],
+      //"galarian": []
     }
     
     let count = 0
@@ -584,14 +604,27 @@ var appMethods = {
       let p = this.speciesIdToData[speciesId]
       
       if (p.isAlolan) {
+        if (Array.isArray(ranking.alolan) === false) {
+          ranking.alolan = []
+        }
         ranking.alolan.push(p)
       }
       else if (p.isGalarian) {
+        if (Array.isArray(ranking.galarian) === false) {
+          ranking.galarian = []
+        }
         ranking.galarian.push(p)
       }
       else {
+        if (Array.isArray(ranking.normal) === false) {
+          ranking.normal = []
+        }
         ranking.normal.push(p)
       }
+      
+      //if (p.dex === 3) {
+      //  console.log("妙蛙花加入了")
+      //}
       
       count++
       if (count > this.topLimit) {
@@ -600,5 +633,26 @@ var appMethods = {
     }
     
     return ranking
+  },
+  computedAreaQuery: function (area) {
+    if (area === 'normal') {
+      return '!阿羅拉&!galar&'
+    }
+    else if (area === "alolan") {
+      return "阿羅拉&"
+    }
+    else if (area === "galarian") {
+      return "galar&"
+    }
+  },
+  computedStarExclusiveQuery: function (starListString) {
+    let starList = starListString.split(',')
+    
+    if (starList.length === 0) {
+      return ''
+    }
+    else {
+      return starList.map(s => "!" + s).join('&') + '&'
+    }
   }
 }

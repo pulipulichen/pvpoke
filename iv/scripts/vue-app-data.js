@@ -1,4 +1,5 @@
 var appData = {
+  ready: false,
   gm: null,
   battle: null,
   //message: 'hello',
@@ -6,7 +7,7 @@ var appData = {
   pokemonNameTW: {},
   pokemonName: {},
   dexToID: {},
-  topLimit: 50,
+  topLimit: 100,
   area: ['normal', 'alolan', 'galarian'],
   //top1500: [],
   //top2500: [],
@@ -26,4 +27,8 @@ var appData = {
   queryATK: 0,
   queryDEF: 0,
   queryHP: 0,
+  //gIncludeSpeciesID: ["raichu_alolan", "raichu"],
+  //uIncludeSpeciesID: [],
+  //gExcludeSpeciesID: [],
+  //uExcludeSpeciesID: []
 }
