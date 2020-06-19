@@ -34,7 +34,13 @@ var appMethods = {
       if (this.gm.data.pokemon) {
         let pokemonName = {}
 
-        this.gm.data.pokemon.forEach(({dex, speciesId, speciesName}) => {
+        this.gm.data.pokemon.forEach(({dex, speciesId, speciesName}, i) => {
+          this.gm.data.pokemon[i].gIV = this.gm.data.pokemon[i].defaultIVs.cp1500.slice(1)
+          this.gm.data.pokemon[i].uIV = this.gm.data.pokemon[i].defaultIVs.cp2500.slice(1)
+          this.gm.data.pokemon[i].gStar = this.calcGStar(this.gm.data.pokemon[i])
+          this.gm.data.pokemon[i].uStar = this.calcUStar(this.gm.data.pokemon[i])
+          this.gm.data.pokemon[i].topIncludable = this.isTopIncludable(this.gm.data.pokemon[i])
+          
           pokemonName[speciesId] = speciesName
         })
         this.pokemonName = pokemonName
@@ -322,6 +328,32 @@ var appMethods = {
     //return console.log(csv)
 
   },
+  calcGStar: function (pokemon) {
+    return this.calcStar(pokemon.pokemon.defaultIVs.cp1500.slice(1))
+  },
+  calcUStar: function (pokemon) {
+    return this.calcStar(pokemon.pokemon.defaultIVs.cp2500.slice(1))
+  },
+  isTopIncludable: function (pokemon) {
+    let isShadow = false
+    let isSpecial = false
+    if (Array.isArray(pokemon.tags)) {
+      isShadow = (pokemon.tags.indexOf('shadow') > -1)
+      isSpecial = (pokemon.tags.indexOf('legendary') > -1
+              || pokemon.tags.indexOf('untradeable') > -1
+              || pokemon.tags.indexOf('mythical') > -1)
+    }
+
+    let gStar = this.calcGStar(pokemon)
+    let uStar = this.calcUStar(pokemon)
+    
+    return (
+              (gStar !== '4*') // 1500不是100%
+              && (uStar !== '4*')
+              && (isShadow === false)
+              && (isSpecial === false)
+              )
+  },
   getRank1500: function (id) {
     let rank = (this.all1500.indexOf(id) + 1)
     if (rank === 0) {
@@ -400,11 +432,16 @@ var appMethods = {
   getFamilyNameTW(dex) {
     let family = this.evolutionFamily[dex]
 
-    return family.map(dex => {
-      let id = this.dexToID[dex + '']
-      id = this.pokemonNameTW[id]
-      return id
-    }).join(';')
+    try {
+      return family.map(dex => {
+        let id = this.dexToID[dex + '']
+        id = this.pokemonNameTW[id]
+        return id
+      }).join(';')
+    }
+    catch (e) {
+      throw `Evolution Family not found. dex: ${dex}`
+    }
   },
   buildQueryURL(id, ivs) {
     return `https://pulipulichen.github.io/pvpoke/iv/calc.html?speciesId=${id}&atk=${ivs.atk}&def=${ivs.def}&hp=${ivs.hp}`
@@ -524,5 +561,44 @@ var appMethods = {
     })
     
     //console.log(this.searchSpeciesIdContent[0])
+  },
+  computedBuildTopPokemons: function (sourceRankings) {
+    let ranking = {
+      "normal": [],
+      "alolan": [],
+      "galarian": []
+    }
+    
+    let count = 0
+    
+    for (let i = 0; i < sourceRankings.length; i++) {
+      let r = sourceRankings[i]
+      
+      if (r.topIncludable === false) {
+        continue;
+      }
+      
+      // 接下來我要看，這個pokemon它屬於哪一個類型
+      let speciesId = r.speciesId
+      
+      let p = this.speciesIdToData[speciesId]
+      
+      if (p.isAlolan) {
+        ranking.alolan.push(p)
+      }
+      else if (p.isGalarian) {
+        ranking.galarian.push(p)
+      }
+      else {
+        ranking.normal.push(p)
+      }
+      
+      count++
+      if (count > this.topLimit) {
+        break
+      }
+    }
+    
+    return ranking
   }
 }

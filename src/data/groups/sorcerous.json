@@ -2,22 +2,12 @@
 	{
 		"speciesId":"azumarill",
 		"fastMove":"BUBBLE",
-		"chargedMoves":["ICE_BEAM","HYDRO_PUMP"]
+		"chargedMoves":["PLAY_ROUGH","HYDRO_PUMP"]
 	},
 	{
 		"speciesId":"venusaur",
 		"fastMove":"VINE_WHIP",
 		"chargedMoves":["FRENZY_PLANT","SLUDGE_BOMB"]
-	},
-	{
-		"speciesId":"victreebel",
-		"fastMove":"RAZOR_LEAF",
-		"chargedMoves":["LEAF_BLADE","ACID_SPRAY"]
-	},
-	{
-		"speciesId":"abomasnow",
-		"fastMove":"RAZOR_LEAF",
-		"chargedMoves":["ENERGY_BALL","OUTRAGE"]
 	},
 	{
 		"speciesId":"raticate_alolan",
@@ -37,7 +27,7 @@
 	{
 		"speciesId":"skuntank",
 		"fastMove":"POISON_JAB",
-		"chargedMoves":["CRUNCH","SLUDGE_BOMB"]
+		"chargedMoves":["CRUNCH","FLAMETHROWER"]
 	},
 	{
 		"speciesId":"golbat",
@@ -55,9 +45,14 @@
 		"chargedMoves":["PSYCHIC","METEOR_MASH"]
 	},
 	{
-		"speciesId":"qwilfish",
-		"fastMove":"WATER_GUN",
-		"chargedMoves":["AQUA_TAIL","SLUDGE_WAVE"]
+		"speciesId":"granbull",
+		"fastMove":"CHARM",
+		"chargedMoves":["CRUNCH","CLOSE_COMBAT"]
+	},
+	{
+		"speciesId":"ninetales_alolan",
+		"fastMove":"CHARM",
+		"chargedMoves":["PSYSHOCK","ICE_BEAM"]
 	},
 	{
 		"speciesId":"toxicroak",
@@ -70,14 +65,9 @@
 		"chargedMoves":["HYDRO_PUMP","ACID_SPRAY"]
 	},
 	{
-		"speciesId":"haunter",
-		"fastMove":"SHADOW_CLAW",
-		"chargedMoves":["SHADOW_PUNCH","SLUDGE_BOMB"]
-	},
-	{
 		"speciesId":"noctowl",
 		"fastMove":"WING_ATTACK",
-		"chargedMoves":["SKY_ATTACK","PSYCHIC"]
+		"chargedMoves":["SKY_ATTACK","NIGHT_SHADE"]
 	},
 	{
 		"speciesId":"munchlax",
@@ -100,11 +90,6 @@
 		"chargedMoves":["THUNDER_PUNCH","SHADOW_BALL"]
 	},
 	{
-		"speciesId":"glalie",
-		"fastMove":"ICE_SHARD",
-		"chargedMoves":["AVALANCHE","SHADOW_BALL"]
-	},
-	{
 		"speciesId":"medicham",
 		"fastMove":"COUNTER",
 		"chargedMoves":["POWER_UP_PUNCH","PSYCHIC"]
@@ -120,6 +105,11 @@
 		"chargedMoves":["PSYSHOCK","BULLDOZE"]
 	},
 	{
+		"speciesId":"claydol",
+		"fastMove":"MUD_SLAP",
+		"chargedMoves":["EARTH_POWER","PSYCHIC"]
+	},
+	{
 		"speciesId":"sandslash_alolan",
 		"fastMove":"POWDER_SNOW",
 		"chargedMoves":["ICE_PUNCH","BULLDOZE"]
@@ -128,10 +118,5 @@
 		"speciesId":"linoone",
 		"fastMove":"SHADOW_CLAW",
 		"chargedMoves":["GRASS_KNOT","THUNDER"]
-	},
-	{
-		"speciesId":"beedrill",
-		"fastMove":"POISON_JAB",
-		"chargedMoves":["X_SCISSOR","SLUDGE_BOMB"]
 	}
 ]

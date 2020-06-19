@@ -7,6 +7,7 @@ var appData = {
   pokemonName: {},
   dexToID: {},
   topLimit: 50,
+  area: ['normal', 'alolan', 'galarian'],
   //top1500: [],
   //top2500: [],
   rankings1500: [],

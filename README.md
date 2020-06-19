@@ -1,3 +1,9 @@
+替換資料：
+
+1. 下載檔案 https://github.com/pvpoke/pvpoke/archive/master.zip
+2. 取得 src/data
+3. 替換本機端目錄的 src/data
+
 # PvPoke
 
 [PvPoke.com](https://pvpoke.com) is a resource for Pokemon GO PvP that includes a battle simulator, rankings, and team building. The project’s goal is to provide tools and insights to help players build their teams, and foster the game’s community spirit by making all of the underlying code public. I hope this project can inspire new tools or benefit the existing ones that continue to enhance our enjoyment of the game.
