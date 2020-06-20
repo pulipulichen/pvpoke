@@ -593,15 +593,15 @@ var appMethods = {
     
     for (let i = 0; i < sourceRankings.length; i++) {
       let r = sourceRankings[i]
+      let speciesId = r.speciesId
       
-      if (r.topIncludable === false) {
+      let p = this.speciesIdToData[speciesId]
+      
+      if (p.topIncludable === false) {
         continue;
       }
       
       // 接下來我要看，這個pokemon它屬於哪一個類型
-      let speciesId = r.speciesId
-      
-      let p = this.speciesIdToData[speciesId]
       
       if (p.isAlolan) {
         if (Array.isArray(ranking.alolan) === false) {
@@ -633,6 +633,282 @@ var appMethods = {
     }
     
     return ranking
+  },
+  computedBuildTopShadowPokemons: function (sourceRankings) {
+    if (this.ready === false) {
+      return {}
+    }
+    
+    let ranking = {
+    }
+    
+    let count = 0
+    
+    for (let i = 0; i < sourceRankings.length; i++) {
+      let r = sourceRankings[i]
+      let speciesId = r.speciesId
+
+      let p = this.speciesIdToData[speciesId]
+      //console.log(r.topIncludable, r.isShadow)
+      if (p.topIncludable === false) {
+        
+          
+        if (p.isShadow) {
+          
+          // 接下來我要看，這個pokemon它屬於哪一個類型
+          
+
+          if (p.isAlolan) {
+            if (Array.isArray(ranking.alolan) === false) {
+              ranking.alolan = []
+            }
+            ranking.alolan.push(p)
+          }
+          else if (p.isGalarian) {
+            if (Array.isArray(ranking.galarian) === false) {
+              ranking.galarian = []
+            }
+            ranking.galarian.push(p)
+          }
+          else {
+            if (Array.isArray(ranking.normal) === false) {
+              ranking.normal = []
+            }
+            ranking.normal.push(p)
+          }
+        }
+      }
+      else {
+        count++
+        if (count > this.topLimit) {
+          break
+        }
+      }
+    }
+    
+    //console.log(ranking)
+    return ranking
+  },
+  computedOutOfRankingAddDex: function (a, top, exclusiveList) {
+    top.forEach(pokemon => {
+      // 確認pokemon的family
+      let dex = pokemon.dex
+      let family = this.evolutionFamily[dex]
+
+      family.forEach(d => {
+        if (Array.isArray(exclusiveList[a]) === false) {
+          exclusiveList[a] = []
+        }
+
+        if (exclusiveList[a].indexOf(d) === -1) {
+          exclusiveList[a].push(d)
+        }
+      })
+    })
+  },
+  computedBuildIVGrid: function (iv) {
+    iv = iv.slice(0,1) // 只取攻擊
+    return iv.map((i) => {
+      if (i <= 5) {
+        return 'A'
+      }
+      else if (i <= 10) {
+        return 'B'
+      }
+      else {
+        return 'C'
+      }
+    }).join('/')
+  },
+  computedTopListAddDex: function (area, dex, star, iv, areaDexStarMap, areaDexIVAttMap) {
+    let family = this.evolutionFamily[dex]
+
+    family.forEach(d => {
+      if (!areaDexStarMap[area]) {
+        areaDexStarMap[area] = {}
+      }
+
+      if (Array.isArray(areaDexStarMap[area][d]) === false) {
+        areaDexStarMap[area][d] = []
+      }
+
+      if (areaDexStarMap[area][d].indexOf(star) === -1) {
+        areaDexStarMap[area][d].push(star)
+      }
+
+      // -----------
+
+      if (!areaDexIVAttMap[area]) {
+        areaDexIVAttMap[area] = {}
+      }
+
+      if (Array.isArray(areaDexIVAttMap[area][d]) === false) {
+        areaDexIVAttMap[area][d] = []
+      }
+
+      let ivGrid = this.computedBuildIVGrid(iv)
+      if (areaDexIVAttMap[area][d].indexOf(ivGrid) === -1) {
+        areaDexIVAttMap[area][d].push(ivGrid)
+      }
+    })
+  },
+  computedTopListBuildAreaStarDexMap: function (areaDexStarMap) {
+    let areaStarDexMap = {}
+    
+    for (let area in areaDexStarMap) {
+      for (let dex in areaDexStarMap[area]) {
+        let starList = areaDexStarMap[area][dex].sort().join(",")
+        dex = Number(dex)
+        
+        if (!areaStarDexMap[area]) {
+          areaStarDexMap[area] = {}
+        }
+        
+        if (Array.isArray(areaStarDexMap[area][starList]) === false) {
+          areaStarDexMap[area][starList] = []
+        }
+        
+        if (areaStarDexMap[area][starList].indexOf(dex) === -1) {
+          areaStarDexMap[area][starList].push(dex)
+        }
+      }
+    }
+    
+    return areaStarDexMap
+  },
+  computedTopListBuildAreaAttDexMap: function (areaDexIVAttMap) {
+    let areaAttDexMap = {}
+    
+    for (let area in areaDexIVAttMap) {
+      for (let dex in areaDexIVAttMap[area]) {
+        let attList = areaDexIVAttMap[area][dex].sort().join(",")
+        dex = Number(dex)
+        
+        if (!areaAttDexMap[area]) {
+          areaAttDexMap[area] = {}
+        }
+        
+        if (Array.isArray(areaAttDexMap[area][attList]) === false) {
+          areaAttDexMap[area][attList] = []
+        }
+        
+        if (areaAttDexMap[area][attList].indexOf(dex) === -1) {
+          areaAttDexMap[area][attList].push(dex)
+        }
+      }
+    }
+    
+    return areaAttDexMap
+  },
+  computedBestIVCellsSortRowsByCount: function (rowsToAdd, rows) {
+    rowsToAdd.sort((a, b) => {
+      return b.count - a.count
+    }).forEach((row, i) => {
+      i = i % 6
+      rows.push(i + ":" + row.cells)
+    })
+  },
+  computedBestIVCellsOutOfRange: function (rows, outOfRanking, outOfRankingPrefixNotTraded, outOfRankingPrefixTraded, outOfRankingPrefixTradedBadLucky) {
+    rows.push("不在排名內的\t未交換\t數量\t已交換\t數量\t亮晶晶2*\t數量")
+    
+    let rowsToAdd = []
+    for (let area in outOfRanking) {
+      let dexList = outOfRanking[area]
+      let count = dexList.length
+      let ivList = dexList.map(dex => '!' + dex).join('&')
+      let areaQuery = this.computedAreaQuery(area)
+      
+      let cells = [
+        area,
+        areaQuery + outOfRankingPrefixNotTraded + ivList,
+        `[${count}]`,
+        areaQuery + outOfRankingPrefixTraded + ivList,
+        `[${count}]`,
+        areaQuery + outOfRankingPrefixTradedBadLucky + ivList,
+        `[${count}]`,
+      ].join('\t')
+      
+      rowsToAdd.push({
+        count: count,
+        cells
+      })
+    }
+    
+    rowsToAdd.sort((a, b) => {
+      return b.count - a.count
+    }).forEach(row => {
+      rows.push(row.cells)
+    })
+    
+    rows.push("") // 空一行
+  },
+  computedBestIVCellsStarMap: function (rows, starMap, topRankingStarIncorrPrefixNotTraded, topRankingStarIncorrPrefixTraded, topRankingStarIncorrPrefixTradedBadLucky) {
+    
+    rows.push("排名內但星級不符\t未交換\t數量\t已交換\t數量\t亮晶晶2*\t數量")
+    
+    let rowsToAdd = []
+    
+    for (let area in starMap) {
+      Object.keys(starMap[area]).sort().forEach(starList => {
+        let dexList = starMap[area][starList]
+        let count = dexList.length
+        let ivList = dexList.join(',')
+        
+        let areaQuery = this.computedAreaQuery(area)
+        let starExclusiveQuery = this.computedStarExclusiveQuery(starList)
+        
+        let cells = [
+          starList + " " + area,
+          starExclusiveQuery + areaQuery + topRankingStarIncorrPrefixNotTraded + ivList,
+          `[${count}]`,
+          starExclusiveQuery + areaQuery + topRankingStarIncorrPrefixTraded + ivList,
+          `[${count}]`,
+          starExclusiveQuery + areaQuery + topRankingStarIncorrPrefixTradedBadLucky + ivList,
+          `[${count}]`,
+        ].join('\t')
+
+        rowsToAdd.push({
+          count: count,
+          cells
+        })
+      })
+    }
+    
+    this.computedBestIVCellsSortRowsByCount(rowsToAdd, rows)
+    rows.push("") // 空一行
+  },
+  computedBestIVCellsAttMap: function (rows, attMap, topRankingStarCorrAttPrefixNotTraded, topRankingStarCorrAttPrefixTraded, topRankingStarCorrAttPrefixAllDistance) {
+    let rowsToAdd = []
+    
+    rows.push("排名內星級符，過濾攻防IV格(A:0-5/B:6-10/C:11-15)\t未交換\t數量\t已交換\t數量\t全部\t數量")
+    
+    for (let area in attMap) {
+      Object.keys(attMap[area]).sort().forEach(attList => {
+        let dexList = attMap[area][attList]
+        let count = dexList.length
+        let ivList = dexList.join(',')
+        
+        let areaQuery = this.computedAreaQuery(area)
+        
+        let cells = [
+          attList + " " + area,
+          areaQuery + topRankingStarCorrAttPrefixNotTraded + ivList,
+          `[${count}]`,
+          areaQuery + topRankingStarCorrAttPrefixTraded + ivList,
+          `[${count}]`,
+          areaQuery + topRankingStarCorrAttPrefixAllDistance + ivList,
+          `[${count}]`,
+        ].join('\t')
+
+        rowsToAdd.push({
+          count: count,
+          cells
+        })
+      })
+    }
+    
+    this.computedBestIVCellsSortRowsByCount(rowsToAdd, rows)
+    
   },
   computedAreaQuery: function (area) {
     if (area === 'normal') {
