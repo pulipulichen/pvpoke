@@ -578,7 +578,7 @@ var appMethods = {
     
     //console.log(this.searchSpeciesIdContent[0])
   },
-  computedBuildTopPokemons: function (sourceRankings) {
+  computedBuildTopPokemons: function (sourceRankings, cp = "cp1500") {
     if (this.ready === false) {
       return {}
     }
@@ -599,6 +599,14 @@ var appMethods = {
       
       if (p.topIncludable === false) {
         continue;
+      }
+      else {
+        let iv = p.defaultIVs[cp]
+        if (iv[1] === 15 
+                || iv[2] === 15 
+                || iv[3] === 15) {
+          continue;
+        }
       }
       
       // 接下來我要看，這個pokemon它屬於哪一個類型
@@ -634,7 +642,7 @@ var appMethods = {
     
     return ranking
   },
-  computedBuildTopShadowPokemons: function (sourceRankings) {
+  computedBuildTopShadowPokemons: function (sourceRankings, cp = "cp1500") {
     if (this.ready === false) {
       return {}
     }
@@ -654,6 +662,13 @@ var appMethods = {
         
           
         if (p.isShadow) {
+          
+          let iv = p.defaultIVs[cp]
+          if (iv[1] === 15 
+                  || iv[2] === 15 
+                  || iv[3] === 15) {
+            continue;
+          }
           
           // 接下來我要看，這個pokemon它屬於哪一個類型
           
@@ -679,6 +694,13 @@ var appMethods = {
         }
       }
       else {
+        let iv = p.defaultIVs[cp]
+        if (iv[1] === 15 
+                || iv[2] === 15 
+                || iv[3] === 15) {
+          continue;
+        }
+        
         count++
         if (count > this.topLimit) {
           break

@@ -26,16 +26,16 @@ var appComputed = {
     return data
   },
   top1500: function () {
-    return this.computedBuildTopPokemons(this.rankings1500)
+    return this.computedBuildTopPokemons(this.rankings1500, "cp1500")
   },
   top2500: function () {
-    return this.computedBuildTopPokemons(this.rankings2500)
+    return this.computedBuildTopPokemons(this.rankings2500, "cp2500")
   },
   top1500Shadow: function () {
-    return this.computedBuildTopShadowPokemons(this.rankings1500)
+    return this.computedBuildTopShadowPokemons(this.rankings1500, "cp1500")
   },
   top2500Shadow: function () {
-    return this.computedBuildTopShadowPokemons(this.rankings2500)
+    return this.computedBuildTopShadowPokemons(this.rankings2500, "cp2500")
   },
   outOfRanking: function () {
     if (this.ready === false) {
