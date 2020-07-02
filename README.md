@@ -1,8 +1,12 @@
 替換資料：
+last update: 2020/7/2
 
-1. 下載檔案 https://github.com/pvpoke/pvpoke/archive/master.zip
-2. 取得 src/data
-3. 替換本機端目錄的 src/data
+1. 注意更新時間：https://github.com/pvpoke/pvpoke/tree/master/src
+2. 下載檔案 https://github.com/pvpoke/pvpoke/archive/master.zip
+3. 取得 src/data
+4. 替換本機端目錄的 src/data
+5. 取得中文的對照表 https://pvpoketw.com/data/gamemaster.json
+6. 替換 iv/data/pvpoke.tw/gamemaster.json
 
 # PvPoke
 

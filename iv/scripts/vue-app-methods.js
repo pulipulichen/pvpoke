@@ -65,7 +65,7 @@ var appMethods = {
       
       $.getJSON('data/evolution-family.json', (family) => {
         this.evolutionFamily = family
-        $.getJSON('data/gamemaster-tw.json', (data) => {
+        $.getJSON('data/pvpoke.tw/gamemaster.json', (data) => {
           let trans = {}
           let dexToID = {}
           data.pokemon.forEach(({dex, speciesName, speciesId}) => {
@@ -578,7 +578,7 @@ var appMethods = {
     
     //console.log(this.searchSpeciesIdContent[0])
   },
-  computedBuildTopPokemons: function (sourceRankings, cp = "cp1500") {
+  computedBuildTopPokemons: function (sourceRankings, cp) {
     if (this.ready === false) {
       return {}
     }
@@ -598,13 +598,15 @@ var appMethods = {
       let p = this.speciesIdToData[speciesId]
       
       if (p.topIncludable === false) {
+        count++
         continue;
       }
       else {
         let iv = p.defaultIVs[cp]
         if (iv[1] === 15 
-                || iv[2] === 15 
-                || iv[3] === 15) {
+                && iv[2] === 15 
+                && iv[3] === 15) {
+          count++
           continue;
         }
       }
@@ -642,7 +644,7 @@ var appMethods = {
     
     return ranking
   },
-  computedBuildTopShadowPokemons: function (sourceRankings, cp = "cp1500") {
+  computedBuildTopShadowPokemons: function (sourceRankings, cp) {
     if (this.ready === false) {
       return {}
     }
@@ -659,14 +661,14 @@ var appMethods = {
       let p = this.speciesIdToData[speciesId]
       //console.log(r.topIncludable, r.isShadow)
       if (p.topIncludable === false) {
-        
+        count++
           
         if (p.isShadow) {
           
           let iv = p.defaultIVs[cp]
           if (iv[1] === 15 
-                  || iv[2] === 15 
-                  || iv[3] === 15) {
+                  && iv[2] === 15 
+                  && iv[3] === 15) {
             continue;
           }
           
@@ -696,8 +698,9 @@ var appMethods = {
       else {
         let iv = p.defaultIVs[cp]
         if (iv[1] === 15 
-                || iv[2] === 15 
-                || iv[3] === 15) {
+                && iv[2] === 15 
+                && iv[3] === 15) {
+          count++
           continue;
         }
         
@@ -729,7 +732,7 @@ var appMethods = {
     })
   },
   computedBuildIVGrid: function (iv) {
-    iv = iv.slice(0,1) // 只取攻擊
+    iv = iv.slice(0,2) // 攻擊,防禦
     return iv.map((i) => {
       if (i <= 5) {
         return 'A'
@@ -836,18 +839,23 @@ var appMethods = {
     let rowsToAdd = []
     for (let area in outOfRanking) {
       let dexList = outOfRanking[area]
+      //console.log(dexList.slice(0,3))
+      if (Array.isArray(dexList) === false) {
+        throw "dexList is not array"
+      }
       let count = dexList.length
-      let ivList = dexList.map(dex => '!' + dex).join('&')
+      let countName = this.computedCountName(dexList)
+      let ivList = dexList.map(dex => '!' + dex).join('&') + "&日數0-"
       let areaQuery = this.computedAreaQuery(area)
       
       let cells = [
         area,
         areaQuery + outOfRankingPrefixNotTraded + ivList,
-        `[${count}]`,
+        countName,
         areaQuery + outOfRankingPrefixTraded + ivList,
-        `[${count}]`,
+        countName,
         areaQuery + outOfRankingPrefixTradedBadLucky + ivList,
-        `[${count}]`,
+        countName,
       ].join('\t')
       
       rowsToAdd.push({
@@ -874,7 +882,8 @@ var appMethods = {
       Object.keys(starMap[area]).sort().forEach(starList => {
         let dexList = starMap[area][starList]
         let count = dexList.length
-        let ivList = dexList.join(',')
+        let countName = this.computedCountName(dexList)
+        let ivList = dexList.join(',') + "&日數0-"
         
         let areaQuery = this.computedAreaQuery(area)
         let starExclusiveQuery = this.computedStarExclusiveQuery(starList)
@@ -882,11 +891,11 @@ var appMethods = {
         let cells = [
           starList + " " + area,
           starExclusiveQuery + areaQuery + topRankingStarIncorrPrefixNotTraded + ivList,
-          `[${count}]`,
+          countName,
           starExclusiveQuery + areaQuery + topRankingStarIncorrPrefixTraded + ivList,
-          `[${count}]`,
+          countName,
           starExclusiveQuery + areaQuery + topRankingStarIncorrPrefixTradedBadLucky + ivList,
-          `[${count}]`,
+          countName,
         ].join('\t')
 
         rowsToAdd.push({
@@ -907,19 +916,20 @@ var appMethods = {
     for (let area in attMap) {
       Object.keys(attMap[area]).sort().forEach(attList => {
         let dexList = attMap[area][attList]
+        let countName = this.computedCountName(dexList)
         let count = dexList.length
-        let ivList = dexList.join(',')
+        let ivList = dexList.join(',') + "&日數0-"
         
         let areaQuery = this.computedAreaQuery(area)
         
         let cells = [
           attList + " " + area,
           areaQuery + topRankingStarCorrAttPrefixNotTraded + ivList,
-          `[${count}]`,
+          countName,
           areaQuery + topRankingStarCorrAttPrefixTraded + ivList,
-          `[${count}]`,
+          countName,
           areaQuery + topRankingStarCorrAttPrefixAllDistance + ivList,
-          `[${count}]`,
+          countName,
         ].join('\t')
 
         rowsToAdd.push({
@@ -932,9 +942,29 @@ var appMethods = {
     this.computedBestIVCellsSortRowsByCount(rowsToAdd, rows)
     
   },
+  computedCountName: function (dexList) {
+    //if (dexList === undefined) {
+    // return ""
+    //}
+    
+    let count = dexList.length
+    //console.log(count)
+    let trans = dexList.slice(0,3)
+    trans = trans.map((dex) => {
+      dex = dex + ''
+      let id = this.dexToID[dex]
+      if (typeof(this.pokemonNameTW[id]) !== "string") {
+        throw "id not found: " + id
+      }
+      return this.pokemonNameTW[id].slice(0,2)
+    })
+    
+    return `[${count}] ${trans.join(",")}`
+  },
   computedAreaQuery: function (area) {
     if (area === 'normal') {
-      return '!阿羅拉&!galar&'
+      //return '!阿羅拉&!galar&'
+      return '關都,城都,豐緣,神奧,合眾&'
     }
     else if (area === "alolan") {
       return "阿羅拉&"
