@@ -46,20 +46,46 @@
 <body>
   <!-- ============================================= -->
   
+  <h1>
   <a href="https://docs.google.com/spreadsheets/d/1t87-wOouod1RPUoBDsF4HN1uYsLsQyUm8Hxh1Xfxzyw/edit#gid=1170803128"
     target="_blank">
-    <h1>
+    
       搜尋指令
-    </h1>
   </a>
+    <a href="https://docs.google.com/spreadsheets/d/1mfXbZRvfYl1mAF2cjX2ueIXo9wYdZrbmZCInkhjylSI/edit?usp=sharing"
+    target="_blank">
+      IV查詢
+  </a>
+    </h1>
   
   <div id="app" class="ui container">
     <form class="ui form">
-      位於臺北
+      <!--
+      <div class="ui button positive"
+           v-on:click="downloadBeskIV">
+        DOWNLOAD
+      </div>
+      -->
+      
+      <h2>
+        <a href="https://docs.google.com/spreadsheets/d/1mfXbZRvfYl1mAF2cjX2ueIXo9wYdZrbmZCInkhjylSI/edit?usp=sharing" 
+           target="allData">
+          All Data
+        </a>
+      </h2>
+      <textarea 
+        v-model="bestIVAll"></textarea>
+      
+      <h2>
+        <a href="https://docs.google.com/spreadsheets/d/1t87-wOouod1RPUoBDsF4HN1uYsLsQyUm8Hxh1Xfxzyw/edit#gid=1170803128" 
+           target="queryBase">
+          臺北
+        </a>
+      </h2>
       <textarea 
         v-model="bestIVCells"></textarea>
       
-      
+      <!--
       位於臺南
       <textarea 
         v-model="bestIVCellsTainan"></textarea>
@@ -68,8 +94,13 @@
       位於臺中
       <textarea 
         v-model="bestIVCellsTaichung"></textarea>
-      
-      暗影
+      -->
+      <h2>
+        <a href="https://docs.google.com/spreadsheets/d/1t87-wOouod1RPUoBDsF4HN1uYsLsQyUm8Hxh1Xfxzyw/edit#gid=9582834" target="shadow">
+          
+        暗影
+        </a>
+      </h2>
       <textarea 
         v-model="bestIVShadowCells"></textarea>
     </form>

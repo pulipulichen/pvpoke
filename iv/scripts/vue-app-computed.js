@@ -1,4 +1,10 @@
 var appComputed = {
+  rankings1500SpeciesId: function () {
+    return this.rankings1500.map(r => r.speciesId)
+  },
+  rankings2500SpeciesId: function () {
+    return this.rankings2500.map(r => r.speciesId)
+  },
   speciesIdToData: function () {
     if (this.ready === false) {
       return {}
@@ -180,8 +186,8 @@ var appComputed = {
     let outOfRankingPrefixTraded = "交換&!4*&!f&!p&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
     let outOfRankingPrefixTradedBadLucky = "交換&2*&亮晶晶&!f&!p&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
     
-    this.computedBestIVCellsOutOfRange(rows, this.outOfRanking, outOfRankingPrefixNotTraded, outOfRankingPrefixTraded, outOfRankingPrefixTradedBadLucky)
-    
+    let header = '臺北(0-10)'
+    this.computedBestIVCellsOutOfRange(rows, this.outOfRanking, header, outOfRankingPrefixNotTraded, outOfRankingPrefixTraded, outOfRankingPrefixTradedBadLucky)
     
     // ----------------------
     // 來處理排名內，但不在星級內的名單
@@ -202,6 +208,15 @@ var appComputed = {
     let topRankingStarCorrAttPrefixAllDistance = ""
     
     this.computedBestIVCellsAttMap(rows, attMap, topRankingStarCorrAttPrefixNotTraded, topRankingStarCorrAttPrefixTraded, topRankingStarCorrAttPrefixAllDistance)
+    
+    rows.push([])
+    // -----------------
+    
+    this.computedBestIVCellsAll(rows, attMap, topRankingStarCorrAttPrefixNotTraded, topRankingStarCorrAttPrefixTraded, topRankingStarCorrAttPrefixAllDistance)
+    
+    for (let i = 0; i < 10; i++) {
+      rows.push([])
+    }
     
     //console.log('計算完畢', rows)
     return rows.join("\n")
@@ -226,7 +241,9 @@ var appComputed = {
     let outOfRankingPrefixTraded = outOfRankingPrefixNotTraded
     let outOfRankingPrefixTradedBadLucky = outOfRankingPrefixNotTraded
     
-    this.computedBestIVCellsOutOfRange(rows, this.outOfRankingShadow, outOfRankingPrefixNotTraded, outOfRankingPrefixTraded, outOfRankingPrefixNotTraded)
+    let header = '暗影'
+    
+    this.computedBestIVCellsOutOfRange(rows, this.outOfRankingShadow, header, outOfRankingPrefixNotTraded, outOfRankingPrefixTraded, outOfRankingPrefixNotTraded)
     
     
     // ----------------------
@@ -248,7 +265,18 @@ var appComputed = {
     
     this.computedBestIVCellsAttMap(rows, attMap, topRankingStarCorrAttPrefixNotTraded, topRankingStarCorrAttPrefixTraded, topRankingStarCorrAttPrefixAllDistance)
     
+    for (let i = 0; i < 10; i++) {
+      rows.push([])
+    }
+    
     //console.log('計算完畢', rows)
     return rows.join("\n")
   },
+  bestIVAll () {
+    if (typeof(this.bestIVCSV) === 'string') {
+      let result = this.bestIVCSV.replace(new RegExp(",","gm"), "\t")
+      //console.log(result)
+      return result
+    }
+  }
 }

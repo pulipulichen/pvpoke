@@ -5,6 +5,7 @@ var appMount = async function () {
   
   await this.initPokemons()
   await this.initRanks()
+  this.initBestCSV()
             
   this.ready = true
   //this.initBestIV()

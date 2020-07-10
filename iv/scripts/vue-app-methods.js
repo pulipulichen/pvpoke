@@ -50,6 +50,7 @@ var appMethods = {
           this.gm.data.pokemon[i].gStar = this.calcGStar(this.gm.data.pokemon[i])
           this.gm.data.pokemon[i].uStar = this.calcUStar(this.gm.data.pokemon[i])
           this.gm.data.pokemon[i].topIncludable = this.isTopIncludable(this.gm.data.pokemon[i])
+          this.gm.data.pokemon[i].isNotSpecial = this.isNotSpecial(this.gm.data.pokemon[i])
           
           pokemonName[speciesId] = speciesName
         })
@@ -116,6 +117,7 @@ var appMethods = {
   },
   initBestIV: async function () {
     await this.initRanks()
+    this.initBestCSV()
     return false
 
 
@@ -340,6 +342,250 @@ var appMethods = {
     //return console.log(csv)
 
   },
+  initBestCSV: async function () {
+    var gm = this.gm
+    //gm.loadRankingData($('#app'), "overall", 2500, "all");
+
+    //console.log(gm.data.pokemon.length)
+
+    let header = [
+      ('[' + new Date()).mmdd() + ']',
+      'dex',
+      'family_tw',
+      'g_ivs',
+      'g_lv',
+      'u_ivs',
+      'u_lv',
+      'url',
+      'name',
+      'family',
+      'shadow',
+      'special',
+      'in_top',
+      'g_rank',
+      'g_star',
+      'g_exchange',
+      'g_lucky',
+      'g_atk',
+      'g_def',
+      'g_hp',
+      'g_level',
+      'g_stardust',
+      'g_candy',
+      'g_cp',
+      'g_url',
+      'u_rank',
+      'u_star',
+      'u_exchange',
+      'u_lucky',
+      'u_atk',
+      'u_def',
+      'u_hp',
+      'u_level',
+      'u_stardust',
+      'u_candy',
+      'u_cp',
+      'u_url'
+    ]
+
+    let rows = []
+    rows.push(header)
+
+    let rankings1500 = this.rankings1500
+    let rankings2500 = this.rankings2500
+
+    let starClassList = []
+
+    let limit = gm.data.pokemon.length
+    //let limit = 10
+    for (let i = 0; i < limit; i++) {
+      
+      if (i % 50 === 40) {
+        await this.sleep()
+      }
+      
+      let dataPokemon = gm.data.pokemon[i]
+
+      this.battle.setCP(1500)
+      let gPokemon = new Pokemon(dataPokemon.speciesId, 0, this.battle);
+
+      let gBestIV = gPokemon.generateIVCombinations("overall", 1, 4096, null, 0).filter(({ivs}) => {
+        let {atk, def, hp} = ivs
+        return (atk === dataPokemon.defaultIVs.cp1500[1]
+                && def === dataPokemon.defaultIVs.cp1500[2]
+                && hp === dataPokemon.defaultIVs.cp1500[3])
+      })[0]
+      let gStar = this.calcStar(gBestIV.ivs)
+      //console.log(bestIV)
+
+      this.battle.setCP(2500)
+      let uPokemon = new Pokemon(dataPokemon.speciesId, 0, this.battle);
+
+      let uBestIV = uPokemon.generateIVCombinations("overall", 1, 4096, null, 0).filter(({ivs}) => {
+        let {atk, def, hp} = ivs
+        return (atk === dataPokemon.defaultIVs.cp2500[1]
+                && def === dataPokemon.defaultIVs.cp2500[2]
+                && hp === dataPokemon.defaultIVs.cp2500[3])
+      })[0]
+      let uStar = this.calcStar(uBestIV.ivs)
+      //console.log(bestIV)
+
+      let isShadow = false
+      let isSpecial = false
+      if (Array.isArray(dataPokemon.tags)) {
+        isShadow = (dataPokemon.tags.indexOf('shadow') > -1)
+        isSpecial = (dataPokemon.tags.indexOf('legendary') > -1
+                || dataPokemon.tags.indexOf('untradeable') > -1
+                || dataPokemon.tags.indexOf('mythical') > -1)
+      }
+
+      let id = dataPokemon.speciesId
+      let dex = Number(dataPokemon.dex)
+      let rank1500 = this.getRank1500(id)
+      let rank2500 = this.getRank2500(id)
+
+
+      let topIncludable = (
+              (gStar !== '4*') // 1500不是100%
+              && (isShadow === false)
+              && (isSpecial === false)
+              )
+
+      let glvInfo = gBestIV.level
+      if (glvInfo < 40) {
+        glvInfo = glvInfo + ' (' + this.lvStarDust[(gBestIV.level + '')] + '&' + this.lvCandy[(gBestIV.level + '')] + ')'
+      }
+      
+      let ulvInfo = uBestIV.level
+      if (ulvInfo < 40) {
+        ulvInfo = ulvInfo + ' (' + this.lvStarDust[(uBestIV.level + '')] + '&' + this.lvCandy[(uBestIV.level + '')] + ')'
+      }
+      
+      let r15 = rank1500
+      let r25 = rank2500
+      
+      if (r15 < this.topLimit + 1) {
+        r15 = '!' + r15
+      }
+      if (r25 < this.topLimit + 1) {
+        r25 = '!' + r25
+      }
+
+      rows.push([
+        this.pokemonNameTW[dataPokemon.speciesId],
+        '#' + dataPokemon.dex,
+        this.getFamilyNameTW(dataPokemon.dex, dataPokemon.speciesId),
+        `${r15}: ${gBestIV.ivs.atk}/${gBestIV.ivs.def}/${gBestIV.ivs.hp} (${gStar})`,
+        glvInfo,
+        `${r25}: ${uBestIV.ivs.atk}/${uBestIV.ivs.def}/${uBestIV.ivs.hp} (${uStar})`,
+        ulvInfo,
+        this.buildQueryURL(dataPokemon.speciesId, gBestIV.ivs),
+        dataPokemon.speciesName,
+        this.getFamilyName(dataPokemon.dex, dataPokemon.speciesId),
+        //dataPokemon.speciesId,
+        isShadow,
+        isSpecial,
+        topIncludable,
+        rank1500,
+        gStar,
+        this.calcIncludeExchange(gBestIV.ivs),
+        this.calcIncludeLucky(gBestIV.ivs),
+        gBestIV.ivs.atk,
+        gBestIV.ivs.def,
+        gBestIV.ivs.hp,
+        gBestIV.level,
+        this.lvStarDust[(gBestIV.level + '')],
+        this.lvCandy[(gBestIV.level + '')],
+        gBestIV.cp,
+        this.buildQueryURL(dataPokemon.speciesId, gBestIV.ivs),
+        rank2500,
+        uStar,
+        this.calcIncludeExchange(uBestIV.ivs),
+        this.calcIncludeLucky(uBestIV.ivs),
+        uBestIV.ivs.atk,
+        uBestIV.ivs.def,
+        uBestIV.ivs.hp,
+        uBestIV.level,
+        this.lvStarDust[(uBestIV.level + '')],
+        this.lvCandy[(uBestIV.level + '')],
+        uBestIV.cp,
+        this.buildQueryURL(dataPokemon.speciesId, uBestIV.ivs),
+      ])
+
+      // ---------------
+
+
+      //if (dex === 260) {
+      //  console.log(rows[rows.length - 1])
+      //  console.log(topIncludable, isShadow, isSpecial, (gStar !== '4*'))
+      //}
+
+      let starClass = []
+      if (rank1500 !== 9999 && gStar !== '4*') {
+        starClass.push(gStar)
+      }
+      if (rank2500 !== 9999 && gStar !== uStar && uStar !== '4*') {
+        starClass.push(uStar)
+      }
+      starClass = starClass.sort().join(',')
+
+      try {
+        if (rank1500 !== 9999) {
+          rankings1500[(rank1500 - 1)].topIncludable = topIncludable
+          rankings1500[(rank1500 - 1)].dex = dex
+          if (topIncludable
+                  && gStar !== '4*') {
+            //rankings1500[(rank1500 - 1)].starClass = starClass
+            rankings1500[(rank1500 - 1)].starClass = gStar
+            rankings1500[(rank1500 - 1)].exchange = this.calcIncludeExchange(gBestIV.ivs)
+          }
+
+        }
+        if (rank2500 !== 9999) {
+          rankings2500[(rank2500 - 1)].topIncludable = topIncludable
+          rankings2500[(rank2500 - 1)].dex = dex
+          if (topIncludable
+                  && uStar !== '4*') {
+            //rankings2500[(rank2500 - 1)].starClass = starClass
+            rankings2500[(rank2500 - 1)].starClass = uStar
+            rankings2500[(rank2500 - 1)].exchange = this.calcIncludeExchange(uBestIV.ivs)
+          }
+        }
+
+        if (topIncludable
+                && starClass !== ''
+                && starClassList.indexOf(starClass) === -1) {
+          starClassList.push(starClass)
+        }
+      } catch (e) {
+        console.log(rank1500)
+        throw e
+      }
+    }
+
+    let dexFieldIndex = 1
+    rows.sort((a, b) => {
+      return Number(a[dexFieldIndex].slice(1)) - Number(b[dexFieldIndex].slice(1))
+    })
+
+    this.rankings1500 = this.rankings1500.slice(0, 0).concat(rankings1500)
+    this.rankings2500 = this.rankings1500.slice(0, 0).concat(rankings2500)
+
+    //console.log(this.rankings1500.slice(0, 5))
+
+    let csv = rows.map(row => row.join(',')).join('\n')
+    this.bestIVCSV = csv
+    //console.log(this.top1500)
+    //return console.log(csv)
+
+  },
+  sleep: function (ms = 0) {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(true)
+      }, ms)
+    })
+  },
   calcGStar: function (pokemon) {
     //console.log(pokemon.defaultIVs.cp1500.slice(1))
     return this.calcStar(pokemon.defaultIVs.cp1500.slice(1))
@@ -370,15 +616,39 @@ var appMethods = {
               && (isSpecial === false)
               )
   },
-  getRank1500: function (id) {
-    let rank = (this.all1500.indexOf(id) + 1)
+  isNotSpecial: function (pokemon) {
+    let isShadow = false
+    let isSpecial = false
+    if (Array.isArray(pokemon.tags)) {
+      isShadow = false
+      isSpecial = (pokemon.tags.indexOf('legendary') > -1
+              || pokemon.tags.indexOf('untradeable') > -1
+              || pokemon.tags.indexOf('mythical') > -1)
+    }
+    else {
+      //console.log(pokemon, '沒有tags?')
+    }
+
+    let gStar = this.calcGStar(pokemon)
+    let uStar = this.calcUStar(pokemon)
+    
+    return (
+              ((gStar !== '4*') // 1500不是100%
+              || (uStar !== '4*'))
+              && (isShadow === false)
+              && (isSpecial === false)
+              )
+  },
+  getRank1500: function (speciesId) {
+    //console.log(id, this.rankings1500)
+    let rank = (this.rankings1500SpeciesId.indexOf(speciesId) + 1)
     if (rank === 0) {
       rank = 9999
     }
     return rank
   },
-  getRank2500: function (id) {
-    let rank = (this.all2500.indexOf(id) + 1)
+  getRank2500: function (speciesId) {
+    let rank = (this.rankings2500SpeciesId.indexOf(speciesId) + 1)
     if (rank === 0) {
       rank = 9999
     }
@@ -386,7 +656,7 @@ var appMethods = {
   },
   downloadBeskIV: async function () {
     let blob = new Blob([this.bestIVCSV], {type: "text/csv;charset=utf-8"});
-    saveAs(blob, 'best.csv', true);
+    saveAs(blob, 'best_' + (new Date()).mmddhhmm()  + '.csv', true);
   },
   onInputFocus(event) {
     //console.log(event)
@@ -663,7 +933,7 @@ var appMethods = {
       if (p.topIncludable === false) {
         count++
           
-        if (p.isShadow) {
+        if (p.isShadow && p.isNotSpecial) {
           
           let iv = p.defaultIVs[cp]
           if (iv[1] === 15 
@@ -674,7 +944,6 @@ var appMethods = {
           
           // 接下來我要看，這個pokemon它屬於哪一個類型
           
-
           if (p.isAlolan) {
             if (Array.isArray(ranking.alolan) === false) {
               ranking.alolan = []
@@ -833,8 +1102,8 @@ var appMethods = {
       rows.push(i + ":" + row.cells)
     })
   },
-  computedBestIVCellsOutOfRange: function (rows, outOfRanking, outOfRankingPrefixNotTraded, outOfRankingPrefixTraded, outOfRankingPrefixTradedBadLucky) {
-    rows.push("不在排名內的\t未交換\t數量\t已交換\t數量\t亮晶晶2*\t數量")
+  computedBestIVCellsOutOfRange: function (rows, outOfRanking, header, outOfRankingPrefixNotTraded, outOfRankingPrefixTraded, outOfRankingPrefixTradedBadLucky) {
+    rows.push(header + (new Date()).mmdd() + "\t未交換\t數量\t已交換\t數量\t亮晶晶2*\t數量")
     
     let rowsToAdd = []
     for (let area in outOfRanking) {
@@ -942,6 +1211,45 @@ var appMethods = {
     this.computedBestIVCellsSortRowsByCount(rowsToAdd, rows)
     
   },
+  
+  computedBestIVCellsAll: function (rows, attMap, topRankingStarCorrAttPrefixNotTraded, topRankingStarCorrAttPrefixTraded, topRankingStarCorrAttPrefixAllDistance) {
+    let rowsToAdd = []
+    
+    rows.push("排名內\t未交換\t數量\t已交換\t數量\t全部\t數量")
+    
+    for (let area in attMap) {
+      let allDexList = []
+      let allCount = 0
+      Object.keys(attMap[area]).sort().forEach(attList => {
+        let dexList = attMap[area][attList]
+        allDexList = allDexList.concat(dexList)
+        let count = dexList.length
+        allCount = allCount + count
+      })
+      
+      let ivList = allDexList.join(',') + "&日數0-"
+      let countName = this.computedCountName(allDexList)
+      let areaQuery = this.computedAreaQuery(area)
+
+      let cells = [
+        area,
+        areaQuery + topRankingStarCorrAttPrefixNotTraded + ivList,
+        countName,
+        areaQuery + topRankingStarCorrAttPrefixTraded + ivList,
+        countName,
+        areaQuery + topRankingStarCorrAttPrefixAllDistance + ivList,
+        countName,
+      ].join('\t')
+
+      rowsToAdd.push({
+        count: allCount,
+        cells
+      })
+    }
+    
+    this.computedBestIVCellsSortRowsByCount(rowsToAdd, rows)
+    
+  },
   computedCountName: function (dexList) {
     //if (dexList === undefined) {
     // return ""
@@ -956,7 +1264,15 @@ var appMethods = {
       if (typeof(this.pokemonNameTW[id]) !== "string") {
         throw "id not found: " + id
       }
-      return this.pokemonNameTW[id].slice(0,2)
+      
+      let name = this.pokemonNameTW[id]
+      let firstWord = name.slice(0,1)
+      let lastWord = name.slice(-1)
+      if (firstWord === lastWord) {
+        lastWord = name.slice(1,2)
+      }
+      
+      return firstWord + lastWord
     })
     
     return `[${count}] ${trans.join(",")}`
