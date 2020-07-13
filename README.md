@@ -1,5 +1,5 @@
 替換資料：
-last update: 2020/7/2
+last update: 2020/7/13
 
 1. 注意更新時間：https://github.com/pvpoke/pvpoke/tree/master/src
 2. 下載檔案 https://github.com/pvpoke/pvpoke/archive/master.zip

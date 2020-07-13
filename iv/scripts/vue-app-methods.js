@@ -163,7 +163,8 @@ var appMethods = {
       'u_stardust',
       'u_candy',
       'u_cp',
-      'u_url'
+      'u_url',
+      'speciesId',
     ]
 
     let rows = []
@@ -273,6 +274,7 @@ var appMethods = {
         this.lvCandy[(uBestIV.level + '')],
         uBestIV.cp,
         this.buildQueryURL(dataPokemon.speciesId, uBestIV.ivs),
+        id
       ])
 
       // ---------------
@@ -349,7 +351,7 @@ var appMethods = {
     //console.log(gm.data.pokemon.length)
 
     let header = [
-      ('[' + new Date()).mmdd() + ']',
+      '[' + (new Date()).mmdd() + ']',
       'dex',
       'family_tw',
       'g_ivs',
@@ -385,7 +387,8 @@ var appMethods = {
       'u_stardust',
       'u_candy',
       'u_cp',
-      'u_url'
+      'u_url',
+      'speciesId'
     ]
 
     let rows = []
@@ -510,6 +513,7 @@ var appMethods = {
         this.lvCandy[(uBestIV.level + '')],
         uBestIV.cp,
         this.buildQueryURL(dataPokemon.speciesId, uBestIV.ivs),
+        id
       ])
 
       // ---------------
@@ -861,15 +865,13 @@ var appMethods = {
     
     let count = 0
     
-    for (let i = 0; i < sourceRankings.length; i++) {
-      let r = sourceRankings[i]
-      let speciesId = r.speciesId
+    let addRanking = (speciesId) => {
       
       let p = this.speciesIdToData[speciesId]
       
       if (p.topIncludable === false) {
         count++
-        continue;
+        return true
       }
       else {
         let iv = p.defaultIVs[cp]
@@ -877,7 +879,7 @@ var appMethods = {
                 && iv[2] === 15 
                 && iv[3] === 15) {
           count++
-          continue;
+          return true
         }
       }
       
@@ -907,7 +909,27 @@ var appMethods = {
       //}
       
       count++
+    }
+    
+    for (let i = 0; i < sourceRankings.length; i++) {
+      let r = sourceRankings[i]
+      let speciesId = r.speciesId
+      if (addRanking(speciesId) === false) {
+        break
+      }
       if (count > this.topLimit) {
+        break
+      }
+    }
+    
+    let includeList = this.include1500
+    if (cp === 'cp2500') {
+      includeList = this.include2500
+    }
+    
+    for (let i = 0; i < includeList.length; i++) {
+      let speciesId = includeList[i]
+      if (addRanking(speciesId) === false) {
         break
       }
     }
@@ -924,6 +946,41 @@ var appMethods = {
     
     let count = 0
     
+    let addRanking = (speciesId) => {
+      let p = this.speciesIdToData[speciesId]
+      
+      if (p.isShadow && p.isNotSpecial) {
+
+        let iv = p.defaultIVs[cp]
+        if (iv[1] === 15 
+                && iv[2] === 15 
+                && iv[3] === 15) {
+          return false
+        }
+
+        // 接下來我要看，這個pokemon它屬於哪一個類型
+
+        if (p.isAlolan) {
+          if (Array.isArray(ranking.alolan) === false) {
+            ranking.alolan = []
+          }
+          ranking.alolan.push(p)
+        }
+        else if (p.isGalarian) {
+          if (Array.isArray(ranking.galarian) === false) {
+            ranking.galarian = []
+          }
+          ranking.galarian.push(p)
+        }
+        else {
+          if (Array.isArray(ranking.normal) === false) {
+            ranking.normal = []
+          }
+          ranking.normal.push(p)
+        }
+      }
+    }
+    
     for (let i = 0; i < sourceRankings.length; i++) {
       let r = sourceRankings[i]
       let speciesId = r.speciesId
@@ -933,36 +990,7 @@ var appMethods = {
       if (p.topIncludable === false) {
         count++
           
-        if (p.isShadow && p.isNotSpecial) {
-          
-          let iv = p.defaultIVs[cp]
-          if (iv[1] === 15 
-                  && iv[2] === 15 
-                  && iv[3] === 15) {
-            continue;
-          }
-          
-          // 接下來我要看，這個pokemon它屬於哪一個類型
-          
-          if (p.isAlolan) {
-            if (Array.isArray(ranking.alolan) === false) {
-              ranking.alolan = []
-            }
-            ranking.alolan.push(p)
-          }
-          else if (p.isGalarian) {
-            if (Array.isArray(ranking.galarian) === false) {
-              ranking.galarian = []
-            }
-            ranking.galarian.push(p)
-          }
-          else {
-            if (Array.isArray(ranking.normal) === false) {
-              ranking.normal = []
-            }
-            ranking.normal.push(p)
-          }
-        }
+        addRanking(speciesId)
       }
       else {
         let iv = p.defaultIVs[cp]
@@ -978,6 +1006,16 @@ var appMethods = {
           break
         }
       }
+    }
+    
+    let includeList = this.include1500
+    if (cp === 'cp2500') {
+      includeList = this.include2500
+    }
+    
+    for (let i = 0; i < includeList.length; i++) {
+      let speciesId = includeList[i]
+      addRanking(speciesId)
     }
     
     //console.log(ranking)
