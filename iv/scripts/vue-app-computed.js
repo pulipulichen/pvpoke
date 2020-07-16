@@ -282,7 +282,7 @@ var appComputed = {
     this.computedBestIVCellsAll(rows, attMap, topRankingStarCorrAttPrefixNotTraded, topRankingStarCorrAttPrefixTraded, topRankingStarCorrAttPrefixAllDistance)
     
     for (let i = 0; i < 10; i++) {
-      rows.push([])
+      rows.push('-\t-\t-\t-\t-\t-\t-')
     }
     
     //console.log('計算完畢', rows)
@@ -333,7 +333,7 @@ var appComputed = {
     this.computedBestIVCellsAttMap(rows, attMap, topRankingStarCorrAttPrefixNotTraded, topRankingStarCorrAttPrefixTraded, topRankingStarCorrAttPrefixAllDistance)
     
     for (let i = 0; i < 10; i++) {
-      rows.push([])
+      rows.push('-\t-\t-\t-\t-\t-\t-')
     }
     
     //console.log('計算完畢', rows)
