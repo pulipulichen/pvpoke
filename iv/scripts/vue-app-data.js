@@ -57,6 +57,7 @@ var appData = {
     , 'shiftry', 'shiftry_shadow'
     , 'gengar'],
   evolutionFamily: {},
+  evolutionFamilySort: {},
   lvStarDust: {},
   lvCandy: {},
   //starClassList: [],

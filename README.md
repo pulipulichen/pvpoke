@@ -1,7 +1,7 @@
 替換資料：
 last update: 2020/7/13
 
-1. 注意更新時間：https://github.com/pvpoke/pvpoke/tree/master/src
+1. 注意data的更新時間：https://github.com/pvpoke/pvpoke/tree/master/src/data
 2. 下載檔案 https://github.com/pvpoke/pvpoke/archive/master.zip
 3. 取得 src/data
 4. 替換本機端目錄的 src/data

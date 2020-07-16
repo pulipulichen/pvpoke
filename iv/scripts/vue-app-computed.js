@@ -43,6 +43,69 @@ var appComputed = {
   top2500Shadow: function () {
     return this.computedBuildTopShadowPokemons(this.rankings2500, "cp2500")
   },
+  topMix: function () {
+    let data = {}
+    
+    let includedSpeciesId = []
+   
+    let add = (top) => {
+      Object.keys(top).forEach((area) => {
+        if (Array.isArray(data[area]) === false) {
+          data[area] = []
+        }
+
+        top[area].forEach(p => {
+          let speciesId = p.speciesId
+
+          if (includedSpeciesId.indexOf(speciesId) === -1) {
+            data[area].push(p)
+            includedSpeciesId.push(speciesId)
+          }
+        })
+      })
+    }
+    
+    //console.log(this.top1500)
+    add(this.top1500)
+    add(this.top2500)
+    add(this.top1500Shadow)
+    add(this.top2500Shadow)
+    
+    // 排序
+    Object.keys(data).forEach((area) => {
+      data[area].sort((a, b) => {
+        if (a.dex !== b.dex) {
+          return a.dex - b.dex
+        }
+        else if (a.tags.indexOf('shadow') > -1) {
+          return 1
+        }
+        else {
+          return 0
+        }
+      })
+    })
+    
+    return data
+  },
+  topMixFamilyDex: function () {
+    let data = {}
+    
+    Object.keys(this.topMix).forEach(area => {
+      let list = []
+      this.topMix[area].forEach(p => {
+        let familyDex = this.evolutionFamily[p.dex]
+        familyDex.forEach(d => {
+          if (list.indexOf(d) === -1) {
+            list.push(d)
+          }
+        })
+      })
+      data[area] = list
+    })
+    
+    return data
+  },
   outOfRanking: function () {
     if (this.ready === false) {
       return {}
@@ -58,7 +121,9 @@ var appComputed = {
     })
     
     Object.keys(exclusiveList).forEach(a => {
-      exclusiveList[a].sort()
+      exclusiveList[a].sort((a, b) => {
+        return Number(a) - Number(b)
+      })
     })
     
     return exclusiveList
@@ -78,7 +143,9 @@ var appComputed = {
     })
     
     Object.keys(exclusiveList).forEach(a => {
-      exclusiveList[a].sort()
+      exclusiveList[a].sort((a, b) => {
+        return Number(a) - Number(b)
+      })
     })
     
     return exclusiveList
@@ -205,7 +272,7 @@ var appComputed = {
     let attMap = this.topList.att
     let topRankingStarCorrAttPrefixNotTraded = "!交換&距離0-10&!4*&!f&!p&!U&!G&!傳說的寶可夢&!幻&"
     let topRankingStarCorrAttPrefixTraded = "交換&!4*&!f&!p&!U&!G&!傳說的寶可夢&!幻&"
-    let topRankingStarCorrAttPrefixAllDistance = ""
+    let topRankingStarCorrAttPrefixAllDistance = "!暗影&!4*&!傳說的寶可夢&!幻&"
     
     this.computedBestIVCellsAttMap(rows, attMap, topRankingStarCorrAttPrefixNotTraded, topRankingStarCorrAttPrefixTraded, topRankingStarCorrAttPrefixAllDistance)
     

@@ -66,40 +66,43 @@ var appMethods = {
       
       $.getJSON('data/evolution-family.json', (family) => {
         this.evolutionFamily = family
-        $.getJSON('data/pvpoke.tw/gamemaster.json', (data) => {
-          let trans = {}
-          let dexToID = {}
-          data.pokemon.forEach(({dex, speciesName, speciesId}) => {
-            trans[speciesId] = speciesName
+        
+        $.getJSON('data/evolution-family-sort.json', (familySort) => {
+        this.evolutionFamilySort = familySort
+          $.getJSON('data/pvpoke.tw/gamemaster.json', (data) => {
+            let trans = {}
+            let dexToID = {}
+            data.pokemon.forEach(({dex, speciesName, speciesId}) => {
+              trans[speciesId] = speciesName
 
-            if (!dexToID[dex + '']
-                    && !speciesId.endsWith('_alolan')
-                    && !speciesId.endsWith('_galarian')
-                    && !speciesId.endsWith('_shadow')) {
-              dexToID[dex + ''] = speciesId
-          }
+              if (!dexToID[dex + '']
+                      && !speciesId.endsWith('_alolan')
+                      && !speciesId.endsWith('_galarian')
+                      && !speciesId.endsWith('_shadow')) {
+                dexToID[dex + ''] = speciesId
+            }
 
-          })
-          this.dexToID = dexToID
-          this.pokemonNameTW = trans
-
-          $.getJSON('data/lv-stardust-candy.json', (data) => {
-            let stardust = {}
-            let candy = {}
-            Object.keys(data).forEach(lv => {
-              stardust[lv] = data[lv][0] / 1000
-              if (stardust[lv] < 1) {
-                stardust[lv] = (stardust[lv] + '').slice(1)
-              }
-              candy[lv] = data[lv][1]
             })
+            this.dexToID = dexToID
+            this.pokemonNameTW = trans
 
-            this.lvStarDust = stardust
-            this.lvCandy = candy
-            
-            resolve(true)
+            $.getJSON('data/lv-stardust-candy.json', (data) => {
+              let stardust = {}
+              let candy = {}
+              Object.keys(data).forEach(lv => {
+                stardust[lv] = data[lv][0] / 1000
+                if (stardust[lv] < 1) {
+                  stardust[lv] = (stardust[lv] + '').slice(1)
+                }
+                candy[lv] = data[lv][1]
+              })
+
+              this.lvStarDust = stardust
+              this.lvCandy = candy
+
+              resolve(true)
+            })
           })
-
         })
       })
     })
@@ -388,18 +391,23 @@ var appMethods = {
       'u_candy',
       'u_cp',
       'u_url',
-      'speciesId'
+      'speciesId',
+      'family_dex',
     ]
 
     let rows = []
-    rows.push(header)
+    //rows.push(header)
 
     let rankings1500 = this.rankings1500
     let rankings2500 = this.rankings2500
+    
+    //console.log(this.topMix)
 
     let starClassList = []
 
     let limit = gm.data.pokemon.length
+    let rowMap = {}
+    
     //let limit = 10
     for (let i = 0; i < limit; i++) {
       
@@ -467,16 +475,78 @@ var appMethods = {
       let r15 = rank1500
       let r25 = rank2500
       
-      if (r15 < this.topLimit + 1) {
-        r15 = '!' + r15
+      let inTop = false
+      if (isSpecial === false) {
+        if (r15 < this.topLimit + 1 
+                && (gBestIV.ivs.atk + gBestIV.ivs.def + gBestIV.ivs.hp) < 45 ) {
+          r15 = '!' + r15
+        }
+        if (r25 < this.topLimit + 1 
+                && (uBestIV.ivs.atk + uBestIV.ivs.def + uBestIV.ivs.hp) < 45 ) {
+          r25 = '!' + r25
+        }
+        
+        for (let area in this.topMixFamilyDex) {
+          if (this.topMixFamilyDex[area].indexOf(dataPokemon.dex) > -1) {
+            inTop = true
+            break
+          }
+        }
       }
-      if (r25 < this.topLimit + 1) {
-        r25 = '!' + r25
+      
+      let familyDex = this.getFamilyDex(dataPokemon.dex)
+
+      let name = dataPokemon.speciesId
+      if (typeof(this.pokemonNameTW[dataPokemon.speciesId]) === 'string') {
+        name = this.pokemonNameTW[dataPokemon.speciesId]
       }
 
       rows.push([
+        name,
+        dataPokemon.dex,
+        this.getFamilyNameTW(dataPokemon.dex, dataPokemon.speciesId),
+        `${r15}: ${gBestIV.ivs.atk}/${gBestIV.ivs.def}/${gBestIV.ivs.hp} (${gStar})`,
+        glvInfo,
+        `${r25}: ${uBestIV.ivs.atk}/${uBestIV.ivs.def}/${uBestIV.ivs.hp} (${uStar})`,
+        ulvInfo,
+        this.buildQueryURL(dataPokemon.speciesId, gBestIV.ivs),
+        dataPokemon.speciesName,
+        this.getFamilyName(dataPokemon.dex, dataPokemon.speciesId),
+        //dataPokemon.speciesId,
+        isShadow,
+        isSpecial,
+        inTop,
+        rank1500,
+        gStar,
+        this.calcIncludeExchange(gBestIV.ivs),
+        this.calcIncludeLucky(gBestIV.ivs),
+        gBestIV.ivs.atk,
+        gBestIV.ivs.def,
+        gBestIV.ivs.hp,
+        gBestIV.level,
+        this.lvStarDust[(gBestIV.level + '')],
+        this.lvCandy[(gBestIV.level + '')],
+        gBestIV.cp,
+        this.buildQueryURL(dataPokemon.speciesId, gBestIV.ivs),
+        rank2500,
+        uStar,
+        this.calcIncludeExchange(uBestIV.ivs),
+        this.calcIncludeLucky(uBestIV.ivs),
+        uBestIV.ivs.atk,
+        uBestIV.ivs.def,
+        uBestIV.ivs.hp,
+        uBestIV.level,
+        this.lvStarDust[(uBestIV.level + '')],
+        this.lvCandy[(uBestIV.level + '')],
+        uBestIV.cp,
+        this.buildQueryURL(dataPokemon.speciesId, uBestIV.ivs),
+        id,
+        familyDex,
+      ])
+      /*
+      rowMap[dataPokemon.speciesId] = [
         this.pokemonNameTW[dataPokemon.speciesId],
-        '#' + dataPokemon.dex,
+        dataPokemon.dex,
         this.getFamilyNameTW(dataPokemon.dex, dataPokemon.speciesId),
         `${r15}: ${gBestIV.ivs.atk}/${gBestIV.ivs.def}/${gBestIV.ivs.hp} (${gStar})`,
         glvInfo,
@@ -514,8 +584,8 @@ var appMethods = {
         uBestIV.cp,
         this.buildQueryURL(dataPokemon.speciesId, uBestIV.ivs),
         id
-      ])
-
+      ]
+      */
       // ---------------
 
 
@@ -567,10 +637,37 @@ var appMethods = {
       }
     }
 
-    let dexFieldIndex = 1
-    rows.sort((a, b) => {
-      return Number(a[dexFieldIndex].slice(1)) - Number(b[dexFieldIndex].slice(1))
+    // --------------------------
+    // 再來是根據topMix來排序
+    /*
+    let rowTop = []
+    let rowOther = []
+    
+    this.topMix.forEach(area => {
+      row
     })
+    
+    rows = rows.concat(rowTop).concat(rowOther)
+    */
+    // ------------------
+
+    let dexFieldIndex = 38
+    let inTopFieldIndex = 12
+    rows.sort((a, b) => {
+      if (a[inTopFieldIndex] === b[inTopFieldIndex]) {
+        return Number(a[dexFieldIndex]) - Number(b[dexFieldIndex])
+      }
+      else {
+        if (a[inTopFieldIndex] === true) {
+          return -1
+        }
+        else {
+          return 1
+        }
+      }
+    })
+    
+    rows = [header].concat(rows)
 
     this.rankings1500 = this.rankings1500.slice(0, 0).concat(rankings1500)
     this.rankings2500 = this.rankings1500.slice(0, 0).concat(rankings2500)
@@ -582,6 +679,45 @@ var appMethods = {
     //console.log(this.top1500)
     //return console.log(csv)
 
+    //console.log(this.topMix)
+
+  },
+  getFamilyDex: function (dex) {
+    let familyDex = this.evolutionFamilySort[dex]
+    if (Array.isArray(familyDex) === false) {
+      familyDex = this.evolutionFamily[dex]
+    }
+    
+    if (Array.isArray(familyDex) === false) {
+      //return dex + '-' + dex
+      return dex
+    }
+    else {
+      let min = familyDex[0]
+      
+      for (let i = 1; i < familyDex.length; i++) {
+        if (min > familyDex[i]) {
+          min = familyDex[i]
+        }
+      }
+      
+      let max = dex
+      
+      if (min > max) {
+        let temp = max
+        max = min
+        min = temp
+      }
+     
+      
+      //return familyDex[0] + '-' + dex
+      let dexString = '' + max
+      while (dexString.length < 4) {
+        dexString = '0' + dexString
+      }
+      
+      return Number(min + '.' + dexString)
+    }
   },
   sleep: function (ms = 0) {
     return new Promise((resolve) => {
