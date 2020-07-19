@@ -1276,8 +1276,8 @@ var appMethods = {
       rows.push(i + ":" + row.cells)
     })
   },
-  computedBestIVCellsOutOfRange: function (rows, outOfRanking, header, outOfRankingPrefixNotTraded, outOfRankingPrefixTraded, outOfRankingPrefixTradedBadLucky) {
-    rows.push(header + (new Date()).mmdd() + "\t未交換\t數量\t已交換\t數量\t亮晶晶2*\t數量")
+  computedBestIVCellsOutOfRange: function (rows, outOfRanking, header, outOfRankingPrefixNotTraded, outOfRankingPrefixTraded, outOfRankingPrefixTradedBadLucky, outOfRankingPrefixAll) {
+    rows.push(header + (new Date()).mmdd() + "\t未交換\t數量\t已交換\t數量\t亮晶晶2*\t數量\t整理\t數量")
     
     let rowsToAdd = []
     for (let area in outOfRanking) {
@@ -1299,6 +1299,8 @@ var appMethods = {
         countName,
         areaQuery + outOfRankingPrefixTradedBadLucky + ivList,
         countName,
+        areaQuery + outOfRankingPrefixAll + ivList,
+        countName,
       ].join('\t')
       
       rowsToAdd.push({
@@ -1315,9 +1317,9 @@ var appMethods = {
     
     rows.push("") // 空一行
   },
-  computedBestIVCellsStarMap: function (rows, starMap, topRankingStarIncorrPrefixNotTraded, topRankingStarIncorrPrefixTraded, topRankingStarIncorrPrefixTradedBadLucky) {
+  computedBestIVCellsStarMap: function (rows, starMap, topRankingStarIncorrPrefixNotTraded, topRankingStarIncorrPrefixTraded, topRankingStarIncorrPrefixTradedBadLucky, topRankingStarIncorrPrefixNotTradedFilter = '') {
     
-    rows.push("排名內但星級不符\t未交換\t數量\t已交換\t數量\t亮晶晶2*\t數量")
+    rows.push("排名內但星級不符\t未交換\t數量\t已交換\t數量\t亮晶晶2*\t數量\t整理\t數量")
     
     let rowsToAdd = []
     
@@ -1339,6 +1341,8 @@ var appMethods = {
           countName,
           starExclusiveQuery + areaQuery + topRankingStarIncorrPrefixTradedBadLucky + ivList,
           countName,
+          starExclusiveQuery + areaQuery + topRankingStarIncorrPrefixNotTradedFilter + ivList,
+          countName,
         ].join('\t')
 
         rowsToAdd.push({
@@ -1351,10 +1355,10 @@ var appMethods = {
     this.computedBestIVCellsSortRowsByCount(rowsToAdd, rows)
     rows.push("") // 空一行
   },
-  computedBestIVCellsAttMap: function (rows, attMap, topRankingStarCorrAttPrefixNotTraded, topRankingStarCorrAttPrefixTraded, topRankingStarCorrAttPrefixAllDistance) {
+  computedBestIVCellsAttMap: function (rows, attMap, topRankingStarCorrAttPrefixNotTraded, topRankingStarCorrAttPrefixTraded, topRankingStarCorrAttPrefixAllDistance, topRankingStarCorrAttPrefixNotTradedFilter = '') {
     let rowsToAdd = []
     
-    rows.push("排名內星級符，過濾攻防IV格(A:0-5/B:6-10/C:11-15)\t未交換\t數量\t已交換\t數量\t全部\t數量")
+    rows.push("排名內星級符，過濾攻防IV格(A:0-5/B:6-10/C:11-15)\t未交換\t數量\t已交換\t數量\t全部\t數量\t整理\t數量")
     
     for (let area in attMap) {
       Object.keys(attMap[area]).sort().forEach(attList => {
@@ -1372,6 +1376,8 @@ var appMethods = {
           areaQuery + topRankingStarCorrAttPrefixTraded + ivList,
           countName,
           areaQuery + topRankingStarCorrAttPrefixAllDistance + ivList,
+          countName,
+          areaQuery + topRankingStarCorrAttPrefixNotTradedFilter + ivList,
           countName,
         ].join('\t')
 
