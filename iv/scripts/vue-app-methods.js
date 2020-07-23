@@ -1009,6 +1009,11 @@ var appMethods = {
         count++
         return true
       }
+      else if ( (cp === 'cp1500' && this.exclude1500.indexOf(speciesId) > -1) 
+              || (cp === 'cp2500' && this.exclude2500.indexOf(speciesId) > -1) ) {
+        count++
+        return true
+      }
       else {
         let iv = p.defaultIVs[cp]
         if (iv[1] === 15 

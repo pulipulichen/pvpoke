@@ -264,7 +264,7 @@ var appComputed = {
     let topRankingStarIncorrPrefixNotTraded = "!交換&距離0-10&!4*&!f&!p&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
     let topRankingStarIncorrPrefixTraded = "交換&!4*&!f&!p&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
     let topRankingStarIncorrPrefixTradedBadLucky = "交換&2*&亮晶晶&!f&!p&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
-    let topRankingStarIncorrPrefixNotTradedFilter = "!e&!t&!f&!c&!交換&距離0-10&!f&!p&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
+    let topRankingStarIncorrPrefixNotTradedFilter = "!e&!t&!f&!c&!交換&距離0-10&!f&!p&!U&!G&!4*&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
     
     this.computedBestIVCellsStarMap(rows, starMap, topRankingStarIncorrPrefixNotTraded, topRankingStarIncorrPrefixTraded, topRankingStarIncorrPrefixTradedBadLucky, topRankingStarIncorrPrefixNotTradedFilter)
     
@@ -275,7 +275,7 @@ var appComputed = {
     let topRankingStarCorrAttPrefixNotTraded = "!交換&距離0-10&!4*&!f&!p&!U&!G&!異色&!暗影&!淨化&!傳說的寶可夢&!幻&"
     let topRankingStarCorrAttPrefixTraded = "交換&!4*&!f&!p&!U&!G&!異色&!暗影&!淨化&!傳說的寶可夢&!幻&"
     let topRankingStarCorrAttPrefixAllDistance = "!暗影&!淨化&!4*&!傳說的寶可夢&!幻&"
-    let topRankingStarCorrAttPrefixNotTradedFilter = "!e&!t&!f&!c&!交換&距離0-10&!f&!p&!U&!G&!異色&!暗影&!淨化&!傳說的寶可夢&!幻&"
+    let topRankingStarCorrAttPrefixNotTradedFilter = "!e&!t&!f&!c&!交換&距離0-10&!f&!p&!U&!G&!4*&!異色&!暗影&!淨化&!傳說的寶可夢&!幻&"
     
     this.computedBestIVCellsAttMap(rows, attMap, topRankingStarCorrAttPrefixNotTraded, topRankingStarCorrAttPrefixTraded, topRankingStarCorrAttPrefixAllDistance, topRankingStarCorrAttPrefixNotTradedFilter)
     
@@ -307,7 +307,7 @@ var appComputed = {
     let rows = []
     
     // 先處理要移除的全部
-    let outOfRankingPrefixNotTraded = "!4*&暗影&!傳說的寶可夢&!幻&!異色&"
+    let outOfRankingPrefixNotTraded = "!4*&暗影,淨化&!傳說的寶可夢&!幻&!異色&"
     let outOfRankingPrefixTraded = outOfRankingPrefixNotTraded
     let outOfRankingPrefixTradedBadLucky = outOfRankingPrefixNotTraded
     
@@ -320,7 +320,7 @@ var appComputed = {
     // 來處理排名內，但不在星級內的名單
     
     let starMap = this.topShadowList.star
-    let topRankingStarIncorrPrefixNotTraded = "!4*&暗影&!傳說的寶可夢&!幻&!異色&"
+    let topRankingStarIncorrPrefixNotTraded = "!4*&暗影,淨化&!傳說的寶可夢&!幻&!異色&"
     let topRankingStarIncorrPrefixTraded = topRankingStarIncorrPrefixNotTraded
     
     this.computedBestIVCellsStarMap(rows, starMap, topRankingStarIncorrPrefixNotTraded, topRankingStarIncorrPrefixTraded, outOfRankingPrefixNotTraded)
@@ -329,7 +329,7 @@ var appComputed = {
     // 來處理排名內，符合星級，不過要注意Att是否相符的名單
     
     let attMap = this.topShadowList.att
-    let topRankingStarCorrAttPrefixNotTraded = "!4*&暗影&!傳說的寶可夢&!幻&!異色&"
+    let topRankingStarCorrAttPrefixNotTraded = "!4*&暗影,淨化&!傳說的寶可夢&!幻&!異色&"
     let topRankingStarCorrAttPrefixTraded = topRankingStarCorrAttPrefixNotTraded
     let topRankingStarCorrAttPrefixAllDistance = ""
     
