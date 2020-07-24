@@ -251,11 +251,12 @@ var appComputed = {
     // 先處理要移除的全部
     let outOfRankingPrefixNotTraded = "!交換&!4*&距離0-10&!f&!p&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
     let outOfRankingPrefixTraded = "交換&!4*&!f&!p&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
-    let outOfRankingPrefixTradedBadLucky = "交換&2*&亮晶晶&!f&!p&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
+    //let outOfRankingPrefixTradedBadLucky = "交換&2*&亮晶晶&!f&!p&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
     let outOfRankingPrefixAll = "!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
+    let outOfRankingPrefixNotTradedFilter = "!e&!t&!f&!c&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
     
     let header = '臺北(0-10)'
-    this.computedBestIVCellsOutOfRange(rows, this.outOfRanking, header, outOfRankingPrefixNotTraded, outOfRankingPrefixTraded, outOfRankingPrefixTradedBadLucky, outOfRankingPrefixAll)
+    this.computedBestIVCellsOutOfRange(rows, this.outOfRanking, header, outOfRankingPrefixNotTraded, outOfRankingPrefixTraded, outOfRankingPrefixAll, outOfRankingPrefixNotTradedFilter)
     
     // ----------------------
     // 來處理排名內，但不在星級內的名單

@@ -1282,7 +1282,7 @@ var appMethods = {
     })
   },
   computedBestIVCellsOutOfRange: function (rows, outOfRanking, header, outOfRankingPrefixNotTraded, outOfRankingPrefixTraded, outOfRankingPrefixTradedBadLucky, outOfRankingPrefixAll) {
-    rows.push(header + (new Date()).mmdd() + "\t未交換\t數量\t已交換\t數量\t亮晶晶2*\t數量\t整理\t數量")
+    rows.push(header + (new Date()).mmdd() + "\t未交換\t數量\t已交換\t數量\t全部2*\t數量\t整理\t數量")
     
     let rowsToAdd = []
     for (let area in outOfRanking) {
