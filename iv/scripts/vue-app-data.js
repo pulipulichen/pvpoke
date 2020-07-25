@@ -35,7 +35,11 @@ var appData = {
     , 'beedrill', 'beedrill_shadow'
     , 'haunter'],
   exclude1500: [
-    'bellossom'
+    'ivysaur',
+    'hariyama',
+    'bellossom',
+    'tangrowth',
+    'gloom'
   ],
   include2500: ['dragonite', 'dragonite_shadow'
     , 'venusaur', 'venusaur_shadow'
@@ -59,7 +63,9 @@ var appData = {
     , 'flygon', 'flygon_shadow'
     , 'shiftry', 'shiftry_shadow'
     , 'gengar'],
-  exclude2500: [],
+  exclude2500: [
+    'hariyama'
+  ],
   evolutionFamily: {},
   evolutionFamilySort: {},
   lvStarDust: {},

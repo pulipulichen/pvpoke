@@ -253,7 +253,7 @@ var appComputed = {
     let outOfRankingPrefixTraded = "交換&!4*&!f&!p&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
     //let outOfRankingPrefixTradedBadLucky = "交換&2*&亮晶晶&!f&!p&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
     let outOfRankingPrefixAll = "!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
-    let outOfRankingPrefixNotTradedFilter = "!e&!t&!f&!c&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
+    let outOfRankingPrefixNotTradedFilter = "!e&!t&!f&!c&!w&!交換&!4*&距離0-10&!f&!p&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
     
     let header = '臺北(0-10)'
     this.computedBestIVCellsOutOfRange(rows, this.outOfRanking, header, outOfRankingPrefixNotTraded, outOfRankingPrefixTraded, outOfRankingPrefixAll, outOfRankingPrefixNotTradedFilter)
@@ -265,7 +265,7 @@ var appComputed = {
     let topRankingStarIncorrPrefixNotTraded = "!交換&距離0-10&!4*&!f&!p&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
     let topRankingStarIncorrPrefixTraded = "交換&!4*&!f&!p&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
     let topRankingStarIncorrPrefixTradedBadLucky = "交換&2*&亮晶晶&!f&!p&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
-    let topRankingStarIncorrPrefixNotTradedFilter = "!e&!t&!f&!c&!交換&距離0-10&!f&!p&!U&!G&!4*&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
+    let topRankingStarIncorrPrefixNotTradedFilter = "!e&!t&!f&!c&!w&!交換&距離0-10&!f&!p&!U&!G&!4*&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
     
     this.computedBestIVCellsStarMap(rows, starMap, topRankingStarIncorrPrefixNotTraded, topRankingStarIncorrPrefixTraded, topRankingStarIncorrPrefixTradedBadLucky, topRankingStarIncorrPrefixNotTradedFilter)
     
@@ -276,7 +276,7 @@ var appComputed = {
     let topRankingStarCorrAttPrefixNotTraded = "!交換&距離0-10&!4*&!f&!p&!U&!G&!異色&!暗影&!淨化&!傳說的寶可夢&!幻&"
     let topRankingStarCorrAttPrefixTraded = "交換&!4*&!f&!p&!U&!G&!異色&!暗影&!淨化&!傳說的寶可夢&!幻&"
     let topRankingStarCorrAttPrefixAllDistance = "!暗影&!淨化&!4*&!傳說的寶可夢&!幻&"
-    let topRankingStarCorrAttPrefixNotTradedFilter = "!e&!t&!f&!c&!交換&距離0-10&!f&!p&!U&!G&!4*&!異色&!暗影&!淨化&!傳說的寶可夢&!幻&"
+    let topRankingStarCorrAttPrefixNotTradedFilter = "!e&!t&!f&!c&!w&!交換&距離0-10&!f&!p&!U&!G&!4*&!異色&!暗影&!淨化&!傳說的寶可夢&!幻&"
     
     this.computedBestIVCellsAttMap(rows, attMap, topRankingStarCorrAttPrefixNotTraded, topRankingStarCorrAttPrefixTraded, topRankingStarCorrAttPrefixAllDistance, topRankingStarCorrAttPrefixNotTradedFilter)
     

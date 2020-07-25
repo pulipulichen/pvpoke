@@ -2869,7 +2869,8 @@
         "defaultIVs": {
             "cp1500": [23.5, 5, 12, 7],
             "cp2500": [40, 15, 15, 15]
-        }
+        },
+		"searchPriority": 2
     }, {
         "dex": 74,
         "speciesName": "Geodude",
@@ -12039,7 +12040,8 @@
         "defaultIVs": {
             "cp1500": [22, 5, 7, 11],
             "cp2500": [38.5, 13, 14, 14]
-        }
+        },
+		"searchPriority": 2
     }, {
         "dex": 480,
         "speciesName": "Uxie",
@@ -14818,7 +14820,7 @@
             "cp1500": [26, 7, 15, 6],
             "cp2500": [40, 15, 15, 15]
         },
-        "searchPriority": 10
+        "searchPriority": 20
     }, {
         "dex": 619,
         "speciesId": "mienfoo",
@@ -16434,7 +16436,46 @@
 		   },
 		   "level25CP": 1436,
 		   "tags": ["shadoweligible"]
-	   }],
+	   }, {
+           "dex": 382,
+           "speciesName": "Kyogre (Primal)",
+           "speciesId": "kyogre_primal",
+           "baseStats": {
+               "atk": 331,
+               "def": 251,
+               "hp": 205
+           },
+           "types": ["water", "none"],
+           "fastMoves": ["WATERFALL"],
+           "chargedMoves": ["BLIZZARD", "HYDRO_PUMP", "THUNDER", "SURF", "ORIGIN_PULSE"],
+           "tags": ["legendary"],
+           "defaultIVs": {
+               "cp1500": [10.5, 1, 13, 15],
+               "cp2500": [17.5, 1, 14, 14]
+           }
+       }, {
+           "dex": 382,
+		   "speciesName": "Groudon (Primal)",
+           "speciesId": "groudon_primal",
+		   "baseStats": {
+               "atk": 331,
+               "def": 251,
+               "hp": 205
+           },
+           "types": ["ground", "fire"],
+           "fastMoves": ["DRAGON_TAIL", "MUD_SHOT"],
+           "chargedMoves": ["EARTHQUAKE", "FIRE_BLAST", "SOLAR_BEAM", "FIRE_PUNCH", "PRECIPICE_BLADES"],
+           "tags": ["legendary"],
+           "defaultIVs": {
+               "cp1500": [13, 11, 15, 12],
+               "cp2500": [22.5, 5, 14, 6]
+           },
+           "eliteMoves": ["FIRE_PUNCH"],
+           "defaultIVs": {
+               "cp1500": [10.5, 1, 13, 15],
+               "cp2500": [17.5, 1, 14, 14]
+           }
+       }],
     "moves": [{
         "moveId": "ACID",
         "name": "Acid",
@@ -18250,11 +18291,11 @@
         "moveId": "V_CREATE",
         "name": "V-Create",
         "type": "fire",
-        "power": 100,
+        "power": 95,
         "energy": 40,
         "energyGain": 0,
         "cooldown": 500,
-        "buffs": [-3, -3],
+        "buffs": [0, -3],
         "buffTarget": "self",
         "buffApplyChance": "1"
     }, {
