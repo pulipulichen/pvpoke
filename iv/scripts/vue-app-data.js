@@ -32,7 +32,8 @@ var appData = {
     , 'prinplup' , 'empoleon'
     , 'flygon', 'flygon_shadow'
     , 'shiftry', 'shiftry_shadow'
-    , 'beedrill', 'beedrill_shadow'
+    //, 'beedrill' // 已有
+    , 'beedrill_shadow'
     , 'haunter'],
   exclude1500: [
     'ivysaur',

@@ -182,8 +182,8 @@ var appComputed = {
     // ----------------------------
     
     // 再轉換成以星級為主的列表
-    let areaStarDexMap = this.computedTopListBuildAreaStarDexMap(areaDexStarMap)
-    
+    //let areaStarDexMap = this.computedTopListBuildAreaStarDexMap(areaDexStarMap)
+    let areaStarDexMap = this.computedTopListBuildAreaStarReverseDexMap(areaDexStarMap)
     
     // ----------------------------
     
@@ -267,7 +267,8 @@ var appComputed = {
     let topRankingStarIncorrPrefixTradedBadLucky = "交換&2*&亮晶晶&!f&!p&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
     let topRankingStarIncorrPrefixNotTradedFilter = "!e&!t&!f&!c&!w&!交換&距離0-10&!f&!p&!U&!G&!4*&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
     
-    this.computedBestIVCellsStarMap(rows, starMap, topRankingStarIncorrPrefixNotTraded, topRankingStarIncorrPrefixTraded, topRankingStarIncorrPrefixTradedBadLucky, topRankingStarIncorrPrefixNotTradedFilter)
+    //this.computedBestIVCellsStarMap(rows, starMap, topRankingStarIncorrPrefixNotTraded, topRankingStarIncorrPrefixTraded, topRankingStarIncorrPrefixTradedBadLucky, topRankingStarIncorrPrefixNotTradedFilter)
+    this.computedBestIVCellsStarReverseMap(rows, starMap, topRankingStarIncorrPrefixNotTraded, topRankingStarIncorrPrefixTraded, topRankingStarIncorrPrefixTradedBadLucky, topRankingStarIncorrPrefixNotTradedFilter)
     
     // -------------------
     // 來處理排名內，符合星級，不過要注意Att是否相符的名單

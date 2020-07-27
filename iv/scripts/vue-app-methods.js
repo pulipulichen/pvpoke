@@ -1249,6 +1249,63 @@ var appMethods = {
     
     return areaStarDexMap
   },
+  computedTopListBuildAreaStarReverseDexMap: function (areaDexStarMap) {
+    let areaStarDexMap = {}
+    
+    let getReverseStars = (stars) => {
+      return ['0*', '1*', '2*', '3*'].filter(s => {
+        return (stars.indexOf(s) === -1)
+      })
+    }
+    
+    for (let area in areaDexStarMap) {
+      for (let dex in areaDexStarMap[area]) {
+        
+        let dexNumber = Number(dex)
+        getReverseStars(areaDexStarMap[area][dex]).forEach(starList => {
+          
+          if (!areaStarDexMap[area]) {
+            areaStarDexMap[area] = {}
+          }
+
+          if (Array.isArray(areaStarDexMap[area][starList]) === false) {
+            areaStarDexMap[area][starList] = []
+          }
+
+          if (areaStarDexMap[area][starList].indexOf(dexNumber) === -1) {
+            areaStarDexMap[area][starList].push(dexNumber)
+          }
+        })
+      } // for (let dex in areaDexStarMap[area]) {
+      
+      // 檢查是否有完全一樣的情況發生
+      let map = {}
+      Object.keys(areaStarDexMap[area]).forEach(starList => {
+        let baseMap = areaStarDexMap[area][starList]
+        let baseMapString = baseMap.join(',')
+        let matchStars = [starList]
+        
+        Object.keys(areaStarDexMap[area]).forEach(s => {
+          if (matchStars.indexOf(s) > -1) {
+            return false
+          }
+          
+          if (areaStarDexMap[area][s].join(',') === baseMapString) {
+            matchStars.push(s)
+          }
+        })
+        
+        let matchStarsString = matchStars.sort().join(',')
+        if (Array.isArray(map[matchStarsString]) === false) {
+          map[matchStarsString] = baseMap
+        }
+      })
+      
+      areaStarDexMap[area] = map
+    }
+    
+    return areaStarDexMap
+  },
   computedTopListBuildAreaAttDexMap: function (areaDexIVAttMap) {
     let areaAttDexMap = {}
     
@@ -1358,6 +1415,45 @@ var appMethods = {
     }
     
     this.computedBestIVCellsSortRowsByCount(rowsToAdd, rows)
+    rows.push("") // 空一行
+  },
+  computedBestIVCellsStarReverseMap: function (rows, starMap, topRankingStarIncorrPrefixNotTraded, topRankingStarIncorrPrefixTraded, topRankingStarIncorrPrefixTradedBadLucky, topRankingStarIncorrPrefixNotTradedFilter = '') {
+    
+    rows.push("排名內但星級不符\t未交換\t數量\t已交換\t數量\t亮晶晶2*\t數量\t整理\t數量")
+    
+    let rowsToAdd = []
+    
+    for (let area in starMap) {
+      Object.keys(starMap[area]).sort().forEach(starList => {
+        let dexList = starMap[area][starList]
+        let count = dexList.length
+        let countName = this.computedCountName(dexList)
+        let ivList = dexList.join(',') + "&日數0-"
+        
+        let areaQuery = this.computedAreaQuery(area)
+        let starExclusiveQuery = starList + '&'
+        
+        let cells = [
+          starList + " " + area,
+          starExclusiveQuery + areaQuery + topRankingStarIncorrPrefixNotTraded + ivList,
+          countName,
+          starExclusiveQuery + areaQuery + topRankingStarIncorrPrefixTraded + ivList,
+          countName,
+          starExclusiveQuery + areaQuery + topRankingStarIncorrPrefixTradedBadLucky + ivList,
+          countName,
+          starExclusiveQuery + areaQuery + topRankingStarIncorrPrefixNotTradedFilter + ivList,
+          countName,
+        ].join('\t')
+
+        //rowsToAdd.push({
+        //  count: count,
+        //  cells
+        //})
+        rows.push(cells)
+      })
+    }
+    
+    //this.computedBestIVCellsSortRowsByCount(rowsToAdd, rows)
     rows.push("") // 空一行
   },
   computedBestIVCellsAttMap: function (rows, attMap, topRankingStarCorrAttPrefixNotTraded, topRankingStarCorrAttPrefixTraded, topRankingStarCorrAttPrefixAllDistance, topRankingStarCorrAttPrefixNotTradedFilter = '') {
