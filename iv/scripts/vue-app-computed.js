@@ -74,14 +74,21 @@ var appComputed = {
     // 排序
     Object.keys(data).forEach((area) => {
       data[area].sort((a, b) => {
-        if (a.dex !== b.dex) {
-          return a.dex - b.dex
+        try {
+          if (a.dex !== b.dex) {
+            return a.dex - b.dex
+          }
+          else if (Array.isArray(a.tags) 
+                  && a.tags.indexOf('shadow') > -1) {
+            return 1
+          }
+          else {
+            return 0
+          }
         }
-        else if (a.tags.indexOf('shadow') > -1) {
-          return 1
-        }
-        else {
-          return 0
+        catch (e) {
+          console.error(a)
+          console.error(e)
         }
       })
     })

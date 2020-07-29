@@ -25,6 +25,11 @@
 		"chargedMoves":["CROSS_CHOP","ROCK_SLIDE"]
 	},
 	{
+		"speciesId":"machamp_shadow",
+		"fastMove":"COUNTER",
+		"chargedMoves":["CROSS_CHOP","ROCK_SLIDE"]
+	},
+	{
 		"speciesId":"typhlosion",
 		"fastMove":"SHADOW_CLAW",
 		"chargedMoves":["BLAST_BURN","SOLAR_BEAM"]
@@ -127,7 +132,7 @@
 	{
 		"speciesId":"empoleon",
 		"fastMove":"WATERFALL",
-		"chargedMoves":["HYDRO_CANNON","BLIZZARD"]
+		"chargedMoves":["HYDRO_CANNON","DRILL_PECK"]
 	},
 	{
 		"speciesId":"feraligatr",
@@ -158,5 +163,20 @@
 		"speciesId":"scizor",
 		"fastMove":"BULLET_PUNCH",
 		"chargedMoves":["NIGHT_SLASH","IRON_HEAD"]
+	},
+	{
+		"speciesId":"abomasnow_shadow",
+		"fastMove":"POWDER_SNOW",
+		"chargedMoves":["WEATHER_BALL_ICE","ENERGY_BALL"]
+	},
+	{
+		"speciesId":"abomasnow",
+		"fastMove":"POWDER_SNOW",
+		"chargedMoves":["WEATHER_BALL_ICE","ENERGY_BALL"]
+	},
+	{
+		"speciesId":"drifblim",
+		"fastMove":"HEX",
+		"chargedMoves":["ICY_WIND","SHADOW_BALL"]
 	}
 ]
