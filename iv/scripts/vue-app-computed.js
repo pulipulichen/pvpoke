@@ -168,7 +168,8 @@ var appComputed = {
     
     Object.keys(this.top1500).forEach(area => {
       this.top1500[area].forEach(pokemon => {
-        let iv = pokemon.gIV.slice(0,2)
+        //let iv = pokemon.gIV.slice(0,2)
+        let iv = pokemon.gIV
         let star = pokemon.gStar
         let dex = pokemon.dex
         this.computedTopListAddDex(area, dex, star, iv, areaDexStarMap, areaDexIVAttMap)
@@ -177,7 +178,8 @@ var appComputed = {
     
     Object.keys(this.top2500).forEach(area => {
       this.top2500[area].forEach(pokemon => {
-        let iv = pokemon.uIV.slice(0,2)
+        //let iv = pokemon.uIV.slice(0,2)
+        let iv = pokemon.uIV
         let star = pokemon.uStar
         let dex = pokemon.dex
         this.computedTopListAddDex(area, dex, star, iv, areaDexStarMap, areaDexIVAttMap)
@@ -256,23 +258,24 @@ var appComputed = {
     let rows = []
     
     // 先處理要移除的全部
-    let outOfRankingPrefixNotTraded = "!交換&!4*&距離0-10&!f&!p&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
+    let outOfRankingPrefixNotTraded = "!交換&!4*&距離" + this.distanceBase + "&!f&!p&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
     let outOfRankingPrefixTraded = "交換&!4*&!f&!p&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
     //let outOfRankingPrefixTradedBadLucky = "交換&2*&亮晶晶&!f&!p&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
-    let outOfRankingPrefixAll = "!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
-    let outOfRankingPrefixNotTradedFilter = "!e&!t&!f&!c&!w&!交換&!4*&距離0-10&!f&!p&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
+    //let outOfRankingPrefixAll = "!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
+    let outOfRankingPrefixAll = "!暗影&!淨化&!傳說的寶可夢&!幻&!異色&!e&!w&!c&"
+    let outOfRankingPrefixNotTradedFilter = "!e&!t&!f&!c&!w&!交換&!4*&距離" + this.distanceBase + "&!f&!p&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
     
-    let header = '臺北(0-10)'
+    let header = "臺北(" + this.distanceBase + ")"
     this.computedBestIVCellsOutOfRange(rows, this.outOfRanking, header, outOfRankingPrefixNotTraded, outOfRankingPrefixTraded, outOfRankingPrefixAll, outOfRankingPrefixNotTradedFilter)
     
     // ----------------------
     // 來處理排名內，但不在星級內的名單
     
     let starMap = this.topList.star
-    let topRankingStarIncorrPrefixNotTraded = "!交換&距離0-10&!4*&!f&!p&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
+    let topRankingStarIncorrPrefixNotTraded = "!交換&距離" + this.distanceBase + "&!4*&!f&!p&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
     let topRankingStarIncorrPrefixTraded = "交換&!4*&!f&!p&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
     let topRankingStarIncorrPrefixTradedBadLucky = "交換&2*&亮晶晶&!f&!p&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
-    let topRankingStarIncorrPrefixNotTradedFilter = "!e&!t&!f&!c&!w&!交換&距離0-10&!f&!p&!U&!G&!4*&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
+    let topRankingStarIncorrPrefixNotTradedFilter = "!e&!t&!f&!c&!w&!交換&距離" + this.distanceBase + "&!f&!p&!U&!G&!4*&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
     
     //this.computedBestIVCellsStarMap(rows, starMap, topRankingStarIncorrPrefixNotTraded, topRankingStarIncorrPrefixTraded, topRankingStarIncorrPrefixTradedBadLucky, topRankingStarIncorrPrefixNotTradedFilter)
     this.computedBestIVCellsStarReverseMap(rows, starMap, topRankingStarIncorrPrefixNotTraded, topRankingStarIncorrPrefixTraded, topRankingStarIncorrPrefixTradedBadLucky, topRankingStarIncorrPrefixNotTradedFilter)
@@ -281,30 +284,46 @@ var appComputed = {
     // 來處理排名內，符合星級，不過要注意Att是否相符的名單
     
     let attMap = this.topList.att
-    let topRankingStarCorrAttPrefixNotTraded = "!交換&距離0-10&!4*&!f&!p&!U&!G&!異色&!暗影&!淨化&!傳說的寶可夢&!幻&"
+    let topRankingStarCorrAttPrefixNotTraded = "!交換&距離" + this.distanceBase + "&!4*&!f&!p&!U&!G&!異色&!暗影&!淨化&!傳說的寶可夢&!幻&"
     let topRankingStarCorrAttPrefixTraded = "交換&!4*&!f&!p&!U&!G&!異色&!暗影&!淨化&!傳說的寶可夢&!幻&"
     let topRankingStarCorrAttPrefixAllDistance = "!暗影&!淨化&!4*&!傳說的寶可夢&!幻&"
-    let topRankingStarCorrAttPrefixNotTradedFilter = "!e&!t&!f&!c&!w&!交換&距離0-10&!f&!p&!U&!G&!4*&!異色&!暗影&!淨化&!傳說的寶可夢&!幻&"
+    let topRankingStarCorrAttPrefixNotTradedFilter = "!e&!t&!f&!c&!w&!交換&距離" + this.distanceBase + "&!f&!p&!U&!G&!4*&!異色&!暗影&!淨化&!傳說的寶可夢&!幻&"
     
     this.computedBestIVCellsAttMap(rows, attMap, topRankingStarCorrAttPrefixNotTraded, topRankingStarCorrAttPrefixTraded, topRankingStarCorrAttPrefixAllDistance, topRankingStarCorrAttPrefixNotTradedFilter)
     
-    rows.push([])
+    //rows.push('-\t-\t-\t-\t-\t-\t-\t-\t-\t-')
+    this.insertRowHr(rows)
     // -----------------
     
-    this.computedBestIVCellsAll(rows, attMap, topRankingStarCorrAttPrefixNotTraded, topRankingStarCorrAttPrefixTraded, topRankingStarCorrAttPrefixAllDistance)
+    let allNotTraded = "!交換&距離" + this.distanceBase + "&!4*&!f&!p&!U&!G&!異色&!暗影&!淨化&!傳說的寶可夢&!幻&"
+    let allTraded = "交換&!4*&!f&!p&!U&!G&!異色&!暗影&!淨化&!傳說的寶可夢&!幻&"
+    //let allAllDistance = "!暗影&!淨化&!4*&!傳說的寶可夢&!幻&" // 不可以加上「&!t&!e&!w&!c&」，因為這會讓交換之後的寶可夢無法納入判斷
+    let allAllDistance = "!暗影&!淨化&!4*&!傳說的寶可夢&!幻&!e&!w&!c&" // 不可以加上「&!t&!e&!w&!c&」，因為這會讓交換之後的寶可夢無法納入判斷
+    let allNotTradedFilter = "!e&!t&!f&!c&!w&!交換&距離" + this.distanceBase + "&!f&!p&!U&!G&!4*&!異色&!暗影&!淨化&!傳說的寶可夢&!幻&"
+    
+    this.computedBestIVCellsAll(rows, attMap, allNotTraded, allTraded, allAllDistance, allNotTradedFilter)
+    this.insertRowHr(rows)
+    
+    // -------------------
+    
+    let topAll = "!暗影&!淨化&!傳說的寶可夢&!幻&!e&!w&!c&" // 不可以加上「&!t&!e&!w&!c&」，因為這會讓交換之後的寶可夢無法納入判斷
+    this.computedQueryNotTopAreaAll(rows, attMap, topAll)
+    
+    // -------------------
     
     for (let i = 0; i < 10; i++) {
-      rows.push('-\t-\t-\t-\t-\t-\t-')
+      //rows.push('-\t-\t-\t-\t-\t-\t-\t-\t-\t-')
+      this.insertRowHr(rows)
     }
     
     //console.log('計算完畢', rows)
     return rows.join("\n")
   },
   bestIVCellsTainan: function () {
-    return this.bestIVCells.split('&距離0-10').join('&距離200-300')
+    return this.bestIVCells.split('&距離' + this.distanceBase).join('&距離200-300')
   },
   bestIVCellsTaichung: function () {
-    return this.bestIVCells.split('&距離0-10').join('&距離100-200')
+    return this.bestIVCells.split('&距離' + this.distanceBase).join('&距離100-200')
   },
   bestIVShadowCells: function () {
     if (this.ready === false) {
@@ -345,13 +364,16 @@ var appComputed = {
     this.computedBestIVCellsAttMap(rows, attMap, topRankingStarCorrAttPrefixNotTraded, topRankingStarCorrAttPrefixTraded, topRankingStarCorrAttPrefixAllDistance)
     
     for (let i = 0; i < 10; i++) {
-      rows.push('-\t-\t-\t-\t-\t-\t-')
+      rows.push('-\t-\t-\t-\t-\t-\t-\t-\t-\t-')
     }
     
     //console.log('計算完畢', rows)
     return rows.join("\n")
   },
   bestIVAll () {
+    if (this.ivTableProgress !== null) {
+      return this.ivTableProgress
+    }
     if (typeof(this.bestIVCSV) === 'string') {
       let result = this.bestIVCSV.replace(new RegExp(",","gm"), "\t")
       //console.log(result)

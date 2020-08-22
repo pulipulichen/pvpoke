@@ -4,9 +4,13 @@ var appData = {
   battle: null,
   //message: 'hello',
   bestIVCSV: null,
+  featureEnable: {
+    allData: true
+  },
   pokemonNameTW: {},
   pokemonName: {},
   dexToID: {},
+  distanceBase: '0-8',
   topLimit: 100,
   area: ['normal', 'alolan', 'galarian'],
   //top1500: [],
@@ -14,16 +18,18 @@ var appData = {
   rankings1500: [],
   rankings2500: [],
   
+  // 編號
   // 社群日的 https://pokemongo.fandom.com/wiki/Community_Day
   // 御三家的 
   include1500: ['raichu', 'dragonair', 'dragonair_shadow', 'dragonite_shadow'
     , 'ivysaur', 'ivysaur_shadow', 'venusaur', 'venusaur_shadow'
-    , 'charizard', 'charizard_shadow'
+    //, 'charizard', 'charizard_shadow'
     , 'blastoise', 'blastoise_shadow'
     , 'umbreon'
     , 'meganium'
     , 'typhlosion'
-    , 'sceptile'
+    , 'muk_alolan'
+    //, 'sceptile'
     , 'blaziken'
     , 'vigoroth'
     , 'marshtomp', 'marshtomp_shadow', 'swampert', 'swampert_shadow'
@@ -32,15 +38,22 @@ var appData = {
     , 'prinplup' , 'empoleon'
     , 'flygon', 'flygon_shadow'
     , 'shiftry', 'shiftry_shadow'
+    , 'cherrim_sunny'
+    , 'hypno'
+    , 'gengar'
+    , 'marowak_alolan'
     //, 'beedrill' // 已有
     , 'beedrill_shadow'
-    , 'haunter'],
+    //, 'haunter' // 鬼斯通已經輸給耿鬼
+  ],
   exclude1500: [
     'ivysaur',
     'hariyama',
     'bellossom',
     'tangrowth',
-    'gloom'
+    'vileplume',
+    'torterra',
+    'altaria'
   ],
   include2500: ['dragonite', 'dragonite_shadow'
     , 'venusaur', 'venusaur_shadow'
@@ -63,7 +76,10 @@ var appData = {
     , 'empoleon'
     , 'flygon', 'flygon_shadow'
     , 'shiftry', 'shiftry_shadow'
-    , 'gengar'],
+    , 'gengar'
+    , 'emboar'
+    , 'samurott'
+  ],
   exclude2500: [
     'hariyama'
   ],
@@ -82,6 +98,8 @@ var appData = {
   queryATK: 0,
   queryDEF: 0,
   queryHP: 0,
+  ivTableProgress: null,
+  areaGroupDex: {},
   //gIncludeSpeciesID: ["raichu_alolan", "raichu"],
   //uIncludeSpeciesID: [],
   //gExcludeSpeciesID: [],
