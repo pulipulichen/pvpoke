@@ -75,10 +75,12 @@ var appMethodsUtils = {
   },
   calcGStar: function (pokemon) {
     //console.log(pokemon.defaultIVs.cp1500.slice(1))
-    return this.calcStar(pokemon.defaultIVs.cp1500.slice(1))
+    //return this.calcStar(pokemon.defaultIVs.cp1500.slice(1))
+    return this.calcStar(pokemon.gIV)
   },
   calcUStar: function (pokemon) {
-    return this.calcStar(pokemon.defaultIVs.cp2500.slice(1))
+    //return this.calcStar(pokemon.defaultIVs.cp2500.slice(1))
+    return this.calcStar(pokemon.uIV)
   },
   isTopIncludable: function (pokemon) {
     let isShadow = false
@@ -99,6 +101,28 @@ var appMethodsUtils = {
     return (
               ((gStar !== '4*') // 1500不是100%
               || (uStar !== '4*'))
+              && (isShadow === false)
+              && (isSpecial === false)
+              )
+  },
+  isTopMaxIncludable: function (pokemon) {
+    let isShadow = false
+    let isSpecial = false
+    if (Array.isArray(pokemon.tags)) {
+      isShadow = (pokemon.tags.indexOf('shadow') > -1)
+      isSpecial = (pokemon.tags.indexOf('legendary') > -1
+              || pokemon.tags.indexOf('untradeable') > -1
+              || pokemon.tags.indexOf('mythical') > -1)
+    }
+    else {
+      //console.log(pokemon, '沒有tags?')
+    }
+
+    let gStar = this.calcGStar(pokemon)
+    let uStar = this.calcUStar(pokemon)
+    
+    return (((gStar === '4*') // 1500不是100%
+              && (uStar === '4*'))
               && (isShadow === false)
               && (isSpecial === false)
               )

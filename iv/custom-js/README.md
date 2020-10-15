@@ -1,0 +1,1 @@
+https://pvpoketw.com/team-builder/*

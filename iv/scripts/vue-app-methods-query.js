@@ -1,12 +1,6 @@
 /* global postMessageAPI, XLSX, GameMaster */
 
 var appMethodsQuery = {
-  
-  
-  
-  
-  
-  
   computedBuildTopPokemons: function (sourceRankings, cp) {
     if (this.ready === false) {
       return {}
@@ -24,6 +18,11 @@ var appMethodsQuery = {
       
       let p = this.speciesIdToData[speciesId]
       
+      if (!p) {
+        throw new Error('SpeciesID is not found: ' + speciesId + '.\n' 
+                + ' Please update /src/data/gamemaster.json with https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json')
+      }
+      
       if (p.topIncludable === false) {
         count++
         return true
@@ -34,7 +33,8 @@ var appMethodsQuery = {
         return true
       }
       else {
-        let iv = p.defaultIVs[cp]
+        //let iv = p.defaultIVs[cp]
+        let iv = this.getIV(cp, speciesId)
         if (iv[1] === 15 
                 && iv[2] === 15 
                 && iv[3] === 15) {
@@ -101,8 +101,7 @@ var appMethodsQuery = {
       return {}
     }
     
-    let ranking = {
-    }
+    let ranking = {}
     
     let count = 0
     
@@ -111,7 +110,8 @@ var appMethodsQuery = {
       
       if (p.isShadow && p.isNotSpecial) {
 
-        let iv = p.defaultIVs[cp]
+        //let iv = p.defaultIVs[cp]
+        let iv = this.getIV(cp, speciesId)
         if (iv[1] === 15 
                 && iv[2] === 15 
                 && iv[3] === 15) {
@@ -153,7 +153,8 @@ var appMethodsQuery = {
         addRanking(speciesId)
       }
       else {
-        let iv = p.defaultIVs[cp]
+        //let iv = p.defaultIVs[cp]
+        let iv = this.getIV(cp, speciesId)
         if (iv[1] === 15 
                 && iv[2] === 15 
                 && iv[3] === 15) {
@@ -182,6 +183,9 @@ var appMethodsQuery = {
     return ranking
   },
   computedOutOfRankingAddDex: function (a, top, exclusiveList) {
+    if (!top) {
+      return false
+    }
     top.forEach(pokemon => {
       // 確認pokemon的family
       let dex = pokemon.dex
@@ -415,7 +419,7 @@ var appMethodsQuery = {
           }
           
           if (hpList === '') {
-            throw new Error('hpList is empty')
+            throw new Error('hpList is empty.' + ' ' + area + ' ' + att)
           }
           
           return att + '/' + hpList
@@ -435,6 +439,30 @@ var appMethodsQuery = {
       rows.push(i + ":" + row.cells)
     })
   },
+  computedBestIVCellsSortRowsByAreaCount: function (rowsToAdd, rows) {
+    rowsToAdd.sort((a, b) => {
+      if (a.area === b.area) {
+        return b.count - a.count
+      }
+      else {
+        if (a.area === 'normal') {
+          return 1
+        }
+        else if (b.area === 'normal') {
+          return -1
+        }
+        else if (a.area === 'alolan') {
+          return 1
+        }
+        else if (b.area === 'alolan') {
+          return -1
+        }
+      }
+    }).forEach((row, i) => {
+      i = i % 6
+      rows.push(i + ":" + row.cells)
+    })
+  },
   computedBestIVCellsOutOfRange: function (rows, outOfRanking, header, outOfRankingPrefixNotTraded, outOfRankingPrefixTraded, outOfRankingPrefixTradedBadLucky, outOfRankingPrefixAll) {
     rows.push(header + (new Date()).mmdd() + "\t未交換\t數量\t已交換\t數量\t全部\t數量\t整理\t數量")
     
@@ -443,11 +471,53 @@ var appMethodsQuery = {
       let dexList = outOfRanking[area]
       //console.log(dexList.slice(0,3))
       if (Array.isArray(dexList) === false) {
-        throw "dexList is not array"
+        throw new Error("dexList is not array")
       }
       let count = dexList.length
       let countName = this.computedCountName(dexList)
       let ivList = dexList.map(dex => '!' + dex).join('&') + "&日數0-"
+      let areaQuery = this.computedAreaQuery(area)
+      
+      let cells = [
+        area,
+        areaQuery + outOfRankingPrefixNotTraded + ivList,
+        countName,
+        areaQuery + outOfRankingPrefixTraded + ivList,
+        countName,
+        areaQuery + outOfRankingPrefixTradedBadLucky + ivList,
+        countName,
+        areaQuery + outOfRankingPrefixAll + ivList,
+        countName,
+      ].join('\t')
+      
+      rowsToAdd.push({
+        count: count,
+        cells
+      })
+    }
+    
+    rowsToAdd.sort((a, b) => {
+      return b.count - a.count
+    }).forEach(row => {
+      rows.push(row.cells)
+    })
+    
+    //rows.push("") // 空一行
+    this.insertRowHr(rows)
+  },
+  computedBestIVCellsTopRankMax: function (rows,outOfRanking,  header, outOfRankingPrefixNotTraded, outOfRankingPrefixTraded, outOfRankingPrefixTradedBadLucky, outOfRankingPrefixAll) {
+    rows.push(header + "\t未交換\t數量\t已交換\t數量\t全部\t數量\t整理\t數量")
+    
+    let rowsToAdd = []
+    for (let area in outOfRanking) {
+      let dexList = outOfRanking[area]
+      //console.log(dexList.slice(0,3))
+      if (Array.isArray(dexList) === false) {
+        throw new Error("dexList is not array")
+      }
+      let count = dexList.length
+      let countName = this.computedCountName(dexList)
+      let ivList = dexList.join(',') + "&日數0-"
       let areaQuery = this.computedAreaQuery(area)
       
       let cells = [
@@ -510,6 +580,7 @@ var appMethodsQuery = {
 
         rowsToAdd.push({
           count: count,
+          area,
           cells
         })
       })
@@ -589,12 +660,13 @@ var appMethodsQuery = {
 
         rowsToAdd.push({
           count: count,
+          area,
           cells
         })
       })
     }
     
-    this.computedBestIVCellsSortRowsByCount(rowsToAdd, rows)
+    this.computedBestIVCellsSortRowsByAreaCount(rowsToAdd, rows)
     
   },
   
@@ -631,6 +703,7 @@ var appMethodsQuery = {
 
       rowsToAdd.push({
         count: allCount,
+        area,
         cells
       })
     }

@@ -7,6 +7,8 @@ var appData = {
   featureEnable: {
     allData: true
   },
+  iv1500: {},
+  iv2500: {},
   pokemonNameTW: {},
   pokemonName: {},
   dexToID: {},
@@ -42,6 +44,7 @@ var appData = {
     , 'hypno'
     , 'gengar'
     , 'marowak_alolan'
+    , 'toxicroak'
     //, 'beedrill' // 已有
     , 'beedrill_shadow'
     //, 'haunter' // 鬼斯通已經輸給耿鬼

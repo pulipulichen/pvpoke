@@ -3,6 +3,7 @@
 var appMethods = {
           ...appMethodsUtils,
           ...appMethodsQuery,
+          ...appMethodsRank,
           ...appMethodsInit,
           ...appMethodsIV,
           ...appMethodsUI,

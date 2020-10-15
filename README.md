@@ -1,8 +1,13 @@
 替換資料：
-last update: 2020/9/5
+last update: 2020/10/13
 
-1. 注意data的更新時間：https://github.com/pvpoke/pvpoke/tree/master/src/data/all/overall
-2. 下載檔案 https://github.com/pvpoke/pvpoke/archive/master.zip
+1. 注意data的更新時間：
+https://github.com/pvpoke/pvpoke/tree/master/src/data/rankings/all/overall
+
+2. 下載複製內容
+https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/rankings/all/overall/rankings-1500.json
+https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/rankings/all/overall/rankings-2500.json
+
 3. 取得 src/data
 4. 替換本機端目錄的 src/data
 5. 取得中文的對照表 https://pvpoketw.com/data/gamemaster.json

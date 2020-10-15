@@ -37,6 +37,12 @@ var appComputed = {
   top2500: function () {
     return this.computedBuildTopPokemons(this.rankings2500, "cp2500")
   },
+  top1500max: function () {
+    return this.computedBuildTopMaxPokemons(this.rankings1500, "cp1500")
+  },
+  top2500max: function () {
+    return this.computedBuildTopMaxPokemons(this.rankings2500, "cp2500")
+  },
   top1500Shadow: function () {
     return this.computedBuildTopShadowPokemons(this.rankings1500, "cp1500")
   },
@@ -125,6 +131,35 @@ var appComputed = {
     })
     Object.keys(this.top2500).forEach((area) => {
       this.computedOutOfRankingAddDex(area, this.top2500[area], exclusiveList)
+    })
+    
+    Object.keys(this.top1500max).forEach((area) => {
+      this.computedOutOfRankingAddDex(area, this.top1500max[area], exclusiveList)
+    })
+    Object.keys(this.top2500max).forEach((area) => {
+      this.computedOutOfRankingAddDex(area, this.top1500max[area], exclusiveList)
+    })
+    
+    Object.keys(exclusiveList).forEach(a => {
+      exclusiveList[a].sort((a, b) => {
+        return Number(a) - Number(b)
+      })
+    })
+    
+    return exclusiveList
+  },
+  topRankingMax: function () {
+    if (this.ready === false) {
+      return {}
+    }
+    
+    let exclusiveList = {}
+    
+    Object.keys(this.top1500max).forEach((area) => {
+      this.computedOutOfRankingAddDex(area, this.top1500max[area], exclusiveList)
+    })
+    Object.keys(this.top2500max).forEach((area) => {
+      this.computedOutOfRankingAddDex(area, this.top1500max[area], exclusiveList)
     })
     
     Object.keys(exclusiveList).forEach(a => {
@@ -267,6 +302,17 @@ var appComputed = {
     
     let header = "臺北(" + this.distanceBase + ")"
     this.computedBestIVCellsOutOfRange(rows, this.outOfRanking, header, outOfRankingPrefixNotTraded, outOfRankingPrefixTraded, outOfRankingPrefixAll, outOfRankingPrefixNotTradedFilter)
+    
+    // ----------------------
+    // 來處理排名內，100%的
+    
+    let topRankMaxStar012NotTraded = outOfRankingPrefixNotTraded.split('&!4*&').join('&!3*&!4*&')
+    let topRankMaxStar012Traded = outOfRankingPrefixTraded.split('&!4*&').join('&!3*&!4*&')
+    let topRankMaxStar012All = outOfRankingPrefixAll.split('&!4*&').join('&!3*&!4*&')
+    let topRankMaxStar012NotTradedFilter = outOfRankingPrefixNotTradedFilter.split('&!4*&').join('&!3*&!4*&')
+    this.computedBestIVCellsTopRankMax(rows, this.topRankingMax, '排名100% 0*-2*', topRankMaxStar012NotTraded, topRankMaxStar012Traded, topRankMaxStar012All, topRankMaxStar012NotTradedFilter)
+    
+    this.computedBestIVCellsTopRankMax(rows, this.topRankingMax, '排名100% !4*', outOfRankingPrefixNotTraded, outOfRankingPrefixTraded, outOfRankingPrefixAll, outOfRankingPrefixNotTradedFilter)
     
     // ----------------------
     // 來處理排名內，但不在星級內的名單

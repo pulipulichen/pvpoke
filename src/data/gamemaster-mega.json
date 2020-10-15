@@ -46,7 +46,8 @@
         "name": "gobattleleague",
         "title": "GO Battle League",
         "include": [],
-        "exclude": []
+        "exclude": [],
+		"partySize": 3
     }, {
         "name": "boulder",
         "title": "Boulder Cup",
@@ -336,7 +337,8 @@
         "exclude": [{
             "filterType": "tag",
             "values": ["legendary", "mythical", "mega"]
-        }]
+        }],
+		"partySize": 3
     }, {
         "name": "grunt",
         "title": "Grunt Cup",
@@ -480,7 +482,8 @@
             "filterType": "type",
             "values": ["flying"]
         }],
-        "exclude": []
+        "exclude": [],
+		"partySize": 3
     },
 	{
 		"name": "halloween",
@@ -489,7 +492,26 @@
 			"filterType": "type",
 			"values": ["poison","ghost","bug","dark","fairy"]
 		}],
-		"exclude": []
+		"exclude": [],
+		"partySize": 3
+	}, {
+	    "name": "circus",
+	    "title": "Circus Cup",
+		"link": "https://silph.gg/players-choice-finalists",
+	    "include": [{
+	        "filterType": "type",
+	        "name": "Type",
+	        "values": ["fighting", "fire", "flying", "poison", "psychic"]
+	    }],
+	    "exclude": [{
+	        "filterType": "tag",
+	        "name": "Tag",
+	        "values": ["legendary", "mythical", "alolan"]
+	    }, {
+	        "filterType": "id",
+	        "name": "Species",
+	        "values": ["altaria"]
+	    }]
 	}],
     "pokemonTags": ["legendary", "mythical", "alolan", "galarian", "starter", "regional", "shadow", "shadoweligible", "untradeable", "mega"],
     "pokemonRegions": [{
@@ -519,7 +541,7 @@
         "dexEnd": 649
     }],
     "shadowPokemon": ["bulbasaur", "ivysaur", "venusaur", "venusaur_mega", "charmander", "charmeleon", "charizard", "charizard_mega_x", "charizard_mega_y", "squirtle", "wartortle", "blastoise", "weedle", "kakuna", "beedrill", "beedrill_mega", "rattata", "raticate", "zubat", "golbat", "oddish", "gloom", "vileplume", "venonat", "venomoth", "meowth", "persian", "psyduck", "golduck", "growlithe", "arcanine", "poliwag", "poliwhirl", "poliwrath", "abra", "kadabra", "alakazam", "alakazam_mega", "grimer", "muk", "drowzee", "hypno", "cubone", "marowak", "hitmonchan", "scyther", "electabuzz", "magmar", "magikarp", "gyarados", "gyarados_mega", "lapras", "snorlax", "dratini", "dragonair", "dragonite", "crobat", "mareep", "flaaffy", "ampharos", "ampharos_mega", "bellossom", "politoed", "scizor", "scizor_mega", "houndour", "houndoom", "houndoom_mega", "larvitar", "pupitar", "tyranitar", "tyranitar_mega", "mudkip", "marshtomp", "swampert", "swampert_mega", "seedot", "nuzleaf", "shiftry", "ralts", "kirlia", "gardevoir", "gardevoir_mega", "trapinch", "vibrava", "flygon", "cacnea", "cacturne", "shuppet", "banette", "banette_mega", "duskull", "dusclops", "turtwig", "grotle", "torterra", "electivire", "magmortar", "gallade", "gallade_mega", "dusknoir", "magnemite", "magneton", "magnezone", "bellsprout", "weepinbell", "victreebel", "sandshrew", "sandslash", "porygon", "porygon2", "porygon_z", "wobbuffet", "meowth", "persian", "hitmonlee", "articuno", "sneasel", "weavile", "sableye", "sableye_mega", "zapdos", "moltres", "delibird", "stantler", "absol", "bagon", "shelgon", "salamence", "salamence_mega", "snover", "abomasnow", "abomasnow_mega", "raikou", "vulpix", "ninetales", "exeggcute", "exeggutor", "omanyte", "omastar", "misdreavus", "mismagius", "carvanha", "sharpedo", "sharpedo_mega", "pinsir", "pinsir_mega", "mawile", "mawile_mega", "beldum", "metang", "metagross", "metagross_mega", "entei", "ekans", "arbok", "koffing", "weezing", "nidoran_female", "nidorina", "nidoran_male", "nidorino", "nidoqueen", "nidoking", "machop", "machoke", "machamp", "gligar", "gliscor", "shuckle", "stunky", "skuntank", "suicune", "pineco", "forretress", "mewtwo", "mewtwo_mega_x", "mewtwo_mega_y"],
-    "cliffhangerTiers": [{
+	"cliffhangerTiers": [{
         "league": 1500,
         "max": 17,
         "tiers": [{
@@ -527,10 +549,10 @@
             "pokemon": ["altaria", "azumarill", "skarmory", "deoxys_defense", "registeel", "stunfisk_galarian", "tropius"]
         }, {
             "points": 5,
-            "pokemon": ["bastiodon", "bronzong", "cresselia", "ferrothorn", "hypno", "ivysaur", "jirachi", "marowak_alolan", "medicham", "meganium", "melmetal", "probopass", "regirock", "sableye", "scrafty", "swampert", "umbreon", "venusaur", "zweilous", "abomasnow"]
+            "pokemon": ["abomasnow", "bastiodon", "bronzong", "cresselia", "ferrothorn", "hypno", "ivysaur", "jirachi", "marowak_alolan", "medicham", "meganium", "melmetal", "probopass", "regirock", "sableye", "scrafty", "swampert", "umbreon", "venusaur", "zweilous"]
         }, {
             "points": 1,
-            "pokemon": ["cherrim_sunny", "clefable", "dewgong", "gardevoir", "golbat", "haunter", "jumpluff", "lanturn", "lapras", "lugia", "mantine", "mew", "muk_alolan", "noctowl", "obstagoon", "raichu", "raichu_alolan", "raikou", "shiftry", "stunfisk", "togekiss", "toxicroak", "uxie", "victreebel", "vigoroth", "whiscash", "wigglytuff", "zapdos", "drifblim", "froslass", "empoleon", "gengar", "machamp", "regice"]
+            "pokemon": ["cherrim_sunny", "clefable", "dewgong", "drifblim", "empoleon", "froslass", "gardevoir", "gengar", "golbat", "haunter", "jumpluff", "lanturn", "lapras", "lugia", "machamp", "mantine", "mew", "muk_alolan", "noctowl", "obstagoon", "pelipper", "raichu", "raichu_alolan", "raikou", "regice", "shiftry", "stunfisk", "togekiss", "toxicroak", "uxie", "victreebel", "vigoroth", "whiscash", "wigglytuff", "zapdos"]
         }]
     }],
     "pokemon": [{
@@ -5292,7 +5314,6 @@
         "types": ["normal", "none"],
         "fastMoves": ["QUICK_ATTACK", "SCRATCH"],
         "chargedMoves": ["BRICK_BREAK", "DIG", "GRASS_KNOT"],
-        "tags": ["starter"],
         "defaultIVs": {
             "cp1500": [40, 15, 15, 15],
             "cp2500": [40, 15, 15, 15]
@@ -7982,7 +8003,7 @@
         },
         "types": ["bug", "flying"],
         "fastMoves": ["AIR_SLASH", "INFESTATION"],
-        "chargedMoves": ["AIR_CUTTER", "OMINOUS_WIND", "SILVER_WIND", "BUBBLE_BEAM"],
+        "chargedMoves": ["AIR_CUTTER", "OMINOUS_WIND", "SILVER_WIND", "BUBBLE_BEAM", "LUNGE"],
         "defaultIVs": {
             "cp1500": [25, 5, 7, 13],
             "cp2500": [40, 15, 15, 15]
@@ -10755,7 +10776,7 @@
         },
         "types": ["bug", "flying"],
         "fastMoves": ["BUG_BITE", "POISON_STING", "FURY_CUTTER", "AIR_SLASH"],
-        "chargedMoves": ["BUG_BUZZ", "POWER_GEM", "X_SCISSOR", "FELL_STINGER"],
+        "chargedMoves": ["BUG_BUZZ", "POWER_GEM", "X_SCISSOR", "FELL_STINGER", "SIGNAL_BEAM"],
         "defaultIVs": {
             "cp1500": [28.5, 6, 11, 8],
             "cp2500": [40, 15, 15, 15]
@@ -14578,7 +14599,7 @@
         },
         "types": ["bug", "electric"],
         "fastMoves": ["VOLT_SWITCH", "FURY_CUTTER"],
-        "chargedMoves": ["CROSS_POISON", "BUG_BUZZ", "DISCHARGE", "ENERGY_BALL"],
+        "chargedMoves": ["CROSS_POISON", "BUG_BUZZ", "DISCHARGE", "ENERGY_BALL", "LUNGE"],
         "defaultIVs": {
             "cp1500": [25, 6, 14, 11],
             "cp2500": [40, 15, 15, 15]
@@ -16825,7 +16846,10 @@
            "power": 90,
            "energy": 60,
            "energyGain": 0,
-           "cooldown": 500
+           "cooldown": 500,
+   		"buffs": [0, -1],
+           "buffTarget": "opponent",
+           "buffApplyChance": ".3"
        }, {
            "moveId": "BULLDOZE",
            "name": "Bulldoze",
@@ -17176,10 +17200,13 @@
            "moveId": "FLAME_CHARGE",
            "name": "Flame Charge",
            "type": "fire",
-           "power": 70,
+           "power": 65,
            "energy": 50,
            "energyGain": 0,
-           "cooldown": 500
+           "cooldown": 500,
+   		"buffs": [1, 0],
+           "buffTarget": "self",
+           "buffApplyChance": "1"
        }, {
            "moveId": "FLAME_WHEEL",
            "name": "Flame Wheel",
@@ -17666,6 +17693,17 @@
            "energy": 40,
            "energyGain": 0,
            "cooldown": 500
+       }, {
+           "moveId": "LUNGE",
+           "name": "Lunge",
+           "type": "bug",
+           "power": 60,
+           "energy": 45,
+           "energyGain": 0,
+           "cooldown": 500,
+           "buffs": [-1, 0],
+           "buffTarget": "opponent",
+           "buffApplyChance": "1"
        }, {
            "moveId": "MAGNET_BOMB",
            "name": "Magnet Bomb",
@@ -18178,7 +18216,10 @@
            "power": 75,
            "energy": 55,
            "energyGain": 0,
-           "cooldown": 500
+           "cooldown": 500,
+   		"buffs": [-1, -1],
+           "buffTarget": "opponent",
+           "buffApplyChance": ".2"
        }, {
            "moveId": "SILVER_WIND",
            "name": "Silver Wind",
