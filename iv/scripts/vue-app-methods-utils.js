@@ -185,7 +185,9 @@ var appMethodsUtils = {
       }).join(';')
     }
     catch (e) {
-      throw `Evolution Family not found. dex: ${dex}`
+      throw new Exception(`Evolution Family not found. dex: ${dex}.
+Query: https://pokemon.wingzero.tw/pokedex/go/${dex}/tw
+Please modify "./iv/data/evolution-family.json"`)
     }
   },
   computedAreaQuery: function (area) {
