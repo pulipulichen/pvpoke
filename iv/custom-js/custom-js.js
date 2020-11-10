@@ -27,7 +27,7 @@ for (let pair of paramsEntries.entries()) {
 	params[key] = value
 }
 
-let onlyCustom = true
+let onlyCustom = false
 let autoStartCompare = false
 let customLeague = params.league
 if (params.id) {
@@ -35,6 +35,11 @@ if (params.id) {
 	customPokemons[params.id] = 'Pokemon'
 	autoStartCompare = true
 	onlyCustom = true
+}
+if (params.all) {
+	customPokemons = {}
+	autoStartCompare = true
+	onlyCustom = false
 }
 
 
@@ -72,7 +77,7 @@ let appendCustomRows = async function () {
 		tbody.empty()
 	}
 	
-	console.log(Object.keys(customPokemons))
+	//console.log(Object.keys(customPokemons))
 	let speciesIdList = Object.keys(customPokemons)
 	for (let i = 0; i < speciesIdList.length; i++) {
 		let speciesId = speciesIdList[i]
@@ -436,7 +441,7 @@ let startCompare = async function () {
 	}
 	
 	let customList = Object.keys(customPokemons)
-	//console.log(customList)
+	console.log(customList)
 	processedID = []
 	for (let i = start; i < end; i++) {
 		let SpeciesID = options.eq(i).attr('value')
@@ -579,10 +584,12 @@ let startCompare = async function () {
 			tr.find('.final-class').addClass("max").css("background-color", "green").html('M')
 			tr.find('.final-iv').addClass("max").css("background-color", "green").html(maxStats)
 		}
-	}
+	}	// for (let i = start; i < end; i++) {
 	
-	$(".modal-close").click()
-	document.title = `!` + params.id 
+	//if (onlyCustom === true) {
+		$(".modal-close").click()
+		document.title = `!` + params.id 
+	//}
 }
 
 let getStats = () => {
@@ -671,10 +678,24 @@ let loadBattleResult = (url) => {
 setupCompareButton()
 
 if (autoStartCompare) {
-	$(".league-select").val(customLeague)[0].dispatchEvent(new Event("change"))
+	// https://pvpoketw.com/team-builder/?league=2500&id=gengar_mega
 	//console.log(customLeague)
-	//return false
-	setTimeout(() => {
-		startCompare()
-	}, 5000)
+	if (customLeague === '2500') {
+		setTimeout(() => {
+			$(".league-select").val(customLeague)
+			$(".league-select")[0].dispatchEvent(new Event("change"))
+			$(".league-select").change()
+			
+			setTimeout(() => {
+				startCompare()
+			}, 5000)
+		}, 5000)
+	}
+	else {
+		//console.log(customLeague)
+		//return false
+		setTimeout(() => {
+			startCompare()
+		}, 5000)
+	}
 }

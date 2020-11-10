@@ -27,6 +27,7 @@ var appData = {
     , 'ivysaur', 'ivysaur_shadow', 'venusaur', 'venusaur_shadow'
     //, 'charizard', 'charizard_shadow'
     , 'blastoise', 'blastoise_shadow'
+    , 'ninetales_alolan'  // 阿羅拉 九尾
     , 'umbreon'
     , 'meganium'
     , 'typhlosion'
@@ -49,20 +50,24 @@ var appData = {
     , 'beedrill_shadow'
     //, 'haunter' // 鬼斯通已經輸給耿鬼
   ],
+  // 排除不使用的
   exclude1500: [
-    'ivysaur',
+    'ivysaur',  // 妙蛙草：因為被妙蛙花蓋過去，所以不採用
+    'charizard',
     'hariyama',
     'bellossom',
     'tangrowth',
     'vileplume',
     'torterra',
-    'altaria'
+    'altaria',
+    'machamp' // 怪力
   ],
   include2500: ['dragonite', 'dragonite_shadow'
     , 'venusaur', 'venusaur_shadow'
     , 'ampharos', 'ampharos_shadow'
     , 'charizard', 'charizard_shadow'
     , 'blastoise', 'blastoise_shadow'
+    , 'ninetales_alolan'  // 阿羅拉 九尾
     , 'umbreon'
     , 'meganium'
     , 'metagross'
@@ -84,7 +89,10 @@ var appData = {
     , 'samurott'
   ],
   exclude2500: [
-    'hariyama'
+    'hariyama',
+    'charizard',  // 噴火龍
+    'machamp', // 怪力
+    
   ],
   evolutionFamily: {},
   evolutionFamilySort: {},

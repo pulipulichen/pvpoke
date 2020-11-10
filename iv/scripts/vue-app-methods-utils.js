@@ -193,13 +193,13 @@ Please modify "./iv/data/evolution-family.json"`)
   computedAreaQuery: function (area) {
     if (area === 'normal') {
       //return '!阿羅拉&!galar&'
-      return '關都,城都,豐緣,神奧,合眾&'
+      return '!阿羅拉&!伽勒爾&'
     }
     else if (area === "alolan") {
       return "阿羅拉&"
     }
     else if (area === "galarian") {
-      return "galar&"
+      return "伽勒爾&"
     }
   },
   getDustCandy: function (level) {

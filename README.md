@@ -1,5 +1,5 @@
 替換資料：
-last update: 2020/10/23
+last update: 2020/11/9
 
 1. 注意data的更新時間：
 https://github.com/pvpoke/pvpoke/tree/master/src/data/rankings/all/overall
@@ -13,13 +13,12 @@ https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/rankings/all/ove
 
 https://github.com/pvpoke/pvpoke/raw/master/src/data/gamemaster.json
 ./src/data/gamemaster.json
+(注意，跟下面的gamemaster.json不一樣)
 
-3. 取得 src/data
-4. 替換本機端目錄的 src/data
-5. 取得中文的對照表 https://pvpoketw.com/data/gamemaster.json
-6. 替換 iv/data/pvpoke.tw/gamemaster.json
+https://pvpoketw.com/data/gamemaster.json
+./iv/data/pvpoke.tw/gamemaster.json
 
-7. 確認是否有下位排行需要排除，如果有要該排除的，則加入在 iv/scripts/vue-app-data.js裡面
+3. 確認是否有下位排行需要排除，如果有要該排除的，則加入在 iv/scripts/vue-app-data.js裡面
 https://pvpoketw.com/rankings/all/1500/overall/
 https://pvpoketw.com/rankings/all/2500/overall/
 
