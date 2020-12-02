@@ -18,7 +18,7 @@ a.rating.extra {
 }
 
 #compareResultTable {
-	position: absolute;
+	position: relative;
 	width: calc(100% - 2rem);
   z-index: 99999;
   background-color: white;

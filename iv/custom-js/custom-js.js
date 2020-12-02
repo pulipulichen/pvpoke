@@ -1,5 +1,10 @@
 // https://docs.google.com/spreadsheets/d/1mfXbZRvfYl1mAF2cjX2ueIXo9wYdZrbmZCInkhjylSI/edit?folder=1Fchm-5uXC1qQrAOcvVyVUcMOp7JN_M6K#gid=1069329069
+
+let onlyCustom = false
+let autoStartCompare = false
+
 let customPokemons = {
+	//"azumarill": "瑪力露chrome-extension://nbhcbdghjpllgmfilhnhkllmkecfmpld/options.html麗",
 	"dugtrio_shadow": "三地鼠 暗影化",
 	/*
 	"shiftry": "狡猾天狗",
@@ -18,6 +23,10 @@ let customPokemons = {
 	//"skarmory": "盔甲鳥"
 }
 
+let excludeSpecies = [
+	//'gourgeist'
+]
+
 const url = new URL(location.href);
 let paramsEntries = url.searchParams
 let params = {}
@@ -27,8 +36,6 @@ for (let pair of paramsEntries.entries()) {
 	params[key] = value
 }
 
-let onlyCustom = false
-let autoStartCompare = false
 let customLeague = params.league
 if (params.id) {
 	customPokemons = {}
@@ -42,7 +49,11 @@ if (params.all) {
 	onlyCustom = false
 }
 
-
+let compareConfig = {
+	//start: 83,
+	//end: 38
+}
+let cacheBattleResultMinutes = 24 * 60 * 7
 
 // ----------------
 
@@ -320,7 +331,7 @@ let setupCompareButton = async function () {
 
 let compareResultTable
 let compareResultTableTbody
-let setupCompareResultTable = function () {
+let setupCompareResultTable = async function () {
 	compareResultTable = $('#compareResultTable')
 	
 	if (compareResultTable.length === 0) {
@@ -343,10 +354,14 @@ let setupCompareResultTable = function () {
 				
 				<th>BEST</th>
 				<th>DEFAULT</th>
+				<th>DEFAULT_XL</th>
 				<th>MAX</th>
-				<th>BvsD</th>
-				<th>DvsM</th>
-				<th>BvsM</th>
+				<th>b2x</th>
+				<th>b2d</th>
+				<th>b2m</th>
+				<th>x2d</th>
+				<th>x2m</th>
+				<th>d2m</th>
 				<th>RESULT</th>
 				<th>IV</th>
 			</tr>
@@ -410,11 +425,6 @@ let copyResultTableCSV = function () {
 	copyToClipboard(output)
 }
 
-let compareConfig = {
-	//start: 37,
-	//end: 38
-}
-
 let processedID = []
 
 let startCompare = async function () {
@@ -445,6 +455,13 @@ let startCompare = async function () {
 	processedID = []
 	for (let i = start; i < end; i++) {
 		let SpeciesID = options.eq(i).attr('value')
+		if (SpeciesID.endsWith('_xl')) {
+			continue
+		}
+		if (excludeSpecies.indexOf(SpeciesID) > -1) {
+			//continue
+		}
+		
 		console.log(i, SpeciesID, customList, customList.indexOf(SpeciesID))
 		if (onlyCustom === true && customList.indexOf(SpeciesID) === -1) {
 			continue
@@ -466,10 +483,14 @@ let startCompare = async function () {
 			
 			<td class="best"></td>
 			<td class="default"></td>
+			<td class="default-xl"></td>
 			<td class="max"></td>
+			<td class="b2x"></td>
 			<td class="b2d"></td>
-			<td class="d2m"></td>
 			<td class="b2m"></td>
+			<td class="x2d"></td>
+			<td class="x2m"></td>
+			<td class="d2m"></td>
 			<td class="final-class"></td>
 			<td class="final-iv"></td>
 		</tr>`).appendTo(compareResultTableTbody)
@@ -477,7 +498,6 @@ let startCompare = async function () {
 		document.title = Math.round(((i - start) / (end - start)) * 100) + '% IV Compare...'
 		
 		select.val(SpeciesID)[0].dispatchEvent(new Event("change"))
-		
 		await sleep(1000)
 		
 		let section = $('.advanced-section:visible')
@@ -489,14 +509,36 @@ let startCompare = async function () {
 		
 		// ----------------------
 		
+		// 取得DEFAULT參數
 		let defaultStats = getStats()
 		tr.find('.default').html(defaultStats)
 		
-		$(".maximize-stats:visible")[0].dispatchEvent(new Event("click"))
+		// 開放等級上限
+		if ($('.modal-container:visible .level-cap-group:visible div.on.check[value="50"]').length === 0) {
+	 		$('.modal-container:visible .level-cap-group:visible div.check[value="50"]').click()
+			await sleep(500)
+		}
+		
+		// 取得BEST參數
+		try {
+			$(".maximize-stats:visible")[0].dispatchEvent(new Event("click"))
+		}
+		catch (e) {
+			i--
+			console.error('不知道為什麼框框被關掉了', i)
+			return false
+			tr.remove()
+			await sleep(1000)
+			$('.add-poke-btn:first').click()
+			await sleep(1000)
+			select = $('.poke-select:visible:first')
+			continue
+		}
 		await sleep(500)
 		let bestStats = getStats()
 		tr.find('.best').html(bestStats)
 		
+		// 取得MAX參數
 		let fields = $('.modal-container:visible .advanced-section:visible .fields:visible .ivs')
 		fields.find(".iv[iv='atk']").val(15)[0].dispatchEvent(new Event("change"))
 		await sleep(200)
@@ -507,90 +549,150 @@ let startCompare = async function () {
 		let maxStats = getStats()
 		tr.find('.max').html(maxStats)
 		
+		// 取得MOVESSET
 		let moveset = getMovesetIndex()
 		tr.find('.movesset').html(moveset)
 		
+		// 取得DEFAULT_XL參數
+		let SpeciesIDXL = SpeciesID + '_xl'
+		let defaultXLStats = ''
+		//console.log(SpeciesIDXL)
+	
+		if ($('.modal-container:visible select.poke-select option[value="' + SpeciesIDXL + '"]').length > 0) {
+			select.val(SpeciesIDXL)[0].dispatchEvent(new Event("change"))
+			await sleep(1000)
+			
+			defaultXLStats = getStats()
+		}
+		tr.find('.default-xl').html(defaultXLStats)
+		
+		// 為了測試，以下戰鬥不做
+		//continue
+		
+		//console.log('有資料嗎？')
+		//throw new Error("有資料嗎？")
+		//return false
+		
+		// B X D M
+		// BX
+		// BD
+		// BM
+		// XD
+		// XM
+		// DM
+		
 		// ------------------------
 		
-		let b2dURL = `/battle/${battle}/${SpeciesID}-${bestStats}-4-4-1/${SpeciesID}-${defaultStats}-4-4-1/22/${moveset}/${moveset}/`
-		let b2dResult
-		if (bestStats !== defaultStats) {
-			b2dResult = await loadBattleResult(b2dURL)
-	  }
-	  else {
-	  	b2dResult = 0
-	  }
-		tr.find('.b2d').html('<a href="' + b2dURL + '" target="_blank">' + b2dResult + '%</a>')
+		let battles = {
+			'b2x': [bestStats, defaultXLStats, null],
+			'b2d': [bestStats, defaultStats, null],
+			'b2m': [bestStats, maxStats, null],
+			'x2d': [defaultXLStats, defaultStats, null],
+			'x2m': [defaultXLStats, maxStats, null],
+			'd2m': [defaultStats, maxStats, null],
+		}
 		
-		// -------------------------
 		
-		let d2mURL = `/battle/${battle}/${SpeciesID}-${defaultStats}-4-4-1/${SpeciesID}-${maxStats}-4-4-1/22/${moveset}/${moveset}/`
-		let d2mResult
-		//console.log('d2m', defaultStats, maxStats, (defaultStats !== maxStats))
-		if (defaultStats !== maxStats) {
-			d2mResult = await loadBattleResult(d2mURL)
-	  }
-	  else {
-	  	d2mResult = 0
-	  }
-		tr.find('.d2m').html('<a href="' + d2mURL + '" target="_blank">' + d2mResult + '%</a>')
+		// B D X M
+		let winsCount = {
+			m: 0,
+			d: 0,
+			x: 0,
+			b: 0,
+		}
 		
-		// ------------
-		
-		let b2mURL = `/battle/${battle}/${SpeciesID}-${bestStats}-4-4-1/${SpeciesID}-${maxStats}-4-4-1/22/${moveset}/${moveset}/`
-		let b2mResult
-		//console.log('b2m', bestStats, maxStats, (bestStats !== maxStats))
-		if (bestStats !== maxStats) {
-			b2mResult = await loadBattleResult(b2mURL)
-	  }
-	  else {
-	  	b2mResult = 0
-	  }
-		tr.find('.b2m').html('<a href="' + b2mURL + '" target="_blank">' + b2dResult + '%</a>')
+		for (let b in battles) {
+			console.log('[START BATTLE] ' + b)
+			let result = await getStatusBattleResult(battles[b][0], battles[b][1], battle, SpeciesID, moveset)
+			tr.find('.' + b).html(result.html)
+			battles[b][2] = result.score
+			
+			let s = b.split('2')[1]
+			if (result.score > 0) {
+				s = b.split('2')[0]
+			}
+			winsCount[s]++
+		}
 		
 		// -----------------------
-		let win = [0,0,0]
-		
-		if (b2dResult > 0) {
-			win[0]++
-		}
-		else {
-			win[1]++
-		}
-		
-		if (d2mResult > 0) {
-			win[1]++
-		}
-		else {
-			win[2]++
-		}
-		
-		if (b2mResult > 0) {
-			win[0]++
-		}
-		else {
-			win[2]++
+		// 找出最佳勝利者
+		let bestWinnerLabel = 'm'
+		let bestWinnerCount = winsCount[bestWinnerLabel]
+		for (let label in winsCount) {
+			if (label === 'm') {
+				continue
+			}
+			
+			let count = winsCount[label]
+			if (count > bestWinnerCount) {
+				bestWinnerLabel = label
+				bestWinnerCount = count
+			}
 		}
 		
-		if (win[0] === 2) {
-			tr.find('.final-class').addClass("default").css("background-color", "#CCC").html('B')
-			tr.find('.final-iv').addClass("best").css("background-color", "yellow").html(bestStats)
+		// -------------------------------------------------
+		// 輸出
+		
+		let statsList = {
+			b: bestStats,
+			d: defaultStats,
+			x: defaultXLStats,
+			m: maxStats
 		}
-		else if (win[1] === 2) {
-			tr.find('.final-class').addClass("default").css("background-color", "#CCC").html('D')
-			tr.find('.final-iv').addClass("default").css("background-color", "#CCC").html(defaultStats)
+		
+		let color = '#CCC'
+		if (bestWinnerLabel === 'm') {
+			color = 'green'
 		}
-		else {
-			tr.find('.final-class').addClass("max").css("background-color", "green").html('M')
-			tr.find('.final-iv').addClass("max").css("background-color", "green").html(maxStats)
-		}
+		
+		tr.find('.final-class').addClass('winner-' + bestWinnerLabel).css("background-color", color).html(bestWinnerLabel.toUpperCase())
+		tr.find('.final-iv').addClass('winner-' + bestWinnerLabel).css("background-color", color).html(statsList[bestWinnerLabel])
+		
 	}	// for (let i = start; i < end; i++) {
 	
 	//if (onlyCustom === true) {
+		console.log('跑完了')
 		$(".modal-close").click()
 		document.title = `!` + params.id 
 	//}
 }
+
+let getStatusBattleResult = async (stats1, stats2, battle, SpeciesID, moveset) => {
+	if (stats1 === '') {
+		return {
+	  	html: '-',
+	  	score: -1
+	  }
+	}
+	else if (stats2 === '') {
+		return {
+	  	html: '-',
+	  	score: 1
+	  }
+	}
+	
+	let url = `/battle/${battle}/${SpeciesID}-${stats1}-4-4-1/${SpeciesID}-${stats2}-4-4-1/22/${moveset}/${moveset}/`
+	console.log('BATTLE URL: ',url)
+	let result
+	//console.log('d2m', defaultStats, maxStats, (defaultStats !== maxStats))
+	
+	// 去掉等級後做比較
+	let stats1IV = stats1.slice(stats1.indexOf('-') + 1)
+	let stats2IV = stats2.slice(stats2.indexOf('-') + 1)
+	console.log(stats1IV, stats2IV)
+	
+	if (stats1IV !== stats2IV) {
+		result = await loadBattleResult(url)
+  }
+  else {
+  	result = 0
+  }
+  return {
+  	html: '<a href="' + url + '" target="_blank">' + result + '%</a>',
+  	score: result
+  }
+}
+
 
 let getStats = () => {
 	let fields = $('.modal-container:visible .advanced-section:visible .fields:visible .ivs')
@@ -604,6 +706,17 @@ let getStats = () => {
 }
 
 let loadBattleResult = (url) => {
+	let key = 'battle-result-' + url
+	let cached = localStorage.getItem(key)
+	console.log('cached', cached)
+	if (cached !== null) {
+		cached = JSON.parse(cached)
+		console.log((new Date).getTime() - cached.time, cacheBattleResultMinutes * 60 * 1000)
+		if (((new Date).getTime() - cached.time) < cacheBattleResultMinutes * 60 * 1000) {
+			return cached.result
+		}
+	}
+	
 	//return -10;
 	return new Promise(async (resolve) => {
 		
@@ -657,6 +770,7 @@ let loadBattleResult = (url) => {
 					//let dataI = Number($(this).attr('data-i'))
 					//console.log(dataI, result)
 					if (result === 100) {
+						// 看起來是有錯誤
 						iframe.remove()
 						resolve(await loadBattleResult(url))
 						return false
@@ -664,6 +778,12 @@ let loadBattleResult = (url) => {
 					
 					//a.eq(dataI).html(result + '%')
 					iframe.remove()
+					//lscache.set(key, result + '', cacheBattleResultMinutes)
+					localStorage.setItem(key, JSON.stringify({
+						time: (new Date()).getTime(),
+						result: result
+					}))
+					
 					resolve(result)
 				}, 1000)
 			}

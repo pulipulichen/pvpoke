@@ -1,0 +1,137 @@
+var appComputedOutput = {
+  bestIVCells: function () {
+    if (this.ready === false) {
+      //console.log('等待中')
+      return ''
+    }
+    //console.log('開始計算')
+    
+    let rows = []
+    
+    // 先處理要移除的全部
+    let outOfRankingPrefixNotTraded = "!交換&!4*&距離" + this.distanceBase + "&!f&!p&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
+    let outOfRankingPrefixTraded = "交換&!4*&!f&!p&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
+    //let outOfRankingPrefixTradedBadLucky = "交換&2*&亮晶晶&!f&!p&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
+    //let outOfRankingPrefixAll = "!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
+    let outOfRankingPrefixAll = "!暗影&!淨化&!傳說的寶可夢&!幻&!異色&!e&!w&!c&"
+    let outOfRankingPrefixNotTradedFilter = "!e&!t&!f&!c&!w&!交換&!4*&距離" + this.distanceBase + "&!f&!p&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
+    
+    let header = "臺北(" + this.distanceBase + ")"
+    this.computedBestIVCellsOutOfRange(rows, this.outOfRanking, header, outOfRankingPrefixNotTraded, outOfRankingPrefixTraded, outOfRankingPrefixAll, outOfRankingPrefixNotTradedFilter)
+    
+    // ----------------------
+    // 來處理排名內，100%的
+    
+    let topRankMaxStar012NotTraded = outOfRankingPrefixNotTraded.split('&!4*&').join('&!3*&!4*&')
+    let topRankMaxStar012Traded = outOfRankingPrefixTraded.split('&!4*&').join('&!3*&!4*&')
+    let topRankMaxStar012All = outOfRankingPrefixAll.split('&!4*&').join('&!3*&!4*&')
+    let topRankMaxStar012NotTradedFilter = outOfRankingPrefixNotTradedFilter.split('&!4*&').join('&!3*&!4*&')
+    this.computedBestIVCellsTopRankMax(rows, this.topRankingMax, '排名100% 0*-2*', topRankMaxStar012NotTraded, topRankMaxStar012Traded, topRankMaxStar012All, topRankMaxStar012NotTradedFilter)
+    
+    this.computedBestIVCellsTopRankMax(rows, this.topRankingMax, '排名100% !4*', outOfRankingPrefixNotTraded, outOfRankingPrefixTraded, outOfRankingPrefixAll, outOfRankingPrefixNotTradedFilter)
+    
+    // ----------------------
+    // 來處理排名內，但不在星級內的名單
+    
+    let starMap = this.topList.star
+    let topRankingStarIncorrPrefixNotTraded = "!交換&距離" + this.distanceBase + "&!4*&!f&!p&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
+    let topRankingStarIncorrPrefixTraded = "交換&!4*&!f&!p&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
+    let topRankingStarIncorrPrefixTradedBadLucky = "交換&2*&亮晶晶&!f&!p&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
+    let topRankingStarIncorrPrefixNotTradedFilter = "!e&!t&!f&!c&!w&!交換&距離" + this.distanceBase + "&!f&!p&!U&!G&!4*&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
+    
+    //this.computedBestIVCellsStarMap(rows, starMap, topRankingStarIncorrPrefixNotTraded, topRankingStarIncorrPrefixTraded, topRankingStarIncorrPrefixTradedBadLucky, topRankingStarIncorrPrefixNotTradedFilter)
+    this.computedBestIVCellsStarReverseMap(rows, starMap, topRankingStarIncorrPrefixNotTraded, topRankingStarIncorrPrefixTraded, topRankingStarIncorrPrefixTradedBadLucky, topRankingStarIncorrPrefixNotTradedFilter)
+    
+    // -------------------
+    // 來處理排名內，符合星級，交換了可能有用，不過要注意Att是否相符的名單
+    this.outputBestInStatTradable(rows)
+    
+    this.outputBestInStatUntradable(rows)
+    
+    // -----------------
+    // 列出所有名單
+    
+    let attMap = this.topList.att
+    let allNotTraded = "!交換&距離" + this.distanceBase + "&!4*&!f&!p&!U&!G&!異色&!暗影&!淨化&!傳說的寶可夢&!幻&"
+    let allTraded = "交換&!4*&!f&!p&!U&!G&!異色&!暗影&!淨化&!傳說的寶可夢&!幻&"
+    //let allAllDistance = "!暗影&!淨化&!4*&!傳說的寶可夢&!幻&" // 不可以加上「&!t&!e&!w&!c&」，因為這會讓交換之後的寶可夢無法納入判斷
+    let allAllDistance = "!暗影&!淨化&!4*&!傳說的寶可夢&!幻&!e&!w&!c&" // 不可以加上「&!t&!e&!w&!c&」，因為這會讓交換之後的寶可夢無法納入判斷
+    let allNotTradedFilter = "!e&!t&!f&!c&!w&!交換&距離" + this.distanceBase + "&!f&!p&!U&!G&!4*&!異色&!暗影&!淨化&!傳說的寶可夢&!幻&"
+    
+    this.computedBestIVCellsAll(rows, attMap, allNotTraded, allTraded, allAllDistance, allNotTradedFilter)
+    this.insertRowHr(rows)
+    
+    // -------------------
+    
+    let topAll = "!暗影&!淨化&!傳說的寶可夢&!幻&!e&!w&!c&" // 不可以加上「&!t&!e&!w&!c&」，因為這會讓交換之後的寶可夢無法納入判斷
+    this.computedQueryNotTopAreaAll(rows, attMap, topAll)
+    
+    // -------------------
+    
+    for (let i = 0; i < 10; i++) {
+      //rows.push('-\t-\t-\t-\t-\t-\t-\t-\t-\t-')
+      this.insertRowHr(rows)
+    }
+    
+    //console.log('計算完畢', rows)
+    return rows.join("\n")
+  },
+  bestIVCellsTainan: function () {
+    return this.bestIVCells.split('&距離' + this.distanceBase).join('&距離200-300')
+  },
+  bestIVCellsTaichung: function () {
+    return this.bestIVCells.split('&距離' + this.distanceBase).join('&距離100-200')
+  },
+  bestIVShadowCells: function () {
+    if (this.ready === false) {
+      //console.log('等待中')
+      return ''
+    }
+    //console.log('開始計算')
+    
+    let rows = []
+    
+    // 先處理要移除的全部
+    let outOfRankingPrefixNotTraded = "!4*&暗影,淨化&!傳說的寶可夢&!幻&!異色&"
+    let outOfRankingPrefixTraded = outOfRankingPrefixNotTraded
+    //let outOfRankingPrefixTradedBadLucky = outOfRankingPrefixNotTraded
+    
+    let header = '暗影'
+    
+    this.computedBestIVCellsOutOfRange(rows, this.outOfRankingShadow, header, outOfRankingPrefixNotTraded, outOfRankingPrefixTraded, outOfRankingPrefixNotTraded)
+    
+    
+    // ----------------------
+    // 來處理排名內，但不在星級內的名單
+    
+    let starMap = this.topShadowList.star
+    let topRankingStarIncorrPrefixNotTraded = "!4*&暗影,淨化&!傳說的寶可夢&!幻&!異色&"
+    let topRankingStarIncorrPrefixTraded = topRankingStarIncorrPrefixNotTraded
+    
+    this.computedBestIVCellsStarMap(rows, starMap, topRankingStarIncorrPrefixNotTraded, topRankingStarIncorrPrefixTraded, outOfRankingPrefixNotTraded)
+    
+    // -------------------
+    // 來處理排名內，符合星級，不過要注意Att是否相符的名單
+    this.outputBestAll(rows)
+    
+    // -------------------------
+    // 最後補上空白
+    
+    for (let i = 0; i < 10; i++) {
+      rows.push('-\t-\t-\t-\t-\t-\t-\t-\t-\t-')
+    }
+    
+    //console.log('計算完畢', rows)
+    return rows.join("\n")
+  },
+  bestIVAll () {
+    if (this.ivTableProgress !== null) {
+      return this.ivTableProgress
+    }
+    if (typeof(this.bestIVCSV) === 'string') {
+      let result = this.bestIVCSV.replace(new RegExp(",","gm"), "\t")
+      //console.log(result)
+      return result
+    }
+  }
+}

@@ -150,6 +150,21 @@ var appMethodsUtils = {
               && (isSpecial === false)
               )
   },
+  isBetterAfterTrading: function (pokemon) {
+    if (this.isNotSpecial(pokemon) === false) {
+      return false
+    }
+    
+    for (let i = 0; i < 3; i++) {
+      if (pokemon.gIV[i] < 5) {
+        return false
+      }
+      if (pokemon.uIV[i] < 5) {
+        return false
+      }
+    }
+    return true
+  },
   getRank1500: function (speciesId) {
     //console.log(id, this.rankings1500)
     let rank = (this.rankings1500SpeciesId.indexOf(speciesId) + 1)

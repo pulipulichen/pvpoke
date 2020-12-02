@@ -1,7 +1,7 @@
 /* global postMessageAPI, XLSX, GameMaster */
 
 var appMethodsQuery = {
-  computedBuildTopPokemons: function (sourceRankings, cp) {
+  computedBuildTopPokemons: function (sourceRankings, cp, limitTrade) {
     if (this.ready === false) {
       return {}
     }
@@ -15,6 +15,9 @@ var appMethodsQuery = {
     let count = 0
     
     let addRanking = (speciesId) => {
+      if (speciesId.endsWith('_xl')) {
+        return false
+      }
       
       let p = this.speciesIdToData[speciesId]
       
@@ -106,6 +109,10 @@ var appMethodsQuery = {
     let count = 0
     
     let addRanking = (speciesId) => {
+      if (speciesId.endsWith('_xl')) {
+        return false
+      }
+      
       let p = this.speciesIdToData[speciesId]
       
       if (p.isShadow && p.isNotSpecial) {
@@ -181,6 +188,25 @@ var appMethodsQuery = {
     
     //console.log(ranking)
     return ranking
+  },
+  filterTradable (top, isTradeBetter) {
+    let result = {}
+    for (let r in top) {
+      let list = top[r]
+      
+      for (let i = 0; i < list.length; i++) {
+        let p = list[i]
+        
+        if (p.isBetterAfterTrading === isTradeBetter) {
+          if (!result[r]) {
+            result[r] = []
+          }
+          result[r].push(p)
+        }
+      }
+    }
+    console.log(result, isTradeBetter)
+    return result
   },
   computedOutOfRankingAddDex: function (a, top, exclusiveList) {
     if (!top) {
@@ -632,10 +658,11 @@ var appMethodsQuery = {
     //rows.push("") // 空一行
     this.insertRowHr(rows)
   },
-  computedBestIVCellsAttMap: function (rows, attMap, topRankingStarCorrAttPrefixNotTraded, topRankingStarCorrAttPrefixTraded, topRankingStarCorrAttPrefixAllDistance, topRankingStarCorrAttPrefixNotTradedFilter = '') {
+  computedBestIVCellsAttMap: function (rows, header, attMap, topRankingStarCorrAttPrefixNotTraded, topRankingStarCorrAttPrefixTraded, topRankingStarCorrAttPrefixAllDistance, topRankingStarCorrAttPrefixNotTradedFilter = '') {
     let rowsToAdd = []
     
-    rows.push("排名內星級符，過濾攻防IV格(A:0-5/B:6-10/C:11-15)\t未交換\t數量\t已交換\t數量\t全部\t數量\t整理\t數量")
+    //rows.push("排名內星級符，過濾攻防IV格(A:0-5/B:6-10/C:11-15)\t未交換\t數量\t已交換\t數量\t全部\t數量\t整理\t數量")
+    rows.push(header)
     
     for (let area in attMap) {
       Object.keys(attMap[area]).sort().forEach(attList => {
@@ -794,6 +821,49 @@ var appMethodsQuery = {
       })
       
         
+    }
+  },
+  buildTopList (top1500, top2500) {
+    if (this.ready === false) {
+      return {}
+    }
+    
+    let areaDexStarMap = {}
+    let areaDexIVAttMap = {}
+    
+    Object.keys(top1500).forEach(area => {
+      top1500[area].forEach(pokemon => {
+        let iv = pokemon.gIV
+        let star = pokemon.gStar
+        let dex = pokemon.dex
+        this.computedTopListAddDex(area, dex, star, iv, areaDexStarMap, areaDexIVAttMap)
+      })
+    })
+    
+    Object.keys(top2500).forEach(area => {
+      top2500[area].forEach(pokemon => {
+        let iv = pokemon.uIV
+        let star = pokemon.uStar
+        let dex = pokemon.dex
+        this.computedTopListAddDex(area, dex, star, iv, areaDexStarMap, areaDexIVAttMap)
+      })
+    })
+    
+    //console.log(areaDexStarMap)
+    
+    // ----------------------------
+    
+    // 再轉換成以星級為主的列表
+    let areaStarDexMap = this.computedTopListBuildAreaStarDexMap(areaDexStarMap)
+    
+    // ----------------------------
+    
+    // 再轉換成以攻擊為主的列表
+    let areaAttDexMap = this.computedTopListBuildAreaAttDexMap(areaDexIVAttMap)
+    
+    return {
+      star: areaStarDexMap,
+      att: areaAttDexMap
     }
   }
 }

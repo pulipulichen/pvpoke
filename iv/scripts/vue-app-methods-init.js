@@ -38,6 +38,11 @@ var appMethodsInit = {
           this.gm.data.pokemon[i].topMaxIncludable = this.isTopMaxIncludable(this.gm.data.pokemon[i])
           this.gm.data.pokemon[i].isNotSpecial = this.isNotSpecial(this.gm.data.pokemon[i])
           
+          this.gm.data.pokemon[i].isBetterAfterTrading = this.isBetterAfterTrading(this.gm.data.pokemon[i])
+          //if (this.gm.data.pokemon[i].isNotSpecial === true) {
+          //  console.log(this.gm.data.pokemon[i].gIV, this.gm.data.pokemon[i].uIV, this.gm.data.pokemon[i].isNotSpecial, this.gm.data.pokemon[i].isBetterAfterTrading)
+          //}
+          
           //if (speciesId === 'glaceon') {
           //  console.log(this.gm.data.pokemon[i])
           //}

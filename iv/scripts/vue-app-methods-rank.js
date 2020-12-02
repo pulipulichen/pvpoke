@@ -15,6 +15,9 @@ var appMethodsRank = {
     let count = 0
     
     let addRanking = (speciesId) => {
+      if (speciesId.endsWith('_xl')) {
+        return false
+      }
       
       let p = this.speciesIdToData[speciesId]
       
