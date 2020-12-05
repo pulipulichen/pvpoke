@@ -14,9 +14,12 @@ var appMethodsQuery = {
     
     let count = 0
     
+    let addedList = []
+    
     let addRanking = (speciesId) => {
-      if (speciesId.endsWith('_xl')) {
-        return false
+      if (speciesId.endsWith('_xl')
+              || addedList.indexOf(speciesId) > -1) {
+        return true
       }
       
       let p = this.speciesIdToData[speciesId]
@@ -38,12 +41,14 @@ var appMethodsQuery = {
       else {
         //let iv = p.defaultIVs[cp]
         let iv = this.getIV(cp, speciesId)
+        /*
         if (iv[1] === 15 
                 && iv[2] === 15 
                 && iv[3] === 15) {
           count++
           return true
         }
+         */
       }
       
       // 接下來我要看，這個pokemon它屬於哪一個類型
@@ -71,12 +76,18 @@ var appMethodsQuery = {
       //  console.log("妙蛙花加入了")
       //}
       
+      addedList.push(speciesId)
+      
       count++
     }
     
+    //console.log(sourceRankings.length)
     for (let i = 0; i < sourceRankings.length; i++) {
       let r = sourceRankings[i]
       let speciesId = r.speciesId
+      //if (speciesId === 'diggersby') {
+        //console.log(speciesId)
+      //}
       if (addRanking(speciesId) === false) {
         break
       }
@@ -108,22 +119,43 @@ var appMethodsQuery = {
     
     let count = 0
     
+    let excludeList = this.exclude1500
+    if (cp === 'cp2500') {
+      excludeList = this.exclude2500
+    }
+    
     let addRanking = (speciesId) => {
-      if (speciesId.endsWith('_xl')) {
-        return false
+      
+      if (speciesId.endsWith('_xl') || excludeList.indexOf(speciesId) > -1) {
+        return true
       }
       
       let p = this.speciesIdToData[speciesId]
       
+      
+      let iv = this.getIV(cp, speciesId)
+      //if (speciesId === 'gliscor_shadow') {
+      //  console.log(iv)
+      //}
+      if (iv[1] === 15 
+              && iv[2] === 15 
+              && iv[3] === 15) {
+        //count++
+        // 因為是暗影的，所以不交換
+        return true
+      }
+      
       if (p.isShadow && p.isNotSpecial) {
 
         //let iv = p.defaultIVs[cp]
+        /*
         let iv = this.getIV(cp, speciesId)
         if (iv[1] === 15 
                 && iv[2] === 15 
                 && iv[3] === 15) {
           return false
         }
+        */
 
         // 接下來我要看，這個pokemon它屬於哪一個類型
 
@@ -151,9 +183,27 @@ var appMethodsQuery = {
     for (let i = 0; i < sourceRankings.length; i++) {
       let r = sourceRankings[i]
       let speciesId = r.speciesId
+      
+      if (speciesId.endsWith('_xl')) {
+        continue
+      }
 
       let p = this.speciesIdToData[speciesId]
       //console.log(r.topIncludable, r.isShadow)
+      
+      
+      let iv = this.getIV(cp, speciesId)
+      //if (speciesId === 'gliscor_shadow') {
+      //  console.log(iv)
+      //}
+      if (iv[1] === 15 
+              && iv[2] === 15 
+              && iv[3] === 15) {
+        count++
+        // 因為是暗影的，所以不交換
+        continue;
+      }
+      
       if (p.topIncludable === false) {
         count++
           
@@ -161,13 +211,19 @@ var appMethodsQuery = {
       }
       else {
         //let iv = p.defaultIVs[cp]
+        /*
         let iv = this.getIV(cp, speciesId)
+        if (speciesId === 'gliscor_shadow') {
+          console.log(iv)
+        }
         if (iv[1] === 15 
                 && iv[2] === 15 
                 && iv[3] === 15) {
           count++
+          // 因為是暗影的，所以不交換
           continue;
         }
+        */
         
         count++
         if (count > this.topLimit) {
@@ -205,7 +261,7 @@ var appMethodsQuery = {
         }
       }
     }
-    console.log(result, isTradeBetter)
+    //console.log(result, isTradeBetter)
     return result
   },
   computedOutOfRankingAddDex: function (a, top, exclusiveList) {
@@ -490,6 +546,53 @@ var appMethodsQuery = {
     })
   },
   computedBestIVCellsOutOfRange: function (rows, outOfRanking, header, outOfRankingPrefixNotTraded, outOfRankingPrefixTraded, outOfRankingPrefixTradedBadLucky, outOfRankingPrefixAll) {
+    rows.push(header + (new Date()).mmdd() + "\t未交換\t數量\t已交換\t數量\t全部\t數量\t可交換\t數量")
+    
+    let rowsToAdd = []
+    for (let area in outOfRanking) {
+      let dexList = outOfRanking[area]
+      //console.log(dexList.slice(0,3))
+      if (Array.isArray(dexList) === false) {
+        throw new Error("dexList is not array")
+      }
+      let count = dexList.length
+      let countName = this.computedCountName(dexList)
+      let day = "&日數0-"
+      let dayInterval = "&日數0-" + (this.dayInterval + 2)
+      let dayIntervalTrade = "&日數1-" + (this.dayInterval + 2)
+      
+      let ivList = dexList.map(dex => '!' + dex).join('&')
+      let areaQuery = this.computedAreaQuery(area)
+      
+      let cells = [
+        area,
+        '[e],' + areaQuery + outOfRankingPrefixNotTraded + ivList + dayInterval,
+        countName,
+        '[t],' + areaQuery + outOfRankingPrefixTraded + ivList + dayInterval,
+        countName,
+        areaQuery + outOfRankingPrefixTradedBadLucky + ivList + day,
+        countName,
+        //areaQuery + outOfRankingPrefixAll + ivList + day,
+        '[e],' + areaQuery + outOfRankingPrefixNotTraded + ivList + dayIntervalTrade,
+        countName,
+      ].join('\t')
+      
+      rowsToAdd.push({
+        count: count,
+        cells
+      })
+    }
+    
+    rowsToAdd.sort((a, b) => {
+      return b.count - a.count
+    }).forEach(row => {
+      rows.push(row.cells)
+    })
+    
+    //rows.push("") // 空一行
+    this.insertRowHr(rows)
+  },
+  computedBestIVCellsShadowOutOfRange: function (rows, outOfRanking, header, outOfRankingPrefixNotTraded, outOfRankingPrefixTraded, outOfRankingPrefixTradedBadLucky, outOfRankingPrefixAll) {
     rows.push(header + (new Date()).mmdd() + "\t未交換\t數量\t已交換\t數量\t全部\t數量\t整理\t數量")
     
     let rowsToAdd = []
@@ -501,19 +604,22 @@ var appMethodsQuery = {
       }
       let count = dexList.length
       let countName = this.computedCountName(dexList)
-      let ivList = dexList.map(dex => '!' + dex).join('&') + "&日數0-"
+      let day = "&日數0-"
+      //let dayInterval = "&日數0-" + (this.dayInterval + 2)
+      
+      let ivList = dexList.map(dex => '!' + dex).join('&')
       let areaQuery = this.computedAreaQuery(area)
       
       let cells = [
         area,
-        areaQuery + outOfRankingPrefixNotTraded + ivList,
+        '[p],' + areaQuery + outOfRankingPrefixNotTraded + ivList + day,
         countName,
-        areaQuery + outOfRankingPrefixTraded + ivList,
-        countName,
-        areaQuery + outOfRankingPrefixTradedBadLucky + ivList,
-        countName,
-        areaQuery + outOfRankingPrefixAll + ivList,
-        countName,
+        '-',
+        '-',
+        '-',
+        '-',
+        '-',
+        '-'
       ].join('\t')
       
       rowsToAdd.push({
@@ -543,18 +649,21 @@ var appMethodsQuery = {
       }
       let count = dexList.length
       let countName = this.computedCountName(dexList)
-      let ivList = dexList.join(',') + "&日數0-"
+      let day = "&日數0-"
+      let dayInterval = day + (this.dayInterval + 1)
+      
+      let ivList = dexList.join(',')
       let areaQuery = this.computedAreaQuery(area)
       
       let cells = [
         area,
-        areaQuery + outOfRankingPrefixNotTraded + ivList,
+        "[e]," + areaQuery + outOfRankingPrefixNotTraded + ivList + dayInterval,
         countName,
-        areaQuery + outOfRankingPrefixTraded + ivList,
+        "[t]," + areaQuery + outOfRankingPrefixTraded + ivList + dayInterval,
         countName,
-        areaQuery + outOfRankingPrefixTradedBadLucky + ivList,
+        areaQuery + outOfRankingPrefixTradedBadLucky + ivList + day,
         countName,
-        areaQuery + outOfRankingPrefixAll + ivList,
+        areaQuery + outOfRankingPrefixAll + ivList + day,
         countName,
       ].join('\t')
       
@@ -587,21 +696,156 @@ var appMethodsQuery = {
         let dexList = starMap[area][starList]
         let count = dexList.length
         let countName = this.computedCountName(dexList)
-        let ivList = dexList.join(',') + "&日數0-"
+        
+        let day = "&日數0-"
+        let dayInterval = day + (this.dayInterval + 3)
+        
+        let ivList = dexList.join(',')
         
         let areaQuery = this.computedAreaQuery(area)
         let starExclusiveQuery = this.computedStarExclusiveQuery(starList)
         
         let cells = [
           area.slice(0, 1) + ' ' + starList,
-          starExclusiveQuery + areaQuery + topRankingStarIncorrPrefixNotTraded + ivList,
+          '[e],' + starExclusiveQuery + areaQuery + topRankingStarIncorrPrefixNotTraded + ivList + dayInterval,
           countName,
-          starExclusiveQuery + areaQuery + topRankingStarIncorrPrefixTraded + ivList,
+          '[t],' + starExclusiveQuery + areaQuery + topRankingStarIncorrPrefixTraded + ivList + dayInterval,
           countName,
-          starExclusiveQuery + areaQuery + topRankingStarIncorrPrefixTradedBadLucky + ivList,
+          starExclusiveQuery + areaQuery + topRankingStarIncorrPrefixTradedBadLucky + ivList + day,
           countName,
-          starExclusiveQuery + areaQuery + topRankingStarIncorrPrefixNotTradedFilter + ivList,
+          starExclusiveQuery + areaQuery + topRankingStarIncorrPrefixNotTradedFilter + ivList + day,
           countName,
+        ].join('\t')
+
+        rowsToAdd.push({
+          count: count,
+          area,
+          cells
+        })
+      })
+    }
+    
+    this.computedBestIVCellsSortRowsByCount(rowsToAdd, rows)
+    //rows.push("") // 空一行
+    this.insertRowHr(rows)
+  },
+  computedBestIVCellsStarMapAll: function (rows, starMap, topRankingStarIncorrPrefixNotTraded, topRankingStarIncorrPrefixTraded, topRankingStarIncorrPrefixTradedBadLucky, topRankingStarIncorrPrefixNotTradedFilter = '') {
+    
+    rows.push("排名內準備排除用\t未交換\t數量\t已交換\t數量\t亮晶晶2*\t數量\t整理\t數量")
+    
+    let rowsToAdd = []
+    
+    for (let area in starMap) {
+      Object.keys(starMap[area]).sort().forEach(starList => {
+        let dexList = starMap[area][starList]
+        let count = dexList.length
+        let countName = this.computedCountName(dexList)
+        
+        let day = "&日數0-"
+        let dayInterval = day + (this.dayInterval + 3)
+        
+        let ivList = dexList.join(',')
+        
+        let areaQuery = this.computedAreaQuery(area)
+        let cells = [
+          area.slice(0, 1) + ' ' + starList,
+          starList + '&' + areaQuery + topRankingStarIncorrPrefixTradedBadLucky + ivList + day,
+          countName,
+          '-',
+          '-',
+          '-',
+          '-',
+          '-',
+          '-',
+        ].join('\t')
+
+        rowsToAdd.push({
+          count: count,
+          area,
+          cells
+        })
+      })
+    }
+    
+    this.computedBestIVCellsSortRowsByCount(rowsToAdd, rows)
+    //rows.push("") // 空一行
+    this.insertRowHr(rows)
+  },
+  computedBestIVCellsShadowStarMap: function (rows, starMap, topRankingStarIncorrPrefixNotTraded, topRankingStarIncorrPrefixTraded, topRankingStarIncorrPrefixTradedBadLucky, topRankingStarIncorrPrefixNotTradedFilter = '') {
+    
+    rows.push("排名必須符合\t未交換\t數量\t已交換\t數量\t亮晶晶2*\t數量\t整理\t數量")
+    
+    let rowsToAdd = []
+    
+    let allIvList = []
+    
+    for (let area in starMap) {
+      Object.keys(starMap[area]).sort().forEach(starList => {
+        let dexList = starMap[area][starList]
+        let count = dexList.length
+        let countName = this.computedCountName(dexList)
+        
+        allIvList = allIvList.concat(dexList)
+        
+      })
+    }
+    
+    
+    //allIvList = allIvList.join(',')
+
+    let cells = [
+      'ALL',
+      topRankingStarIncorrPrefixNotTraded + allIvList.join(','),
+      '['+ allIvList.length + ']',
+      '-',
+      '-',
+      '-',
+      '-',
+      '-',
+      '-',
+    ].join('\t')
+
+    rowsToAdd.push({
+      count: allIvList.length,
+      area: 'ALL',
+      cells
+    })
+    
+    this.computedBestIVCellsSortRowsByCount(rowsToAdd, rows)
+    //rows.push("") // 空一行
+    this.insertRowHr(rows)
+  },
+  
+  computedBestIVCellsShadowStarExclusiveMap: function (rows, starMap, topRankingStarIncorrPrefixNotTraded, topRankingStarIncorrPrefixTraded, topRankingStarIncorrPrefixTradedBadLucky, topRankingStarIncorrPrefixNotTradedFilter = '') {
+    
+    rows.push("排名內但星級不符\t未交換\t數量\t已交換\t數量\t亮晶晶2*\t數量\t整理\t數量")
+    
+    let rowsToAdd = []
+    
+    for (let area in starMap) {
+      Object.keys(starMap[area]).sort().forEach(starList => {
+        let dexList = starMap[area][starList]
+        let count = dexList.length
+        let countName = this.computedCountName(dexList)
+        
+        let day = "&日數0-"
+        let dayInterval = day + (this.dayInterval + 3)
+        
+        let ivList = dexList.join(',')
+        
+        let areaQuery = this.computedAreaQuery(area)
+        let starExclusiveQuery = this.computedStarExclusiveQuery(starList)
+        
+        let cells = [
+          area.slice(0, 1) + ' ' + starList,
+          '[p],' + starExclusiveQuery + areaQuery + topRankingStarIncorrPrefixNotTraded + ivList + dayInterval,
+          countName,
+          '-',
+          '-',
+          '-',
+          '-',
+          '-',
+          '-',
         ].join('\t')
 
         rowsToAdd.push({
@@ -631,18 +875,21 @@ var appMethodsQuery = {
         let areaQuery = this.computedAreaQuery(area)
         let starExclusiveQuery =  '&' + starList
         
-        let ivList = dexList.join(',') + starExclusiveQuery + "&日數0-"
+        let day = "&日數0-" 
+        let dayInterval = day + (this.dayInterval + 4)
+        
+        let ivList = dexList.join(',') + starExclusiveQuery
         
         
         let cells = [
           area.slice(0,1) + ' ' + starList,
-          areaQuery + topRankingStarIncorrPrefixNotTraded + ivList,
+          '[e],' + areaQuery + topRankingStarIncorrPrefixNotTraded + ivList + dayInterval,
           countName,
-          areaQuery + topRankingStarIncorrPrefixTraded + ivList,
+          '[t],' + areaQuery + topRankingStarIncorrPrefixTraded + ivList + dayInterval,
           countName,
-          areaQuery + topRankingStarIncorrPrefixTradedBadLucky + ivList,
+          areaQuery + topRankingStarIncorrPrefixTradedBadLucky + ivList + day,
           countName,
-          areaQuery + topRankingStarIncorrPrefixNotTradedFilter + ivList,
+          areaQuery + topRankingStarIncorrPrefixNotTradedFilter + ivList + day,
           countName,
         ].join('\t')
 
@@ -669,19 +916,23 @@ var appMethodsQuery = {
         let dexList = attMap[area][attList]
         let countName = this.computedCountName(dexList)
         let count = dexList.length
-        let ivList = dexList.join(',') + "&![" + attList + "]&日數0-"
+        
+        let day = "&日數0-"
+        let dayInterval = day + (this.dayInterval + 5)
+        
+        let ivList = dexList.join(',') + "&![" + attList + "]"
         
         let areaQuery = this.computedAreaQuery(area)
         
         let cells = [
           area.slice(0,1) + ' ' + attList,
-          areaQuery + topRankingStarCorrAttPrefixNotTraded + ivList,
+          '[e],' + areaQuery + topRankingStarCorrAttPrefixNotTraded + ivList + dayInterval,
           countName,
-          areaQuery + topRankingStarCorrAttPrefixTraded + ivList,
+          '[t],' + areaQuery + topRankingStarCorrAttPrefixTraded + ivList + dayInterval,
           countName,
-          areaQuery + topRankingStarCorrAttPrefixAllDistance + ivList,
+          areaQuery + topRankingStarCorrAttPrefixAllDistance + ivList + day,
           countName,
-          areaQuery + topRankingStarCorrAttPrefixNotTradedFilter + ivList,
+          areaQuery + topRankingStarCorrAttPrefixNotTradedFilter + ivList + day,
           countName,
         ].join('\t')
 
@@ -696,11 +947,54 @@ var appMethodsQuery = {
     this.computedBestIVCellsSortRowsByAreaCount(rowsToAdd, rows)
     
   },
+  computedBestIVUntradableCellsAttMap: function (rows, header, attMap, topRankingStarCorrAttPrefixNotTraded, topRankingStarCorrAttPrefixTraded, topRankingStarCorrAttPrefixAllDistance, topRankingStarCorrAttPrefixNotTradedFilter = '') {
+    let rowsToAdd = []
+    
+    //rows.push("排名內星級符，過濾攻防IV格(A:0-5/B:6-10/C:11-15)\t未交換\t數量\t已交換\t數量\t全部\t數量\t整理\t數量")
+    rows.push(header)
+    
+    for (let area in attMap) {
+      Object.keys(attMap[area]).sort().forEach(attList => {
+        let dexList = attMap[area][attList]
+        let countName = this.computedCountName(dexList)
+        let count = dexList.length
+        
+        let day = "&日數0-"
+        let dayInterval = day + (this.dayInterval + 5)
+        
+        let ivList = dexList.join(',') + "&![" + attList + "]"
+        
+        let areaQuery = this.computedAreaQuery(area)
+        
+        let cells = [
+          area.slice(0,1) + ' ' + attList,
+          '[u]&' + areaQuery + topRankingStarCorrAttPrefixNotTraded + ivList + dayInterval,
+          countName,
+          '[t]&' + areaQuery + topRankingStarCorrAttPrefixTraded + ivList + dayInterval,
+          countName,
+          areaQuery + topRankingStarCorrAttPrefixAllDistance + ivList + day,
+          countName,
+          areaQuery + topRankingStarCorrAttPrefixNotTradedFilter + ivList + day,
+          countName,
+        ].join('\t')
+
+        rowsToAdd.push({
+          count: count,
+          area,
+          cells
+        })
+      })
+    }
+    
+    this.computedBestIVCellsSortRowsByAreaCount(rowsToAdd, rows)
+  },
   
   computedBestIVCellsAll: function (rows, attMap, allNotTraded, allTraded, allAllDistance, allNotTradedFilter) {
     let rowsToAdd = []
     
-    rows.push("排名內\t未交換\t數量\t已交換\t數量\t全部\t數量\t整理\t數量")
+    rows.push("排名內\t全部\t數量\t全部4*\t數量")
+    
+    let ivListAll = []
     
     for (let area in attMap) {
       let allDexList = []
@@ -712,28 +1006,33 @@ var appMethodsQuery = {
         allCount = allCount + count
       })
       
-      let ivList = allDexList.join(',') + "&日數0-"
-      let countName = this.computedCountName(allDexList)
-      let areaQuery = this.computedAreaQuery(area)
-
-      let cells = [
-        area,
-        areaQuery + allNotTraded + ivList,
-        countName,
-        areaQuery + allTraded + ivList,
-        countName,
-        areaQuery + allAllDistance + ivList,
-        countName,
-        areaQuery + allNotTradedFilter + ivList,
-        countName,
-      ].join('\t')
-
-      rowsToAdd.push({
-        count: allCount,
-        area,
-        cells
-      })
+      ivListAll = ivListAll.concat(allDexList)
+      
     }
+    
+    ivListAll = ivListAll.join(',')
+    let countName = '[' + ivListAll.length + ']'
+    
+    let cells = [
+      '全部',
+      allAllDistance + ivListAll,
+      countName,
+      allAllDistance + ivListAll + '&4*',
+      countName,
+      '-',
+      '-',
+      '-',
+      '-',
+      '-',
+      '-',
+    ].join('\t')
+
+    rowsToAdd.push({
+      count: ivListAll.length,
+      area: 'all',
+      cells
+    })
+    
     
     this.computedBestIVCellsSortRowsByCount(rowsToAdd, rows)
     
@@ -855,6 +1154,49 @@ var appMethodsQuery = {
     
     // 再轉換成以星級為主的列表
     let areaStarDexMap = this.computedTopListBuildAreaStarDexMap(areaDexStarMap)
+    
+    // ----------------------------
+    
+    // 再轉換成以攻擊為主的列表
+    let areaAttDexMap = this.computedTopListBuildAreaAttDexMap(areaDexIVAttMap)
+    
+    return {
+      star: areaStarDexMap,
+      att: areaAttDexMap
+    }
+  },
+  buildTopListReverseStar (top1500, top2500) {
+    if (this.ready === false) {
+      return {}
+    }
+    
+    let areaDexStarMap = {}
+    let areaDexIVAttMap = {}
+    
+    Object.keys(top1500).forEach(area => {
+      top1500[area].forEach(pokemon => {
+        let iv = pokemon.gIV
+        let star = pokemon.gStar
+        let dex = pokemon.dex
+        this.computedTopListAddDex(area, dex, star, iv, areaDexStarMap, areaDexIVAttMap)
+      })
+    })
+    
+    Object.keys(top2500).forEach(area => {
+      top2500[area].forEach(pokemon => {
+        let iv = pokemon.uIV
+        let star = pokemon.uStar
+        let dex = pokemon.dex
+        this.computedTopListAddDex(area, dex, star, iv, areaDexStarMap, areaDexIVAttMap)
+      })
+    })
+    
+    //console.log(areaDexStarMap)
+    
+    // ----------------------------
+    
+    // 再轉換成以星級為主的列表
+    let areaStarDexMap = this.computedTopListBuildAreaStarReverseDexMap(areaDexStarMap)
     
     // ----------------------------
     

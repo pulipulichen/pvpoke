@@ -107,8 +107,25 @@
       </h2>
       <textarea 
         v-model="bestIVShadowCells"></textarea>
+      
+      <hr />
+      
+      <h2>
+        <a href="https://docs.google.com/spreadsheets/d/1mfXbZRvfYl1mAF2cjX2ueIXo9wYdZrbmZCInkhjylSI/edit#gid=1682168048" target="perfect">
+        最佳
+        </a>
+      </h2>
+      <textarea v-model="perfectTable"></textarea>
+      
+      <h2>
+        <a href="https://docs.google.com/spreadsheets/d/1mfXbZRvfYl1mAF2cjX2ueIXo9wYdZrbmZCInkhjylSI/edit#gid=367153502" target="perfect_shadow">
+        最佳 暗影
+        </a>
+      </h2>
+      <textarea v-model="perfectShadowTable"></textarea>
     </form>
       
+    
     
   </div>
   
@@ -150,12 +167,18 @@
 <script src="../src/js/battle/TeamRanker.js?v=758.77.96"></script>
 <script src="../src/js/Main.js?v=758.77.96"></script>
 
- <script src="scripts/vue-app-data.js"></script>
+<script src="data/include1500.js"></script>
+<script src="data/exclude1500.js"></script>
+<script src="data/include2500.js"></script>
+<script src="data/exclude2500.js"></script>
+
+<script src="scripts/vue-app-data.js"></script>
 <script src="scripts/vue-app-mounted-best.js"></script>
 <script src="scripts/vue-app-watch.js"></script>
 
 <script src="scripts/vue-app-computed-info.js"></script>
 <script src="scripts/vue-app-computed-output.js"></script>
+<script src="scripts/vue-app-computed-perfect-table.js"></script>
 <script src="scripts/vue-app-computed.js"></script>
 
 <script src="scripts/vue-app-methods-init.js"></script>
@@ -166,6 +189,7 @@
 <script src="scripts/vue-app-methods-iv.js"></script>
 <script src="scripts/vue-app-methods-ui.js"></script>
 <script src="scripts/vue-app-methods-search.js"></script>
+<script src="scripts/vue-app-methods-perfect-table.js"></script>
 <script src="scripts/vue-app-methods.js"></script>
 
 <script src="scripts/vue-app.js"></script>

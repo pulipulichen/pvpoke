@@ -1,5 +1,8 @@
 /* global postMessageAPI, XLSX, GameMaster */
 
+let lostFamilyList = []
+let lostFamilyTimer
+
 var appMethodsUtils = {
   
   calcStar: function (ivs) {
@@ -44,6 +47,35 @@ var appMethodsUtils = {
     
     if (Array.isArray(familyDex) === false) {
       //return dex + '-' + dex
+      console.log('Not in family:', familyDex, dex)
+      
+      if (lostFamilyTimer) {
+        clearTimeout(lostFamilyTimer)
+      }
+      
+      lostFamilyList.push(dex)
+      lostFamilyTimer = setTimeout(() => {
+        lostFamilyList.sort()
+        
+        let jsonConfig = lostFamilyList.map(dex => {
+          return `  "${dex}": [${dex}],`
+        }).join('\n')
+        
+        let urlList = lostFamilyList.map(dex => {
+          return `https://pokemon.wingzero.tw/pokedex/go/${dex}/tw`
+        }).join('\n')
+        
+        console.error(`=======================================
+Evolution Family not found.
+
+${jsonConfig}
+
+${urlList}
+
+Please modify "./iv/data/evolution-family.json"`)
+        
+      }, 3000)
+      
       return dex
     }
     else {
@@ -85,7 +117,7 @@ var appMethodsUtils = {
   isTopIncludable: function (pokemon) {
     let isShadow = false
     let isSpecial = false
-    if (Array.isArray(pokemon.tags)) {
+    if (Array.isArray(pokemon.tags) && pokemon.tags.length > 0) {
       isShadow = (pokemon.tags.indexOf('shadow') > -1)
       isSpecial = (pokemon.tags.indexOf('legendary') > -1
               || pokemon.tags.indexOf('untradeable') > -1
@@ -98,10 +130,16 @@ var appMethodsUtils = {
     let gStar = this.calcGStar(pokemon)
     let uStar = this.calcUStar(pokemon)
     
+    /*
     return (
               ((gStar !== '4*') // 1500不是100%
               || (uStar !== '4*'))
               && (isShadow === false)
+              && (isSpecial === false)
+              )
+     * 
+     */
+    return ( (isShadow === false)
               && (isSpecial === false)
               )
   },
@@ -182,6 +220,14 @@ var appMethodsUtils = {
   },
   getFamilyName(dex) {
     let family = this.evolutionFamily[dex]
+    if (!family) {
+      let errorMessage = `Evolution Family not found. dex: ${dex}.
+Query: https://pokemon.wingzero.tw/pokedex/go/${dex}/tw
+Please modify "./iv/data/evolution-family.json"`
+      //console.error(errorMessage)
+      return 'ERROR'
+    }
+    
     //console.log(family)
     return family.map(dex => {
       let id = this.dexToID[dex + '']
@@ -200,9 +246,11 @@ var appMethodsUtils = {
       }).join(';')
     }
     catch (e) {
-      throw new Exception(`Evolution Family not found. dex: ${dex}.
+      let errorMessage = `Evolution Family not found. dex: ${dex}.
 Query: https://pokemon.wingzero.tw/pokedex/go/${dex}/tw
-Please modify "./iv/data/evolution-family.json"`)
+Please modify "./iv/data/evolution-family.json"`
+      console.error(errorMessage)
+      //throw new Error(errorMessage)
     }
   },
   computedAreaQuery: function (area) {
@@ -235,5 +283,33 @@ Please modify "./iv/data/evolution-family.json"`)
     }
     
     return '(' + floor + dust + '&' + candy + ')'
+  },
+  /**
+   * 檢查要不要移除家庭用
+   * @param {type} top
+   * @returns {undefined}
+   */
+  reportTop (top) {
+    let output = []
+    
+    for (let r in top) {
+      top[r].forEach((p, i) => {
+        //console.log(p.dex, p.speciesId)
+        
+        output.push({
+          dex: p.dex,
+          i: i,
+          speciesId: p.speciesId
+        })
+      })
+    }
+    
+    output.sort((a, b) => {
+      return a.dex - b.dex
+    })
+    
+    output.forEach(p => {
+     console.log(p.dex, p.speciesId, this.pokemonNameTW[p.speciesId], p.i)
+    })
   }
 }

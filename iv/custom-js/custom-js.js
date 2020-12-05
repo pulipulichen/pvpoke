@@ -440,7 +440,7 @@ let startCompare = async function () {
 	//console.log(options.length)
 	
 	let battle = $(".league-select").val()
-	let end = options.length
+	let end = Math.ceil(options.length / 2)
 	if (compareConfig.end && compareConfig.end < end) {
 		end = compareConfig.end
 	}
@@ -653,7 +653,12 @@ let startCompare = async function () {
 	//if (onlyCustom === true) {
 		console.log('跑完了')
 		$(".modal-close").click()
-		document.title = `!` + params.id 
+		if (params.id) {
+			document.title = `!` + params.id 
+		}
+		else {
+			document.title = `!FINISH` 
+		}
 	//}
 }
 

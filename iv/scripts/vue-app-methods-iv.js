@@ -142,6 +142,10 @@ var appMethodsIV = {
       let dataPokemon = gm.data.pokemon[i]
 
       let id = dataPokemon.speciesId
+      if (id.endsWith('_xl')) {
+        continue
+      }
+      
       this.battle.setCP(1500)
       //let gPokemon = new Pokemon(dataPokemon.speciesId, 0, this.battle);
 
@@ -186,9 +190,15 @@ var appMethodsIV = {
       let rank2500 = this.getRank2500(id)
 
 
+      /*
       let topIncludable = (
               (gStar !== '4*') // 1500不是100%
               && (isShadow === false)
+              && (isSpecial === false)
+              )
+      */
+      let topIncludable = (
+              (isShadow === false)
               && (isSpecial === false)
               )
 
@@ -336,10 +346,18 @@ var appMethodsIV = {
       //}
 
       let starClass = []
+      /*
       if (rank1500 !== 9999 && gStar !== '4*') {
         starClass.push(gStar)
       }
       if (rank2500 !== 9999 && gStar !== uStar && uStar !== '4*') {
+        starClass.push(uStar)
+      }
+      */
+      if (rank1500 !== 9999) {
+        starClass.push(gStar)
+      }
+      if (rank2500 !== 9999) {
         starClass.push(uStar)
       }
       starClass = starClass.sort().join(',')
@@ -348,8 +366,10 @@ var appMethodsIV = {
         if (rank1500 !== 9999) {
           rankings1500[(rank1500 - 1)].topIncludable = topIncludable
           rankings1500[(rank1500 - 1)].dex = dex
-          if (topIncludable
-                  && gStar !== '4*') {
+          
+          //if (topIncludable
+          //        && gStar !== '4*') {
+          if (topIncludable) {
             //rankings1500[(rank1500 - 1)].starClass = starClass
             rankings1500[(rank1500 - 1)].starClass = gStar
             rankings1500[(rank1500 - 1)].exchange = this.calcIncludeExchange(gBestIV.ivs)
@@ -359,8 +379,9 @@ var appMethodsIV = {
         if (rank2500 !== 9999) {
           rankings2500[(rank2500 - 1)].topIncludable = topIncludable
           rankings2500[(rank2500 - 1)].dex = dex
-          if (topIncludable
-                  && uStar !== '4*') {
+          //if (topIncludable
+          //        && uStar !== '4*') {
+          if (topIncludable) {
             //rankings2500[(rank2500 - 1)].starClass = starClass
             rankings2500[(rank2500 - 1)].starClass = uStar
             rankings2500[(rank2500 - 1)].exchange = this.calcIncludeExchange(uBestIV.ivs)
@@ -425,6 +446,10 @@ var appMethodsIV = {
 
   },
   get1500IV: function (speciesId) {
+    if (speciesId.endsWith('_xl')) {
+      throw new Error('XL:' + speciesId)
+    }
+    
     let data = this.iv1500[speciesId]
     if (!data) {
       throw new Error('1500 iv is not found: ' + speciesId + '. \n'

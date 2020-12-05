@@ -24,3 +24,7 @@ a.rating.extra {
   background-color: white;
   top: 0 !important;
 }
+
+#compareResultTable td {
+	white-space: nowrap;
+}

@@ -1,3 +1,5 @@
+/* global exclude2500, exclude1500, include2500, include1500 */
+
 var appData = {
   ready: false,
   gm: null,
@@ -13,6 +15,7 @@ var appData = {
   pokemonName: {},
   dexToID: {},
   distanceBase: '0-8',
+  dayInterval: 15,
   topLimit: 100,
   area: ['normal', 'alolan', 'galarian'],
   //top1500: [],
@@ -23,77 +26,11 @@ var appData = {
   // 編號
   // 社群日的 https://pokemongo.fandom.com/wiki/Community_Day
   // 御三家的 
-  include1500: ['raichu', 'dragonair', 'dragonair_shadow', 'dragonite_shadow'
-    , 'ivysaur', 'ivysaur_shadow', 'venusaur', 'venusaur_shadow'
-    //, 'charizard', 'charizard_shadow'
-    , 'blastoise', 'blastoise_shadow'
-    , 'ninetales_alolan'  // 阿羅拉 九尾
-    , 'umbreon'
-    , 'meganium'
-    , 'typhlosion'
-    , 'muk_alolan'
-    //, 'sceptile'
-    , 'blaziken'
-    , 'vigoroth'
-    , 'marshtomp', 'marshtomp_shadow', 'swampert', 'swampert_shadow'
-    , 'gardevoir_shadow'
-    , 'grotle', 'grotle_shadow', 'torterra', 'torterra_shadow'
-    , 'prinplup' , 'empoleon'
-    , 'flygon', 'flygon_shadow'
-    , 'shiftry', 'shiftry_shadow'
-    , 'cherrim_sunny'
-    , 'hypno'
-    , 'gengar'
-    , 'marowak_alolan'
-    , 'toxicroak'
-    //, 'beedrill' // 已有
-    , 'beedrill_shadow'
-    //, 'haunter' // 鬼斯通已經輸給耿鬼
-  ],
+  include1500: include1500,
   // 排除不使用的
-  exclude1500: [
-    'ivysaur',  // 妙蛙草：因為被妙蛙花蓋過去，所以不採用
-    'charizard',
-    'hariyama',
-    'bellossom',
-    'tangrowth',
-    'vileplume',
-    'torterra',
-    'altaria',
-    'machamp' // 怪力
-  ],
-  include2500: ['dragonite', 'dragonite_shadow'
-    , 'venusaur', 'venusaur_shadow'
-    , 'ampharos', 'ampharos_shadow'
-    , 'charizard', 'charizard_shadow'
-    , 'blastoise', 'blastoise_shadow'
-    , 'ninetales_alolan'  // 阿羅拉 九尾
-    , 'umbreon'
-    , 'meganium'
-    , 'metagross'
-    , 'typhlosion'
-    , 'feraligatr'
-    , 'mamoswine'
-    , 'sceptile'
-    , 'salamence'
-    , 'blaziken'
-    , 'swampert', 'swampert_shadow'
-    , 'gardevoir_shadow', 'gallade', 'gallade_shadow'
-    , 'torterra', 'torterra_shadow'
-    , 'infernape'
-    , 'empoleon'
-    , 'flygon', 'flygon_shadow'
-    , 'shiftry', 'shiftry_shadow'
-    , 'gengar'
-    , 'emboar'
-    , 'samurott'
-  ],
-  exclude2500: [
-    'hariyama',
-    'charizard',  // 噴火龍
-    'machamp', // 怪力
-    
-  ],
+  exclude1500: exclude1500,
+  include2500: include2500,
+  exclude2500: exclude2500,
   evolutionFamily: {},
   evolutionFamilySort: {},
   lvStarDust: {},

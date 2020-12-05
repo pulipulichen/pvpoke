@@ -15,15 +15,19 @@ var appComputedInfo = {
     this.gm.data.pokemon.forEach(p => {
       let tags = p.tags
       
+//      if (p.dex === 660) {
+//        console.log(p)
+//      }
+      
       p.isAlolan = false
       p.isGalarian = false
       p.isShadow = false
       
-      if (Array.isArray(tags)) {
+      if (Array.isArray(tags) && tags.length > 0) {
+        //console.log(tags)
         p.isAlolan = (tags.indexOf('alolan') > -1)
         p.isGalarian = (tags.indexOf('galarian') > -1)
         p.isShadow = (tags.indexOf('shadow') > -1)
-        
       }
       
       data[p.speciesId] = p
@@ -32,31 +36,54 @@ var appComputedInfo = {
     return data
   },
   top1500: function () {
-    return this.computedBuildTopPokemons(this.rankings1500, "cp1500")
+    let top = this.computedBuildTopPokemons(this.rankings1500, "cp1500")
+    //console.log(`top1500`)
+    //console.log(top)
+    ///console.log('top1500')
+    //this.reportTop(top)
+    
+    return top
   },
   top2500: function () {
-    return this.computedBuildTopPokemons(this.rankings2500, "cp2500")
+    let top = this.computedBuildTopPokemons(this.rankings2500, "cp2500")
+    
+    //console.log('top2500')
+    //this.reportTop(top)
+    
+    return top
   },
   top1500TradeBetter: function () {
     //console.log(this.top1500)
     //throw Error('test')
     //return this.
-    return this.filterTradable(this.top1500, true)
+    return this.filterTradable(this.top1500NotMax, true)
   },
   top2500TradeBetter: function () {
-    return this.filterTradable(this.top2500, true)
+    return this.filterTradable(this.top2500NotMax, true)
   },
   top1500TradeWorser: function () {
-    return this.filterTradable(this.top1500, false)
+    return this.filterTradable(this.top1500NotMax, false)
   },
   top2500TradeWorser: function () {
-    return this.filterTradable(this.top2500, false)
+    return this.filterTradable(this.top2500NotMax, false)
   },
   top1500max: function () {
-    return this.computedBuildTopMaxPokemons(this.rankings1500, "cp1500")
+    let top = this.computedBuildTopMaxPokemons(this.rankings1500, "cp1500")
+    //console.log('top1500max')
+    //console.log(top)
+    return top
   },
   top2500max: function () {
     return this.computedBuildTopMaxPokemons(this.rankings2500, "cp2500")
+  },
+  top1500NotMax: function () {
+    let top = this.computedBuildTopNotMaxPokemons(this.rankings1500, "cp1500")
+    //console.log('top1500notmax')
+    //console.log(top)
+    return top
+  },
+  top2500NotMax: function () {
+    return this.computedBuildTopNotMaxPokemons(this.rankings2500, "cp2500")
   },
   top1500Shadow: function () {
     return this.computedBuildTopShadowPokemons(this.rankings1500, "cp1500")
@@ -209,6 +236,17 @@ var appComputedInfo = {
   },
   topList: function () {
     return this.buildTopList(this.top1500, this.top2500)
+  },
+  topNotMaxList: function () {
+    let list = this.buildTopList(this.top1500NotMax, this.top2500NotMax)
+    //console.log(list)
+    return list
+  },
+  topNotMaxListReverseStar: function () {
+    //let list = this.computedTopListBuildAreaStarReverseDexMap(this.topNotMaxList)
+    let list = this.buildTopListReverseStar(this.top1500NotMax, this.top2500NotMax)
+    //console.log(list)
+    return list
   },
   topTradeBetterList: function () {
     return this.buildTopList(this.top1500TradeBetter, this.top2500TradeBetter)

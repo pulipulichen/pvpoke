@@ -15,14 +15,20 @@ var appMethodsInit = {
         let pokemonName = {}
         
         this.gm.data.pokemon.forEach(({dex, speciesId, speciesName}, i) => {
+          if (speciesId.endsWith('_xl') || speciesId.endsWith('_xl.')) {
+            return false
+          }
+          
           //this.gm.data.pokemon[i].gIV = this.gm.data.pokemon[i].defaultIVs.cp1500.slice(1)
           //this.gm.data.pokemon[i].uIV = this.gm.data.pokemon[i].defaultIVs.cp2500.slice(1)
           try {
             this.gm.data.pokemon[i].gIV = this.get1500IV(speciesId).slice(1)
           }
           catch (e) {
+            //console.error(speciesId)
             lostIDList1500.push(speciesId)
           }
+          
           try {
             this.gm.data.pokemon[i].uIV = this.get2500IV(speciesId).slice(1)
           }
@@ -130,11 +136,11 @@ var appMethodsInit = {
   initIV: function () {
     return new Promise(resolve => {
       //console.log('1AAA')
-      $.get('./data/IV1500.csv', (iv1500csv) => {
+      $.get('./data/CP1500-IV.csv', (iv1500csv) => {
         //console.log('2AAA')
         this.iv1500 = this.speieceIDtoIV(iv1500csv)
         
-        $.get('data/IV2500.csv', (iv2500csv) => {
+        $.get('data/CP2500-IV.csv', (iv2500csv) => {
           this.iv2500 = this.speieceIDtoIV(iv2500csv)
           //console.log('3AAA')
           resolve(true)
@@ -155,14 +161,14 @@ var appMethodsInit = {
         speciesK = keys.indexOf('SpeciesID')
         return false
       }
-      
+      //console.log(cells)
       let species = cells[speciesK]
       let poke = {}
       cells.forEach((cell, k) => {
         let key = keys[k]
         poke[key] = cell
       })
-      map[species] = poke['RESULT'].split('-').map(d => Number(d))
+      map[species] = poke['IV'].split('-').map(d => Number(d))
     })
     
     return map

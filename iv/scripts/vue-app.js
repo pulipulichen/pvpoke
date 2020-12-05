@@ -1,4 +1,5 @@
-/* global appData, appComputed, appWatch, appMethods, appMount */
+/* global appData, appComputed, appWatch, appMethods, appMount, Vue */
+Vue.config.devtools = true
 
 let app = {
   el: '#app',
