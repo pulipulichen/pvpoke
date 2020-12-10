@@ -43,6 +43,7 @@ var appMethodsInit = {
           this.gm.data.pokemon[i].topIncludable = this.isTopIncludable(this.gm.data.pokemon[i])
           this.gm.data.pokemon[i].topMaxIncludable = this.isTopMaxIncludable(this.gm.data.pokemon[i])
           this.gm.data.pokemon[i].isNotSpecial = this.isNotSpecial(this.gm.data.pokemon[i])
+          this.gm.data.pokemon[i].isShadow = (this.gm.data.pokemon[i].tags && this.gm.data.pokemon[i].tags.indexOf('shadow') > -1)
           
           this.gm.data.pokemon[i].isBetterAfterTrading = this.isBetterAfterTrading(this.gm.data.pokemon[i])
           //if (this.gm.data.pokemon[i].isNotSpecial === true) {

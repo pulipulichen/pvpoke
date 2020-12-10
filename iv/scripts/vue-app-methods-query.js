@@ -566,14 +566,14 @@ var appMethodsQuery = {
       
       let cells = [
         area,
-        '[e],' + areaQuery + outOfRankingPrefixNotTraded + ivList + dayInterval,
+        '[cO' + this.getMMDD() + ',' + areaQuery + outOfRankingPrefixNotTraded + ivList + dayInterval,
         countName,
-        '[t],' + areaQuery + outOfRankingPrefixTraded + ivList + dayInterval,
+        '[tO' + this.getMMDD() + ',' + areaQuery + outOfRankingPrefixTraded + ivList + day,
         countName,
         areaQuery + outOfRankingPrefixTradedBadLucky + ivList + day,
         countName,
         //areaQuery + outOfRankingPrefixAll + ivList + day,
-        '[e],' + areaQuery + outOfRankingPrefixNotTraded + ivList + dayIntervalTrade,
+        '[eO' + this.getMMDD() + ',' + areaQuery + outOfRankingPrefixNotTraded + ivList + dayIntervalTrade,
         countName,
       ].join('\t')
       
@@ -612,7 +612,7 @@ var appMethodsQuery = {
       
       let cells = [
         area,
-        '[p],' + areaQuery + outOfRankingPrefixNotTraded + ivList + day,
+        '[p' + this.getMMDD() +',' + areaQuery + outOfRankingPrefixNotTraded + ivList + day,
         countName,
         '-',
         '-',
@@ -657,9 +657,9 @@ var appMethodsQuery = {
       
       let cells = [
         area,
-        "[e]," + areaQuery + outOfRankingPrefixNotTraded + ivList + dayInterval,
+        "[eR!M" + this.getMMDD() + "," + areaQuery + outOfRankingPrefixNotTraded + ivList + dayInterval,
         countName,
-        "[t]," + areaQuery + outOfRankingPrefixTraded + ivList + dayInterval,
+        "[tR!M" + this.getMMDD() + "," + areaQuery + outOfRankingPrefixTraded + ivList + day,
         countName,
         areaQuery + outOfRankingPrefixTradedBadLucky + ivList + day,
         countName,
@@ -709,7 +709,7 @@ var appMethodsQuery = {
           area.slice(0, 1) + ' ' + starList,
           '[e],' + starExclusiveQuery + areaQuery + topRankingStarIncorrPrefixNotTraded + ivList + dayInterval,
           countName,
-          '[t],' + starExclusiveQuery + areaQuery + topRankingStarIncorrPrefixTraded + ivList + dayInterval,
+          '[t],' + starExclusiveQuery + areaQuery + topRankingStarIncorrPrefixTraded + ivList + day,
           countName,
           starExclusiveQuery + areaQuery + topRankingStarIncorrPrefixTradedBadLucky + ivList + day,
           countName,
@@ -883,9 +883,9 @@ var appMethodsQuery = {
         
         let cells = [
           area.slice(0,1) + ' ' + starList,
-          '[e],' + areaQuery + topRankingStarIncorrPrefixNotTraded + ivList + dayInterval,
+          '[eR!' + starList + this.getMMDD() + ',' + areaQuery + topRankingStarIncorrPrefixNotTraded + ivList + dayInterval,
           countName,
-          '[t],' + areaQuery + topRankingStarIncorrPrefixTraded + ivList + dayInterval,
+          '[tR!' + starList + this.getMMDD() + ',' + areaQuery + topRankingStarIncorrPrefixTraded + ivList + day,
           countName,
           areaQuery + topRankingStarIncorrPrefixTradedBadLucky + ivList + day,
           countName,
@@ -926,9 +926,9 @@ var appMethodsQuery = {
         
         let cells = [
           area.slice(0,1) + ' ' + attList,
-          '[e],' + areaQuery + topRankingStarCorrAttPrefixNotTraded + ivList + dayInterval,
+          '[cR ' + attList + this.getMMDD() + ',' + areaQuery + topRankingStarCorrAttPrefixNotTraded + ivList + dayInterval,
           countName,
-          '[t],' + areaQuery + topRankingStarCorrAttPrefixTraded + ivList + dayInterval,
+          '[tcR ' + attList + this.getMMDD() + ',' + areaQuery + topRankingStarCorrAttPrefixTraded + ivList + day,
           countName,
           areaQuery + topRankingStarCorrAttPrefixAllDistance + ivList + day,
           countName,
@@ -968,9 +968,9 @@ var appMethodsQuery = {
         
         let cells = [
           area.slice(0,1) + ' ' + attList,
-          '[u]&' + areaQuery + topRankingStarCorrAttPrefixNotTraded + ivList + dayInterval,
+          '[uR ' + attList + this.getMMDD() + ',' + areaQuery + topRankingStarCorrAttPrefixNotTraded + ivList + dayInterval,
           countName,
-          '[t]&' + areaQuery + topRankingStarCorrAttPrefixTraded + ivList + dayInterval,
+          '[tuR ' + attList + this.getMMDD() + ',' + areaQuery + topRankingStarCorrAttPrefixTraded + ivList + dayInterval,
           countName,
           areaQuery + topRankingStarCorrAttPrefixAllDistance + ivList + day,
           countName,

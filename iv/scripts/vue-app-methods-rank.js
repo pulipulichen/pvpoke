@@ -21,7 +21,8 @@ var appMethodsRank = {
       
       let p = this.speciesIdToData[speciesId]
       
-      if (p.topMaxIncludable === false) {
+      if (p.topMaxIncludable === false
+              || p.isShadow === true) {
         count++
         return true
       }
@@ -113,9 +114,11 @@ var appMethodsRank = {
       }
       
       let p = this.speciesIdToData[speciesId]
+      //console.log(p.tags)
       
       if (p.topMaxIncludable === true
-            || p.isNotSpecial === false) {
+            || p.isNotSpecial === false
+            || p.isShadow === true ) {
         count++
         return true
       }

@@ -73,18 +73,33 @@
            target="allData">
           All Data
         </a>
+        <button type="button" v-on:click="copy(bestIVAll)">COPY</button>
       </h2>
       
       <textarea 
         v-model="bestIVAll">
       </textarea>
       
+      <hr />
+      
+      <div>
+        編號意義：
+        c: 請檢查 ; 
+        e: 可交換 ; 
+        t: 已經交換 ; 
+        u: 交換也沒用 ; 
+        p: 檢查待淨化 ; 
+        O: 排名外 ; 
+        R: 排名內 ; 
+        M: 4*
+      </div>
       
       <h2>
         <a href="https://docs.google.com/spreadsheets/d/1t87-wOouod1RPUoBDsF4HN1uYsLsQyUm8Hxh1Xfxzyw/edit#gid=1170803128" 
            target="queryBase">
           臺北
         </a>
+        <button type="button" v-on:click="copy(bestIVCells)">COPY</button>
       </h2>
       <textarea 
         v-model="bestIVCells"></textarea>
@@ -104,6 +119,7 @@
           
         暗影
         </a>
+        <button type="button" v-on:click="copy(bestIVShadowCells)">COPY</button>
       </h2>
       <textarea 
         v-model="bestIVShadowCells"></textarea>
@@ -114,6 +130,7 @@
         <a href="https://docs.google.com/spreadsheets/d/1mfXbZRvfYl1mAF2cjX2ueIXo9wYdZrbmZCInkhjylSI/edit#gid=1682168048" target="perfect">
         最佳
         </a>
+        <button type="button" v-on:click="copy(perfectTable)">COPY</button>
       </h2>
       <textarea v-model="perfectTable"></textarea>
       
@@ -121,6 +138,7 @@
         <a href="https://docs.google.com/spreadsheets/d/1mfXbZRvfYl1mAF2cjX2ueIXo9wYdZrbmZCInkhjylSI/edit#gid=367153502" target="perfect_shadow">
         最佳 暗影
         </a>
+        <button type="button" v-on:click="copy(perfectShadowTable)">COPY</button>
       </h2>
       <textarea v-model="perfectShadowTable"></textarea>
     </form>

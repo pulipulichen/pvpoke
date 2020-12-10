@@ -23,7 +23,7 @@ let include1500 = [
     , 'marowak_alolan'
     , 'toxicroak'
     //, 'beedrill' // 已有
-    , 'beedrill_shadow'
+    , 'beedrill_shadow' // 大針蜂 暗影化
     //, 'haunter' // 鬼斯通已經輸給耿鬼
     , 'stunfisk' // 泥巴魚
     , 'lucario' // 路卡利歐

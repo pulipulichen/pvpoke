@@ -51,10 +51,10 @@ var appComputedOutput = {
     // -----------------
     // 列出所有名單，這是為了要找出排除用的
     
-    let allNotTraded = "!交換&距離" + this.distanceBase + "&!f&!p&!*&!w&!c&!U&!G&!異色&!暗影&!淨化&!傳說的寶可夢&!幻&"
+    let allNotTraded = "!交換&距離" + this.distanceBase + "&!f&!p&!*&!w&!c&!傳說的寶可夢&!幻&"
     let allTraded = "交換&!f&!p&!*&!w&!c&!U&!G&!異色&!暗影&!淨化&!傳說的寶可夢&!幻&"
     //let allAllDistance = "!暗影&!淨化&!4*&!傳說的寶可夢&!幻&" // 不可以加上「&!t&!e&!w&!c&」，因為這會讓交換之後的寶可夢無法納入判斷
-    let allAllDistance = "!暗影&!淨化&!傳說的寶可夢&!幻&!e&!w&!c" // 不可以加上「&!t&!e&!w&!c&」，因為這會讓交換之後的寶可夢無法納入判斷
+    let allAllDistance = "!傳說的寶可夢&!幻&!e&!w&!c&" // 不可以加上「&!t&!e&!w&!c&」，因為這會讓交換之後的寶可夢無法納入判斷
     let allNotTradedFilter = "!e&!t&!f&!c&!w&!*&!交換&距離" + this.distanceBase + "&!f&!p&!U&!G&!異色&!暗影&!淨化&!傳說的寶可夢&!幻&"
     
     //  this.computedBestIVCellsAll(rows, attMap, allNotTraded, allTraded, allAllDistance, allNotTradedFilter)

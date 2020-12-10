@@ -311,5 +311,18 @@ Please modify "./iv/data/evolution-family.json"`
     output.forEach(p => {
      console.log(p.dex, p.speciesId, this.pokemonNameTW[p.speciesId], p.i)
     })
+  },
+  copy (text) {
+    var input = document.createElement('textarea');
+    input.value = text
+    
+    document.body.appendChild(input);
+    input.select();
+    var result = document.execCommand('copy');
+    document.body.removeChild(input);
+    return result;
+  },
+  getMMDD () {
+    return ' ' + (new Date()).mmdd()
   }
 }
