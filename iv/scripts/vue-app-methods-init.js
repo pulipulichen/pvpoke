@@ -139,24 +139,30 @@ var appMethodsInit = {
       //console.log('1AAA')
       $.get('./data/CP1500-IV.csv', (iv1500csv) => {
         //console.log('2AAA')
-        this.iv1500 = this.speieceIDtoIV(iv1500csv)
+        this.iv1500 = this.speieceIDtoIV(iv1500csv, '1500')
         
         $.get('data/CP2500-IV.csv', (iv2500csv) => {
-          this.iv2500 = this.speieceIDtoIV(iv2500csv)
+          this.iv2500 = this.speieceIDtoIV(iv2500csv, '2500')
           //console.log('3AAA')
+          
+          //console.log(this.hasXL1500)
+          //console.log(this.hasXL2500)
           resolve(true)
         })
       })
     })
   },
-  speieceIDtoIV: function (csv) {
+  speieceIDtoIV: function (csv, cp = '1500') {
     let lines = csv.trim().split('\n')
     let map = {}
     let keys = []
     let speciesK
     
+    let xlColIndex = 7
+    
     lines.forEach((line, i) => {
       let cells = line.trim().split(',').map(cell => cell.trim())
+      
       if (i === 0) {
         keys = cells
         speciesK = keys.indexOf('SpeciesID')
@@ -170,6 +176,15 @@ var appMethodsInit = {
         poke[key] = cell
       })
       map[species] = poke['IV'].split('-').map(d => Number(d))
+      
+      if (cells[xlColIndex] !== '') {
+        if (cp === '1500') {
+          this.hasXL1500.push(species)
+        }
+        else {
+          this.hasXL2500.push(species)
+        }
+      }
     })
     
     return map

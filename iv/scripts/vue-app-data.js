@@ -22,6 +22,8 @@ var appData = {
   //top2500: [],
   rankings1500: [],
   rankings2500: [],
+  hasXL1500: [],
+  hasXL2500: [],
   
   // 編號
   // 社群日的 https://pokemongo.fandom.com/wiki/Community_Day

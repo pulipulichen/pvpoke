@@ -1,11 +1,11 @@
 // https://docs.google.com/spreadsheets/d/1mfXbZRvfYl1mAF2cjX2ueIXo9wYdZrbmZCInkhjylSI/edit?folder=1Fchm-5uXC1qQrAOcvVyVUcMOp7JN_M6K#gid=1069329069
 
-let onlyCustom = false
+let onlyCustom = true
 let autoStartCompare = false
 
 let customPokemons = {
 	//"azumarill": "瑪力露chrome-extension://nbhcbdghjpllgmfilhnhkllmkecfmpld/options.html麗",
-	"dugtrio_shadow": "三地鼠 暗影化",
+	"diggersby": "掘地兔",
 	/*
 	"shiftry": "狡猾天狗",
 	"munchlax": "小卡比獸",
@@ -36,23 +36,27 @@ for (let pair of paramsEntries.entries()) {
 	params[key] = value
 }
 
+
+let compareConfig = {
+	//start: 83,
+	//end: 38
+}
+
 let customLeague = params.league
 if (params.id) {
 	customPokemons = {}
 	customPokemons[params.id] = 'Pokemon'
 	autoStartCompare = true
 	onlyCustom = true
+	compareConfig = {}
 }
+
 if (params.all) {
 	customPokemons = {}
 	autoStartCompare = true
 	onlyCustom = false
 }
 
-let compareConfig = {
-	//start: 83,
-	//end: 38
-}
 let cacheBattleResultMinutes = 24 * 60 * 7
 
 // ----------------
@@ -412,9 +416,9 @@ let copyResultTableCSV = function () {
 		let line = [
 		]
 		$(tr).children().each((j, ele) => {
-			if (j === 1 || j === 4 || j === 11) {
-				return
-			}
+			//if (j === 1 || j === 4 || j === 11) {
+			//	return
+			//}
 			line.push(ele.innerText.trim())
 		})
 		
@@ -431,16 +435,35 @@ let startCompare = async function () {
 	
 	setupCompareResultTable()
 	
-	$('.add-poke-btn:first').click()
+	$('.add-poke-btn:visible:first').click()
 	
 	await sleep(1000)
+	//alert('消失了嗎？441')
 	
-	let select = $('.poke-select:visible:first')
+	
+	// https://pvpoketw.com/team-builder/?league=1500&id=mr_mime_galarian
+	
+	let pokeSingle = $('.modal-container:visible:first')
+	while (pokeSingle.length === 0) {
+		$('.add-poke-btn:first').click()
+		await sleep(1000)
+		pokeSingle = $('.modal-container:visible:first')
+	}
+	
+	//alert('消失了嗎？453')
+	
+	let select = pokeSingle.find('.poke-select:visible:first')
+	//alert('消失了嗎？448')
+	
 	let options = select.children(':not([disabled])')
-	//console.log(options.length)
+	console.log(select.length, options.length)
 	
 	let battle = $(".league-select").val()
 	let end = Math.ceil(options.length / 2)
+	if (params.id) {
+		end = options.length
+	}
+	
 	if (compareConfig.end && compareConfig.end < end) {
 		end = compareConfig.end
 	}
@@ -452,7 +475,10 @@ let startCompare = async function () {
 	
 	let customList = Object.keys(customPokemons)
 	console.log(customList)
+	console.log({start, end})
 	processedID = []
+	//alert('消失了嗎？478')
+	
 	for (let i = start; i < end; i++) {
 		let SpeciesID = options.eq(i).attr('value')
 		if (SpeciesID.endsWith('_xl')) {
@@ -462,7 +488,7 @@ let startCompare = async function () {
 			//continue
 		}
 		
-		console.log(i, SpeciesID, customList, customList.indexOf(SpeciesID))
+		//console.log(i, SpeciesID, customList, customList.indexOf(SpeciesID))
 		if (onlyCustom === true && customList.indexOf(SpeciesID) === -1) {
 			continue
 		}
@@ -497,13 +523,43 @@ let startCompare = async function () {
 		
 		document.title = Math.round(((i - start) / (end - start)) * 100) + '% IV Compare...'
 		
-		select.val(SpeciesID)[0].dispatchEvent(new Event("change"))
+		//alert('消失了嗎524')
+		//return
+		//alert('消失了嗎526')
+		
+		/*
+		select = $('.poke-select:visible:first')
+		while (select.length === 0) {
+			$('.add-poke-btn:first').click()
+			await sleep(1000)
+			select = $('.poke-select:visible:first')
+		}
+		*/
+		
+		select.val(SpeciesID)
+		await sleep(100)
+		//alert('消失了嗎')
+		
+		
+		select[0].dispatchEvent(new Event("change", {bubbles: false}))
 		await sleep(1000)
+		
+		//alert('消失了嗎')
 		
 		let section = $('.advanced-section:visible')
 		
+		/*
+		select = $('.poke-select:visible:first')
+		while (select.length === 0) {
+			$('.add-poke-btn:first').click()
+			await sleep(1000)
+			select = $('.poke-select:visible:first')
+			select.val(SpeciesID)[0].dispatchEvent(new Event("change"))
+		}
+		*/
+		
 		if (section.hasClass("active") === false) {
-			$('.advanced-section:visible .advanced:visible')[0].dispatchEvent(new Event("click"))
+			$('.advanced-section:visible .advanced:visible')[0].dispatchEvent(new Event("click", {bubbles: false}))
 			await sleep(1000)
 		}
 		
@@ -514,23 +570,39 @@ let startCompare = async function () {
 		tr.find('.default').html(defaultStats)
 		
 		// 開放等級上限
-		if ($('.modal-container:visible .level-cap-group:visible div.on.check[value="50"]').length === 0) {
-	 		$('.modal-container:visible .level-cap-group:visible div.check[value="50"]').click()
+		if (pokeSingle.find('.level-cap-group:visible div.on.check[value="50"]').length === 0) {
+	 		pokeSingle.find('.level-cap-group:visible div.check[value="50"]')[0].dispatchEvent(new Event("click"))
+	 		pokeSingle.find('.level-cap-group:visible div.check[value="50"]').addClass('on')
 			await sleep(500)
 		}
 		
+		//alert('確認一下等級是否有問題')
+		
+		/*
+		select = $('.poke-select:visible:first')
+		while (select.length === 0) {
+			$('.add-poke-btn:first').click()
+			await sleep(1000)
+			select = $('.poke-select:visible:first')
+			select.val(SpeciesID)[0].dispatchEvent(new Event("change"))
+		}
+		*/
+		
+		//alert('準備取得BEST參數')
+		
 		// 取得BEST參數
 		try {
-			$(".maximize-stats:visible")[0].dispatchEvent(new Event("click"))
+			$(".maximize-stats:visible")[0].dispatchEvent(new Event("click", {bubbles: false}))
 		}
 		catch (e) {
 			i--
 			console.error('不知道為什麼框框被關掉了', i)
-			return false
+			//return false
 			tr.remove()
 			await sleep(1000)
 			$('.add-poke-btn:first').click()
 			await sleep(1000)
+			pokeSingle = $('.modal-container:visible:first')
 			select = $('.poke-select:visible:first')
 			continue
 		}
@@ -539,12 +611,12 @@ let startCompare = async function () {
 		tr.find('.best').html(bestStats)
 		
 		// 取得MAX參數
-		let fields = $('.modal-container:visible .advanced-section:visible .fields:visible .ivs')
-		fields.find(".iv[iv='atk']").val(15)[0].dispatchEvent(new Event("change"))
+		let fields = pokeSingle.find('.advanced-section:visible .fields:visible .ivs')
+		fields.find(".iv[iv='atk']").val(15)[0].dispatchEvent(new Event("change", {bubbles: false}))
 		await sleep(200)
-		fields.find(".iv[iv='def']").val(15)[0].dispatchEvent(new Event("change"))
+		fields.find(".iv[iv='def']").val(15)[0].dispatchEvent(new Event("change", {bubbles: false}))
 		await sleep(200)
-		fields.find(".iv[iv='hp']").val(15)[0].dispatchEvent(new Event("change"))
+		fields.find(".iv[iv='hp']").val(15)[0].dispatchEvent(new Event("change", {bubbles: false}))
 		await sleep(200)
 		let maxStats = getStats()
 		tr.find('.max').html(maxStats)
@@ -558,8 +630,8 @@ let startCompare = async function () {
 		let defaultXLStats = ''
 		//console.log(SpeciesIDXL)
 	
-		if ($('.modal-container:visible select.poke-select option[value="' + SpeciesIDXL + '"]').length > 0) {
-			select.val(SpeciesIDXL)[0].dispatchEvent(new Event("change"))
+		if (pokeSingle.find('select.poke-select option[value="' + SpeciesIDXL + '"]').length > 0) {
+			select.val(SpeciesIDXL)[0].dispatchEvent(new Event("change", {bubbles: false}))
 			await sleep(1000)
 			
 			defaultXLStats = getStats()
@@ -652,7 +724,7 @@ let startCompare = async function () {
 	
 	//if (onlyCustom === true) {
 		console.log('跑完了')
-		$(".modal-close").click()
+		//$(".modal-close").click()
 		if (params.id) {
 			document.title = `!` + params.id 
 		}

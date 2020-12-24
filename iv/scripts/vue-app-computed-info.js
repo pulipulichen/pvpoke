@@ -200,8 +200,10 @@ var appComputedInfo = {
     Object.keys(this.top1500max).forEach((area) => {
       this.computedOutOfRankingAddDex(area, this.top1500max[area], exclusiveList)
     })
+    
+    //console.log(this.top2500max)
     Object.keys(this.top2500max).forEach((area) => {
-      this.computedOutOfRankingAddDex(area, this.top1500max[area], exclusiveList)
+      this.computedOutOfRankingAddDex(area, this.top2500max[area], exclusiveList)
     })
     
     Object.keys(exclusiveList).forEach(a => {
@@ -209,6 +211,8 @@ var appComputedInfo = {
         return Number(a) - Number(b)
       })
     })
+    
+    //console.log(exclusiveList)
     
     return exclusiveList
   },
@@ -245,6 +249,18 @@ var appComputedInfo = {
   topNotMaxListReverseStar: function () {
     //let list = this.computedTopListBuildAreaStarReverseDexMap(this.topNotMaxList)
     let list = this.buildTopListReverseStar(this.top1500NotMax, this.top2500NotMax)
+    //console.log(list)
+    return list
+  },
+  topNotMaxTradableListReverseStar: function () {
+    //let list = this.computedTopListBuildAreaStarReverseDexMap(this.topNotMaxList)
+    let list = this.buildTopListReverseStar(this.top1500TradeBetter, this.top2500TradeBetter)
+    //console.log(list)
+    return list
+  },
+  topNotMaxUntradableListReverseStar: function () {
+    //let list = this.computedTopListBuildAreaStarReverseDexMap(this.topNotMaxList)
+    let list = this.buildTopListReverseStar(this.top1500TradeWorser, this.top2500TradeWorser)
     //console.log(list)
     return list
   },

@@ -16,7 +16,26 @@ var appMethodsQuery = {
     
     let addedList = []
     
+    let needQueryXL1500 = []
+    let needQueryXL2500 = []
+    
     let addRanking = (speciesId) => {
+      if (speciesId.endsWith('_xl')) {
+        let sId = speciesId.slice(0, -3)
+        if (cp === 'cp1500') {
+          if (this.hasXL1500.indexOf(sId) === -1) {
+            needQueryXL1500.push(sId)
+          }
+        }
+        else if (cp === 'cp2500') {
+          if (this.hasXL2500.indexOf(sId) === -1) {
+            needQueryXL2500.push(sId)
+          }
+        }
+        
+        return true
+      }
+      
       if (speciesId.endsWith('_xl')
               || addedList.indexOf(speciesId) > -1) {
         return true
@@ -106,6 +125,19 @@ var appMethodsQuery = {
       if (addRanking(speciesId) === false) {
         break
       }
+    }
+    
+    // 全部跑完後，確認有沒有多的錯誤訊息要處理
+    if (needQueryXL1500.length > 0 || needQueryXL2500.length > 0) {
+      // https://pvpoketw.com/team-builder/?league=1500&id=mr_mime_galarian
+      needQueryXL1500.forEach(sID => {
+        console.error(`https://pvpoketw.com/team-builder/?league=1500&id=` + sID)
+      })
+      needQueryXL2500.forEach(sID => {
+        console.error(`https://pvpoketw.com/team-builder/?league=2500&id=` + sID)
+      })
+      
+      throw Error('Need add XL data to CP1500-IV.csv and CP2500-IV.csv')
     }
     
     return ranking
@@ -566,14 +598,14 @@ var appMethodsQuery = {
       
       let cells = [
         area,
-        '[cO' + this.getMMDD() + ',' + areaQuery + outOfRankingPrefixNotTraded + ivList + dayInterval,
+        'cO' + this.getMMDD() + ',' + areaQuery + outOfRankingPrefixNotTraded + ivList + dayInterval,
         countName,
-        '[tO' + this.getMMDD() + ',' + areaQuery + outOfRankingPrefixTraded + ivList + day,
+        'tO' + this.getMMDD() + ',' + areaQuery + outOfRankingPrefixTraded + ivList + day,
         countName,
         areaQuery + outOfRankingPrefixTradedBadLucky + ivList + day,
         countName,
         //areaQuery + outOfRankingPrefixAll + ivList + day,
-        '[eO' + this.getMMDD() + ',' + areaQuery + outOfRankingPrefixNotTraded + ivList + dayIntervalTrade,
+        'eO' + this.getMMDD() + ',' + areaQuery + outOfRankingPrefixNotTraded + ivList + dayIntervalTrade,
         countName,
       ].join('\t')
       
@@ -612,7 +644,7 @@ var appMethodsQuery = {
       
       let cells = [
         area,
-        '[p' + this.getMMDD() +',' + areaQuery + outOfRankingPrefixNotTraded + ivList + day,
+        'p' + this.getMMDD() +',' + areaQuery + outOfRankingPrefixNotTraded + ivList + day,
         countName,
         '-',
         '-',
@@ -657,9 +689,9 @@ var appMethodsQuery = {
       
       let cells = [
         area,
-        "[eR!M" + this.getMMDD() + "," + areaQuery + outOfRankingPrefixNotTraded + ivList + dayInterval,
+        "eR!M" + this.getMMDD() + "," + areaQuery + outOfRankingPrefixNotTraded + ivList + dayInterval,
         countName,
-        "[tR!M" + this.getMMDD() + "," + areaQuery + outOfRankingPrefixTraded + ivList + day,
+        "tR!M" + this.getMMDD() + "," + areaQuery + outOfRankingPrefixTraded + ivList + day,
         countName,
         areaQuery + outOfRankingPrefixTradedBadLucky + ivList + day,
         countName,
@@ -707,9 +739,9 @@ var appMethodsQuery = {
         
         let cells = [
           area.slice(0, 1) + ' ' + starList,
-          '[e],' + starExclusiveQuery + areaQuery + topRankingStarIncorrPrefixNotTraded + ivList + dayInterval,
+          'e],' + starExclusiveQuery + areaQuery + topRankingStarIncorrPrefixNotTraded + ivList + dayInterval,
           countName,
-          '[t],' + starExclusiveQuery + areaQuery + topRankingStarIncorrPrefixTraded + ivList + day,
+          't],' + starExclusiveQuery + areaQuery + topRankingStarIncorrPrefixTraded + ivList + day,
           countName,
           starExclusiveQuery + areaQuery + topRankingStarIncorrPrefixTradedBadLucky + ivList + day,
           countName,
@@ -731,7 +763,7 @@ var appMethodsQuery = {
   },
   computedBestIVCellsStarMapAll: function (rows, starMap, topRankingStarIncorrPrefixNotTraded, topRankingStarIncorrPrefixTraded, topRankingStarIncorrPrefixTradedBadLucky, topRankingStarIncorrPrefixNotTradedFilter = '') {
     
-    rows.push("排名內準備排除用\t未交換\t數量\t已交換\t數量\t亮晶晶2*\t數量\t整理\t數量")
+    rows.push("排名內準備排除用\t未交換\t數量\t全部\t數量\t亮晶晶2*\t數量\t整理\t數量")
     
     let rowsToAdd = []
     
@@ -749,6 +781,8 @@ var appMethodsQuery = {
         let areaQuery = this.computedAreaQuery(area)
         let cells = [
           area.slice(0, 1) + ' ' + starList,
+          starList + '&' + areaQuery + topRankingStarIncorrPrefixNotTraded + ivList + day,
+          countName,
           starList + '&' + areaQuery + topRankingStarIncorrPrefixTradedBadLucky + ivList + day,
           countName,
           '-',
@@ -838,7 +872,7 @@ var appMethodsQuery = {
         
         let cells = [
           area.slice(0, 1) + ' ' + starList,
-          '[p],' + starExclusiveQuery + areaQuery + topRankingStarIncorrPrefixNotTraded + ivList + dayInterval,
+          'p],' + starExclusiveQuery + areaQuery + topRankingStarIncorrPrefixNotTraded + ivList + dayInterval,
           countName,
           '-',
           '-',
@@ -860,9 +894,9 @@ var appMethodsQuery = {
     //rows.push("") // 空一行
     this.insertRowHr(rows)
   },
-  computedBestIVCellsStarReverseMap: function (rows, starMap, topRankingStarIncorrPrefixNotTraded, topRankingStarIncorrPrefixTraded, topRankingStarIncorrPrefixTradedBadLucky, topRankingStarIncorrPrefixNotTradedFilter = '') {
+  computedBestIVCellsStarReverseMap: function (header, prefix, rows, starMap, topRankingStarIncorrPrefixNotTraded, topRankingStarIncorrPrefixTraded, topRankingStarIncorrPrefixTradedBadLucky, topRankingStarIncorrPrefixNotTradedFilter = '') {
     
-    rows.push("排名內但星級不符\t未交換\t數量\t已交換\t數量\t亮晶晶2*\t數量\t整理\t數量")
+    rows.push(header + "\t未交換\t數量\t已交換\t數量\t亮晶晶2*\t數量\t整理\t數量")
     
     let rowsToAdd = []
     
@@ -883,9 +917,9 @@ var appMethodsQuery = {
         
         let cells = [
           area.slice(0,1) + ' ' + starList,
-          '[eR!' + starList + this.getMMDD() + ',' + areaQuery + topRankingStarIncorrPrefixNotTraded + ivList + dayInterval,
+          prefix + 'R!' + starList + this.getMMDD() + ',' + areaQuery + topRankingStarIncorrPrefixNotTraded + ivList + dayInterval,
           countName,
-          '[tR!' + starList + this.getMMDD() + ',' + areaQuery + topRankingStarIncorrPrefixTraded + ivList + day,
+          'tR!' + starList + this.getMMDD() + ',' + areaQuery + topRankingStarIncorrPrefixTraded + ivList + day,
           countName,
           areaQuery + topRankingStarIncorrPrefixTradedBadLucky + ivList + day,
           countName,
@@ -926,9 +960,9 @@ var appMethodsQuery = {
         
         let cells = [
           area.slice(0,1) + ' ' + attList,
-          '[cR ' + attList + this.getMMDD() + ',' + areaQuery + topRankingStarCorrAttPrefixNotTraded + ivList + dayInterval,
+          'cR ' + attList + this.getMMDD() + ',' + areaQuery + topRankingStarCorrAttPrefixNotTraded + ivList + dayInterval,
           countName,
-          '[tcR ' + attList + this.getMMDD() + ',' + areaQuery + topRankingStarCorrAttPrefixTraded + ivList + day,
+          'tcR ' + attList + this.getMMDD() + ',' + areaQuery + topRankingStarCorrAttPrefixTraded + ivList + day,
           countName,
           areaQuery + topRankingStarCorrAttPrefixAllDistance + ivList + day,
           countName,
@@ -968,9 +1002,9 @@ var appMethodsQuery = {
         
         let cells = [
           area.slice(0,1) + ' ' + attList,
-          '[uR ' + attList + this.getMMDD() + ',' + areaQuery + topRankingStarCorrAttPrefixNotTraded + ivList + dayInterval,
+          'uR ' + attList + this.getMMDD() + ',' + areaQuery + topRankingStarCorrAttPrefixNotTraded + ivList + dayInterval,
           countName,
-          '[tuR ' + attList + this.getMMDD() + ',' + areaQuery + topRankingStarCorrAttPrefixTraded + ivList + dayInterval,
+          'tuR ' + attList + this.getMMDD() + ',' + areaQuery + topRankingStarCorrAttPrefixTraded + ivList + dayInterval,
           countName,
           areaQuery + topRankingStarCorrAttPrefixAllDistance + ivList + day,
           countName,

@@ -323,6 +323,6 @@ Please modify "./iv/data/evolution-family.json"`
     return result;
   },
   getMMDD () {
-    return ' ' + (new Date()).mmdd()
+    return '' + (new Date()).mmdd()
   }
 }

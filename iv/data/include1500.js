@@ -1,5 +1,7 @@
 let include1500 = [
-    'raichu', 'dragonair', 'dragonair_shadow', 'dragonite_shadow'
+    //'raichu', // 雷丘 已經有100%了
+    'raichu_alolan', // 阿羅拉雷丘
+    'dragonair', 'dragonair_shadow', 'dragonite_shadow'
     , 'ivysaur', 'ivysaur_shadow', 'venusaur', 'venusaur_shadow'
     //, 'charizard', 'charizard_shadow'
     , 'blastoise', 'blastoise_shadow'
