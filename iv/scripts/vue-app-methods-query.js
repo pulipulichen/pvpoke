@@ -593,19 +593,21 @@ var appMethodsQuery = {
       let dayInterval = "&日數0-" + (this.dayInterval + 2)
       let dayIntervalTrade = "&日數1-" + (this.dayInterval + 2)
       
+      let distance = "&距離" + this.distanceBase
+      
       let ivList = dexList.map(dex => '!' + dex).join('&')
       let areaQuery = this.computedAreaQuery(area)
       
       let cells = [
         area,
-        'cO' + this.getMMDD() + ',' + areaQuery + outOfRankingPrefixNotTraded + ivList + dayInterval,
+        'cO' + this.getMMDD() + ',' + areaQuery + outOfRankingPrefixNotTraded + ivList + distance + dayInterval,
         countName,
         'tO' + this.getMMDD() + ',' + areaQuery + outOfRankingPrefixTraded + ivList + day,
         countName,
         areaQuery + outOfRankingPrefixTradedBadLucky + ivList + day,
         countName,
         //areaQuery + outOfRankingPrefixAll + ivList + day,
-        'eO' + this.getMMDD() + ',' + areaQuery + outOfRankingPrefixNotTraded + ivList + dayIntervalTrade,
+        'eO' + this.getMMDD() + ',' + areaQuery + outOfRankingPrefixNotTraded + ivList + distance + dayIntervalTrade,
         countName,
       ].join('\t')
       
@@ -684,18 +686,20 @@ var appMethodsQuery = {
       let day = "&日數0-"
       let dayInterval = day + (this.dayInterval + 1)
       
+      let distance = "&距離" + this.distanceBase
+      
       let ivList = dexList.join(',')
       let areaQuery = this.computedAreaQuery(area)
       
       let cells = [
         area,
-        "eR!M" + this.getMMDD() + "," + areaQuery + outOfRankingPrefixNotTraded + ivList + dayInterval,
+        "eR!M" + this.getMMDD() + "," + areaQuery + outOfRankingPrefixNotTraded + ivList + distance + dayInterval,
         countName,
         "tR!M" + this.getMMDD() + "," + areaQuery + outOfRankingPrefixTraded + ivList + day,
         countName,
         areaQuery + outOfRankingPrefixTradedBadLucky + ivList + day,
         countName,
-        areaQuery + outOfRankingPrefixAll + ivList + day,
+        areaQuery + outOfRankingPrefixAll + ivList + distance + day,
         countName,
       ].join('\t')
       
@@ -776,12 +780,14 @@ var appMethodsQuery = {
         let day = "&日數0-"
         let dayInterval = day + (this.dayInterval + 3)
         
+        let distance = "&距離" + this.distanceBase
+        
         let ivList = dexList.join(',')
         
         let areaQuery = this.computedAreaQuery(area)
         let cells = [
           area.slice(0, 1) + ' ' + starList,
-          starList + '&' + areaQuery + topRankingStarIncorrPrefixNotTraded + ivList + day,
+          starList + '&' + areaQuery + topRankingStarIncorrPrefixNotTraded + ivList + distance + day,
           countName,
           starList + '&' + areaQuery + topRankingStarIncorrPrefixTradedBadLucky + ivList + day,
           countName,
@@ -914,16 +920,17 @@ var appMethodsQuery = {
         
         let ivList = dexList.join(',') + starExclusiveQuery
         
+        let distance = "&距離" + this.distanceBase
         
         let cells = [
           area.slice(0,1) + ' ' + starList,
-          prefix + 'R!' + starList + this.getMMDD() + ',' + areaQuery + topRankingStarIncorrPrefixNotTraded + ivList + dayInterval,
+          prefix + 'R!' + starList + this.getMMDD() + ',' + areaQuery + topRankingStarIncorrPrefixNotTraded + ivList + distance + dayInterval,
           countName,
           'tR!' + starList + this.getMMDD() + ',' + areaQuery + topRankingStarIncorrPrefixTraded + ivList + day,
           countName,
           areaQuery + topRankingStarIncorrPrefixTradedBadLucky + ivList + day,
           countName,
-          areaQuery + topRankingStarIncorrPrefixNotTradedFilter + ivList + day,
+          areaQuery + topRankingStarIncorrPrefixNotTradedFilter + ivList + distance + day,
           countName,
         ].join('\t')
 
