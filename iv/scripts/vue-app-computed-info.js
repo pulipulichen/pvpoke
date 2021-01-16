@@ -15,9 +15,30 @@ var appComputedInfo = {
     this.gm.data.pokemon.forEach(p => {
       let tags = p.tags
       
+      if (p.speciesId.endsWith('_xl')) {
+        return false
+      }
+      
 //      if (p.dex === 660) {
 //        console.log(p)
 //      }
+      
+      if (!p.gIV) {
+        p.gIV = this.get1500IV(p.speciesId).slice(1)
+      }
+
+      if (!p.gStar) {
+        p.gStar = this.calcGStar(p)
+      }
+      
+      
+      if (!p.uIV) {
+        p.uIV = this.get2500IV(p.speciesId).slice(1)
+      }
+
+      if (!p.uStar) {
+        p.uStar = this.calcUStar(p)
+      }
       
       p.isAlolan = false
       p.isGalarian = false
@@ -41,7 +62,11 @@ var appComputedInfo = {
     //console.log(top)
     ///console.log('top1500')
     //this.reportTop(top)
-    
+//    
+//    if (top.normal) {
+//      console.log(top.normal.filter(p => p.speciesId === 'machamp'))
+//    }
+//    
     return top
   },
   top2500: function () {
@@ -49,7 +74,11 @@ var appComputedInfo = {
     
     //console.log('top2500')
     //this.reportTop(top)
-    
+//    
+//    if (top.normal) {
+//      console.log(top.normal.filter(p => p.speciesId === 'machamp'))
+//    }
+//    
     return top
   },
   top1500TradeBetter: function () {
@@ -71,10 +100,21 @@ var appComputedInfo = {
     let top = this.computedBuildTopMaxPokemons(this.rankings1500, "cp1500")
     //console.log('top1500max')
     //console.log(top)
+    
+//    if (top.normal) {
+//      console.log(top.normal.filter(p => p.speciesId === 'machamp'))
+//    }
+    
     return top
   },
   top2500max: function () {
-    return this.computedBuildTopMaxPokemons(this.rankings2500, "cp2500")
+    let top = this.computedBuildTopMaxPokemons(this.rankings2500, "cp2500")
+    
+//    if (top.normal) {
+//      console.log(top.normal.filter(p => p.speciesId === 'machamp'))
+//    }
+    
+    return top
   },
   top1500NotMax: function () {
     let top = this.computedBuildTopNotMaxPokemons(this.rankings1500, "cp1500")
@@ -86,10 +126,22 @@ var appComputedInfo = {
     return this.computedBuildTopNotMaxPokemons(this.rankings2500, "cp2500")
   },
   top1500Shadow: function () {
-    return this.computedBuildTopShadowPokemons(this.rankings1500, "cp1500")
+    let top = this.computedBuildTopShadowPokemons(this.rankings1500, "cp1500")
+    
+//    if (top.normal) {
+//      console.log(top.normal.filter(p => p.speciesId === 'machamp'))
+//    }
+    
+    return top
   },
   top2500Shadow: function () {
-    return this.computedBuildTopShadowPokemons(this.rankings2500, "cp2500")
+    let top = this.computedBuildTopShadowPokemons(this.rankings2500, "cp2500")
+    
+//    if (top.normal) {
+//      console.log(top.normal.filter(p => p.speciesId === 'machamp'))
+//    }
+    
+    return top
   },
   topMix: function () {
     let data = {}
@@ -105,6 +157,11 @@ var appComputedInfo = {
         top[area].forEach(p => {
           let speciesId = p.speciesId
 
+//          if (speciesId === 'machamp_shadow') {
+//            console.log(p)
+//            return false
+//          }
+
           if (includedSpeciesId.indexOf(speciesId) === -1) {
             data[area].push(p)
             includedSpeciesId.push(speciesId)
@@ -114,8 +171,65 @@ var appComputedInfo = {
     }
     
     //console.log(this.top1500)
+    console.log('top1500')
     add(this.top1500)
+    
+    console.log('top2500')
     add(this.top2500)
+//    add(this.top1500Shadow)
+//    add(this.top2500Shadow)
+    
+    // 排序
+    Object.keys(data).forEach((area) => {
+      data[area].sort((a, b) => {
+        try {
+          if (a.dex !== b.dex) {
+            return a.dex - b.dex
+          }
+          else if (Array.isArray(a.tags) 
+                  && a.tags.indexOf('shadow') > -1) {
+            return 1
+          }
+          else {
+            return 0
+          }
+        }
+        catch (e) {
+          console.error(a)
+          console.error(e)
+        }
+      })
+    })
+    
+    return data
+  },
+  topMixShadow: function () {
+    let data = {}
+    
+    let includedSpeciesId = []
+   
+    let add = (top) => {
+      Object.keys(top).forEach((area) => {
+        if (Array.isArray(data[area]) === false) {
+          data[area] = []
+        }
+
+        top[area].forEach(p => {
+          let speciesId = p.speciesId
+
+//          if (speciesId === 'machamp_shadow') {
+//            console.log(p)
+//          }
+
+          if (includedSpeciesId.indexOf(speciesId) === -1) {
+            data[area].push(p)
+            includedSpeciesId.push(speciesId)
+          }
+        })
+      })
+    }
+    
+    //console.log(this.top1500)
     add(this.top1500Shadow)
     add(this.top2500Shadow)
     

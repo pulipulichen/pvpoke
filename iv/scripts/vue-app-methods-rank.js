@@ -14,10 +14,25 @@ var appMethodsRank = {
     
     let count = 0
     
+    let addedSpeciesIdList = []
+    
     let addRanking = (speciesId) => {
+      // ------------
+
       if (speciesId.endsWith('_xl')) {
-        return true
+        speciesId = speciesId.slice(0, -3)
       }
+
+      if (speciesId.endsWith('_xl.')) {
+        speciesId = speciesId.slice(0, -4)
+      }
+
+      if (addedSpeciesIdList.indexOf(speciesId) > -1) {
+        return false
+      }
+      addedSpeciesIdList.push(speciesId)
+
+      // ------------
       
       let p = this.speciesIdToData[speciesId]
       
@@ -92,6 +107,8 @@ var appMethodsRank = {
         break
       }
     }
+    
+    //console.log(ranking.normal.filter(p => p.speciesId === 'machamp'))
     
     return ranking
   },

@@ -18,8 +18,8 @@ let exclude2500 = [
   
   'swampert_shadow', // 巨沼怪 暗影化 <  巨沼怪
   
-  'politoed', // 蚊香蛙皇 < 蚊香蛙皇 暗影化
-  'poliwrath', // 蚊香泳士 < 蚊香泳士 暗影化
+  'politoed_shadow', // 蚊香蛙皇 暗影化 < 蚊香蛙皇
+  'poliwrath_shadow', // 蚊香泳士 暗影化 < 蚊香泳士
   
   'dragonite_shadow', // 快龍 暗影化 < 快龍
   
@@ -47,7 +47,11 @@ let exclude2500 = [
   
   'piloswine', // 長毛豬 < 象牙豬
   
-  // 20201204 2500
+  // ==========================
+  // 20210112 2500
+
+  'hitmonchan_shadow', // 快拳郎 暗影化 < 快拳郎
+  
   // ===============================
   // 已經湊到
   
@@ -58,7 +62,7 @@ let exclude2500 = [
   'emboar', // 炎武王
   'blaziken', // 火焰雞
   'infernape', // 烈焰猴
-  'glaceon', // 冰伊布
+  'glaceon', // 冰伊布 < 穿山王 阿羅拉型態
   'magnezone', // 自爆磁怪
   'gengar', // 耿鬼
 ]

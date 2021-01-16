@@ -3,6 +3,6 @@
 var appComputed = {
   ...appComputedInfo,
   ...appComputedOutput,
-          ...appComputedPerfectTable,
+  ...appComputedPerfectTable,
 }
 

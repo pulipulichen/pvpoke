@@ -129,6 +129,8 @@ var appMethodsIV = {
     let limit = gm.data.pokemon.length
     let rowMap = {}
     
+    let addedSpeciesIdList = []
+    
     //let limit = 10
     for (let i = 0; i < limit; i++) {
       
@@ -142,9 +144,23 @@ var appMethodsIV = {
       let dataPokemon = gm.data.pokemon[i]
 
       let id = dataPokemon.speciesId
+      
+      // --------------
+      
       if (id.endsWith('_xl')) {
+        id = id.slice(0, -3)
+      }
+
+      if (id.endsWith('_xl.')) {
+        id = id.slice(0, -4)
+      }
+      
+      if (addedSpeciesIdList.indexOf(id) > -1) {
         continue
       }
+      addedSpeciesIdList.push(id)
+      
+      // --------------
       
       this.battle.setCP(1500)
       //let gPokemon = new Pokemon(dataPokemon.speciesId, 0, this.battle);

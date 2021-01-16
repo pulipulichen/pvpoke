@@ -6,6 +6,8 @@ var appMethodsInit = {
   },
   initPokemons: function () {
     
+    let addedSpeciesIdList = []
+    
     return new Promise(async (resolve) => {
       await this.initIV()
       this.gm = GameMaster.getInstance()
@@ -15,17 +17,35 @@ var appMethodsInit = {
         let pokemonName = {}
         
         this.gm.data.pokemon.forEach(({dex, speciesId, speciesName}, i) => {
-          if (speciesId.endsWith('_xl') || speciesId.endsWith('_xl.')) {
+          // ------------
+          
+          if (speciesId.endsWith('_xl')) {
+            speciesId = speciesId.slice(0, -3)
+          }
+          
+          if (speciesId.endsWith('_xl.')) {
+            speciesId = speciesId.slice(0, -4)
+          }
+          
+          if (addedSpeciesIdList.indexOf(speciesId) > -1) {
             return false
           }
+          addedSpeciesIdList.push(speciesId)
+          
+          // ------------
           
           //this.gm.data.pokemon[i].gIV = this.gm.data.pokemon[i].defaultIVs.cp1500.slice(1)
           //this.gm.data.pokemon[i].uIV = this.gm.data.pokemon[i].defaultIVs.cp2500.slice(1)
           try {
             this.gm.data.pokemon[i].gIV = this.get1500IV(speciesId).slice(1)
+            
+            if (!this.gm.data.pokemon[i].gIV) {
+              console.error(speciesId + ' not gIV')
+              throw Error(speciesId + ' not gIV')
+            }
           }
           catch (e) {
-            //console.error(speciesId)
+            console.error(speciesId + ' lost gIV')
             lostIDList1500.push(speciesId)
           }
           

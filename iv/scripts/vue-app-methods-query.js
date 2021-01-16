@@ -36,10 +36,16 @@ var appMethodsQuery = {
         return true
       }
       
-      if (speciesId.endsWith('_xl')
-              || addedList.indexOf(speciesId) > -1) {
+      if (speciesId.endsWith('_xl')) {
+        speciesId = speciesId.slice(0, -3)
+        //console.log(speciesId)
+      }
+      
+      if (addedList.indexOf(speciesId) > -1) {
         return true
       }
+      
+      //console.log(speciesId)
       
       let p = this.speciesIdToData[speciesId]
       
@@ -47,6 +53,18 @@ var appMethodsQuery = {
         throw new Error('SpeciesID is not found: ' + speciesId + '.\n' 
                 + ' Please update /src/data/gamemaster.json with https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json')
       }
+      
+      
+      if (p.isShadow) {
+        count++
+        return true
+      }
+      
+      
+//      if (speciesId === 'machamp') {
+//        console.log(1500, this.exclude1500.indexOf(speciesId))
+//        console.log(2500, this.exclude1500.indexOf(speciesId))
+//      }
       
       if (p.topIncludable === false) {
         count++
@@ -127,6 +145,8 @@ var appMethodsQuery = {
       }
     }
     
+    // -------------------------------
+    
     // 全部跑完後，確認有沒有多的錯誤訊息要處理
     if (needQueryXL1500.length > 0 || needQueryXL2500.length > 0) {
       // https://pvpoketw.com/team-builder/?league=1500&id=mr_mime_galarian
@@ -156,7 +176,19 @@ var appMethodsQuery = {
       excludeList = this.exclude2500
     }
     
+    let addedList = []
+    
     let addRanking = (speciesId) => {
+      
+      if (speciesId.endsWith('_xl')) {
+        speciesId = speciesId.slice(0, -3)
+        //console.log(speciesId)
+      }
+      
+      if (addedList.indexOf(speciesId) > -1) {
+        return true
+      }
+      addedList.push(speciesId)
       
       if (speciesId.endsWith('_xl') || excludeList.indexOf(speciesId) > -1) {
         return true
@@ -212,17 +244,32 @@ var appMethodsQuery = {
       }
     }
     
+    let addedSpeciesIdList = []
+    
     for (let i = 0; i < sourceRankings.length; i++) {
       let r = sourceRankings[i]
       let speciesId = r.speciesId
       
+      // ---------------
+      
       if (speciesId.endsWith('_xl')) {
-        continue
+        speciesId = speciesId.slice(0, -3)
+        //console.log(speciesId)
       }
 
+      if (speciesId.endsWith('_xl.')) {
+        speciesId = speciesId.slice(0, -4)
+      }
+      
+      if (addedSpeciesIdList.indexOf(speciesId) > -1) {
+        continue
+      }
+      addedSpeciesIdList.push(speciesId)
+      
+      // ---------------
+      
       let p = this.speciesIdToData[speciesId]
       //console.log(r.topIncludable, r.isShadow)
-      
       
       let iv = this.getIV(cp, speciesId)
       //if (speciesId === 'gliscor_shadow') {
@@ -332,6 +379,10 @@ var appMethodsQuery = {
   },
   computedTopListAddDex: function (area, dex, star, iv, areaDexStarMap, areaDexIVAttMap) {
     let family = this.evolutionFamily[dex]
+    
+    if (!iv) {
+      throw Error('iv is undefined')
+    }
 
     family.forEach(d => {
       if (!areaDexStarMap[area]) {
@@ -600,14 +651,14 @@ var appMethodsQuery = {
       
       let cells = [
         area,
-        'cO' + this.getMMDD() + ',' + areaQuery + outOfRankingPrefixNotTraded + ivList + distance + dayInterval,
+        'cO' + this.getMMDD() + ',' + areaQuery + outOfRankingPrefixNotTraded + ivList + distance + dayInterval + '&',
         countName,
         'tO' + this.getMMDD() + ',' + areaQuery + outOfRankingPrefixTraded + ivList + day,
         countName,
         areaQuery + outOfRankingPrefixTradedBadLucky + ivList + day,
         countName,
         //areaQuery + outOfRankingPrefixAll + ivList + day,
-        'eO' + this.getMMDD() + ',' + areaQuery + outOfRankingPrefixNotTraded + ivList + distance + dayIntervalTrade,
+        'eO' + this.getMMDD() + ',' + areaQuery + outOfRankingPrefixNotTraded + ivList + distance + dayIntervalTrade + '&',
         countName,
       ].join('\t')
       
@@ -693,7 +744,7 @@ var appMethodsQuery = {
       
       let cells = [
         area,
-        "eR!M" + this.getMMDD() + "," + areaQuery + outOfRankingPrefixNotTraded + ivList + distance + dayInterval,
+        "eR!M" + this.getMMDD() + "," + areaQuery + outOfRankingPrefixNotTraded + ivList + distance + dayInterval + '&',
         countName,
         "tR!M" + this.getMMDD() + "," + areaQuery + outOfRankingPrefixTraded + ivList + day,
         countName,
@@ -743,7 +794,7 @@ var appMethodsQuery = {
         
         let cells = [
           area.slice(0, 1) + ' ' + starList,
-          'e],' + starExclusiveQuery + areaQuery + topRankingStarIncorrPrefixNotTraded + ivList + dayInterval,
+          'e],' + starExclusiveQuery + areaQuery + topRankingStarIncorrPrefixNotTraded + ivList + dayInterval + '&',
           countName,
           't],' + starExclusiveQuery + areaQuery + topRankingStarIncorrPrefixTraded + ivList + day,
           countName,
@@ -922,11 +973,13 @@ var appMethodsQuery = {
         
         let distance = "&距離" + this.distanceBase
         
+        let starListTag = starList.split(',').join('')
+        
         let cells = [
           area.slice(0,1) + ' ' + starList,
-          prefix + 'R!' + starList + this.getMMDD() + ',' + areaQuery + topRankingStarIncorrPrefixNotTraded + ivList + distance + dayInterval,
+          prefix + 'R!' + starListTag + this.getMMDD() + ',' + areaQuery + topRankingStarIncorrPrefixNotTraded + ivList + distance + dayInterval,
           countName,
-          'tR!' + starList + this.getMMDD() + ',' + areaQuery + topRankingStarIncorrPrefixTraded + ivList + day,
+          'tR!' + starListTag + this.getMMDD() + ',' + areaQuery + topRankingStarIncorrPrefixTraded + ivList + day,
           countName,
           areaQuery + topRankingStarIncorrPrefixTradedBadLucky + ivList + day,
           countName,
@@ -965,11 +1018,13 @@ var appMethodsQuery = {
         
         let areaQuery = this.computedAreaQuery(area)
         
+        let attListTag = attList.split(',').join('') 
+        
         let cells = [
           area.slice(0,1) + ' ' + attList,
-          'cR ' + attList + this.getMMDD() + ',' + areaQuery + topRankingStarCorrAttPrefixNotTraded + ivList + dayInterval,
+          'cR ' + attListTag + this.getMMDD() + ',' + areaQuery + topRankingStarCorrAttPrefixNotTraded + ivList + dayInterval,
           countName,
-          'tcR ' + attList + this.getMMDD() + ',' + areaQuery + topRankingStarCorrAttPrefixTraded + ivList + day,
+          'tcR ' + attListTag + this.getMMDD() + ',' + areaQuery + topRankingStarCorrAttPrefixTraded + ivList + day,
           countName,
           areaQuery + topRankingStarCorrAttPrefixAllDistance + ivList + day,
           countName,
@@ -1007,11 +1062,13 @@ var appMethodsQuery = {
         
         let areaQuery = this.computedAreaQuery(area)
         
+        let attListTag = attList.split(',').join('') 
+        
         let cells = [
           area.slice(0,1) + ' ' + attList,
-          'uR ' + attList + this.getMMDD() + ',' + areaQuery + topRankingStarCorrAttPrefixNotTraded + ivList + dayInterval,
+          'uR ' + attListTag + this.getMMDD() + ',' + areaQuery + topRankingStarCorrAttPrefixNotTraded + ivList + dayInterval,
           countName,
-          'tuR ' + attList + this.getMMDD() + ',' + areaQuery + topRankingStarCorrAttPrefixTraded + ivList + dayInterval,
+          'tuR ' + attListTag + this.getMMDD() + ',' + areaQuery + topRankingStarCorrAttPrefixTraded + ivList + dayInterval,
           countName,
           areaQuery + topRankingStarCorrAttPrefixAllDistance + ivList + day,
           countName,
@@ -1216,8 +1273,23 @@ var appMethodsQuery = {
     
     Object.keys(top1500).forEach(area => {
       top1500[area].forEach(pokemon => {
+        if (!pokemon.gIV) {
+          pokemon.gIV = this.get1500IV(pokemon.speciesId).slice(1)
+        }
+        
         let iv = pokemon.gIV
+        if (!iv) {
+          console.error(pokemon)
+          throw Error(pokemon.speciesId + ' IV is undefined')
+        }
+        
+        if (!pokemon.gStar) {
+          pokemon.gStar = this.calcGStar(pokemon)
+        }
+        
         let star = pokemon.gStar
+        
+        
         let dex = pokemon.dex
         this.computedTopListAddDex(area, dex, star, iv, areaDexStarMap, areaDexIVAttMap)
       })
@@ -1225,7 +1297,17 @@ var appMethodsQuery = {
     
     Object.keys(top2500).forEach(area => {
       top2500[area].forEach(pokemon => {
+        if (!pokemon.uIV) {
+          pokemon.uIV = this.get2500IV(pokemon.speciesId).slice(1)
+        }
+        
+        if (!pokemon.uStar) {
+          pokemon.uStar = this.calcUStar(pokemon)
+        }
+        
+        
         let iv = pokemon.uIV
+        
         let star = pokemon.uStar
         let dex = pokemon.dex
         this.computedTopListAddDex(area, dex, star, iv, areaDexStarMap, areaDexIVAttMap)
