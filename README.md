@@ -7,16 +7,20 @@ https://github.com/pvpoke/pvpoke/tree/master/src/data/rankings/all/overall
 2. 下載複製內容
 https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/rankings/all/overall/rankings-1500.json
 ./src/data/all/overall/rankings-1500.json
+./data/rankings-1500.json
 
 https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/rankings/all/overall/rankings-2500.json
 ./src/data/all/overall/rankings-2500.json
+./data/rankings-2500.json
 
 https://github.com/pvpoke/pvpoke/raw/master/src/data/gamemaster.json
 ./src/data/gamemaster.json
 (注意，跟下面的gamemaster.json不一樣)
+./data/gamemaster.json
 
 https://pvpoketw.com/data/gamemaster.json
 ./iv/data/pvpoke.tw/gamemaster.json
+./data/gamemaster.tw.json
 
 3. 確認是否有下位排行需要排除，如果有要該排除的，則加入在 iv/scripts/vue-app-data.js裡面
 https://pvpoketw.com/rankings/all/1500/overall/

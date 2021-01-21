@@ -102,7 +102,7 @@ var appComputedInfo = {
     //console.log(top)
     
 //    if (top.normal) {
-//      console.log(top.normal.filter(p => p.speciesId === 'machamp'))
+//      console.log(top.normal.filter(p => p.speciesId === 'raichu'))
 //    }
     
     return top
@@ -112,6 +112,10 @@ var appComputedInfo = {
     
 //    if (top.normal) {
 //      console.log(top.normal.filter(p => p.speciesId === 'machamp'))
+//    }
+    
+//    if (top.normal) {
+//      console.log(top.normal.filter(p => p.speciesId === 'raichu'))
 //    }
     
     return top
@@ -171,10 +175,10 @@ var appComputedInfo = {
     }
     
     //console.log(this.top1500)
-    console.log('top1500')
+//    console.log('top1500')
     add(this.top1500)
-    
-    console.log('top2500')
+//    
+//    console.log('top2500')
     add(this.top2500)
 //    add(this.top1500Shadow)
 //    add(this.top2500Shadow)
@@ -259,7 +263,7 @@ var appComputedInfo = {
   },
   topMixFamilyDex: function () {
     let data = {}
-    
+    //console.log(this.topMix)
     Object.keys(this.topMix).forEach(area => {
       let list = []
       this.topMix[area].forEach(p => {
@@ -293,7 +297,7 @@ var appComputedInfo = {
       this.computedOutOfRankingAddDex(area, this.top1500max[area], exclusiveList)
     })
     Object.keys(this.top2500max).forEach((area) => {
-      this.computedOutOfRankingAddDex(area, this.top1500max[area], exclusiveList)
+      this.computedOutOfRankingAddDex(area, this.top2500max[area], exclusiveList)
     })
     
     Object.keys(exclusiveList).forEach(a => {

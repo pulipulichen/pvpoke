@@ -126,7 +126,7 @@ var appMethodsQuery = {
         //console.log(speciesId)
       //}
       if (addRanking(speciesId) === false) {
-        break
+        continue
       }
       if (count > this.topLimit) {
         break
@@ -141,7 +141,7 @@ var appMethodsQuery = {
     for (let i = 0; i < includeList.length; i++) {
       let speciesId = includeList[i]
       if (addRanking(speciesId) === false) {
-        break
+        continue
       }
     }
     
@@ -838,9 +838,9 @@ var appMethodsQuery = {
         let areaQuery = this.computedAreaQuery(area)
         let cells = [
           area.slice(0, 1) + ' ' + starList,
-          starList + '&' + areaQuery + topRankingStarIncorrPrefixNotTraded + ivList + distance + day,
+          starList + ',' + areaQuery + topRankingStarIncorrPrefixNotTraded + ivList + distance + day,
           countName,
-          starList + '&' + areaQuery + topRankingStarIncorrPrefixTradedBadLucky + ivList + day,
+          starList + ',' + areaQuery + topRankingStarIncorrPrefixTradedBadLucky + ivList + day,
           countName,
           '-',
           '-',

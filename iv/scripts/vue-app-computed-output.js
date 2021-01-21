@@ -155,10 +155,12 @@ var appComputedOutput = {
     return rows.join("\n")
   },
   bestIVAll () {
+    //console.log('aaa', this.ivTableProgress)
     if (this.ivTableProgress !== null) {
       return this.ivTableProgress
     }
     if (typeof(this.bestIVCSV) === 'string') {
+      //console.log('bestIVCSV', this.bestIVCSV)
       let result = this.bestIVCSV.replace(new RegExp(",","gm"), "\t")
       //console.log(result)
       return result

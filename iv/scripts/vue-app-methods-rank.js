@@ -6,6 +6,14 @@ var appMethodsRank = {
       return {}
     }
     
+//    if (cp === 'cp1500') {
+//      console.log(sourceRankings.length)
+//    }
+    
+//    if (cp === 'cp1500') {
+//      console.log(sourceRankings.filter(p => p.speciesId.startsWith('diggersby')))
+//    }
+    
     let ranking = {
       //"normal": [],
       //"alolan": [],
@@ -18,7 +26,7 @@ var appMethodsRank = {
     
     let addRanking = (speciesId) => {
       // ------------
-
+      
       if (speciesId.endsWith('_xl')) {
         speciesId = speciesId.slice(0, -3)
       }
@@ -28,13 +36,14 @@ var appMethodsRank = {
       }
 
       if (addedSpeciesIdList.indexOf(speciesId) > -1) {
-        return false
+        return true
       }
       addedSpeciesIdList.push(speciesId)
 
       // ------------
       
       let p = this.speciesIdToData[speciesId]
+      
       
       if (p.topMaxIncludable === false
               || p.isShadow === true) {
@@ -49,6 +58,10 @@ var appMethodsRank = {
       else {
         //let iv = p.defaultIVs[cp]
         let iv = this.getIV(cp, speciesId)
+//        if (speciesId === 'diggersby') {
+//          console.log('diggersby', iv)
+//        }
+        
         if (iv[1] !== 15 
                 || iv[2] !== 15 
                 || iv[3] !== 15) {
@@ -85,11 +98,17 @@ var appMethodsRank = {
       count++
     }
     
+//    if (cp === 'cp1500') {
+//      console.log(sourceRankings.length)
+//    }
+    
     for (let i = 0; i < sourceRankings.length; i++) {
       let r = sourceRankings[i]
       let speciesId = r.speciesId
+      //console.log(speciesId)
+      
       if (addRanking(speciesId) === false) {
-        break
+        continue
       }
       if (count > this.topLimit) {
         break
@@ -104,7 +123,7 @@ var appMethodsRank = {
     for (let i = 0; i < includeList.length; i++) {
       let speciesId = includeList[i]
       if (addRanking(speciesId) === false) {
-        break
+        continue
       }
     }
     
@@ -188,7 +207,7 @@ var appMethodsRank = {
       let r = sourceRankings[i]
       let speciesId = r.speciesId
       if (addRanking(speciesId) === false) {
-        break
+        continue
       }
       if (count > this.topLimit) {
         break
@@ -203,7 +222,7 @@ var appMethodsRank = {
     for (let i = 0; i < includeList.length; i++) {
       let speciesId = includeList[i]
       if (addRanking(speciesId) === false) {
-        break
+        continue
       }
     }
     //console.log(ranking)

@@ -58,10 +58,12 @@ var appMethodsIV = {
     }, 500)
   },
   initBestCSV: async function () {
+    //console.log(this.featureEnable)
     if (this.featureEnable.allData === false) {
       return false // 測試用，暫時不運作
     }
     
+    //console.log(Object.keys(this.topMixFamilyDex).length)
     if (Object.keys(this.topMixFamilyDex).length === 0) {
       setTimeout(() => {
         this.initBestCSV()
