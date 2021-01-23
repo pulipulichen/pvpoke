@@ -74,11 +74,11 @@ var appComputedInfo = {
     
     //console.log('top2500')
     //this.reportTop(top)
-//    
+    
 //    if (top.normal) {
-//      console.log(top.normal.filter(p => p.speciesId === 'machamp'))
+//      console.log(top.normal.filter(p => p.speciesId === 'metagross'))
 //    }
-//    
+    
     return top
   },
   top1500TradeBetter: function () {
@@ -115,7 +115,7 @@ var appComputedInfo = {
 //    }
     
 //    if (top.normal) {
-//      console.log(top.normal.filter(p => p.speciesId === 'raichu'))
+//      console.log(top.normal.filter(p => p.speciesId === 'metagross'))
 //    }
     
     return top
@@ -124,10 +124,15 @@ var appComputedInfo = {
     let top = this.computedBuildTopNotMaxPokemons(this.rankings1500, "cp1500")
     //console.log('top1500notmax')
     //console.log(top)
+    
     return top
   },
   top2500NotMax: function () {
-    return this.computedBuildTopNotMaxPokemons(this.rankings2500, "cp2500")
+    let top = this.computedBuildTopNotMaxPokemons(this.rankings2500, "cp2500")
+//    if (top.normal) {
+//      console.log(top.normal.filter(p => p.speciesId === 'metagross'))
+//    }
+    return top
   },
   top1500Shadow: function () {
     let top = this.computedBuildTopShadowPokemons(this.rankings1500, "cp1500")
@@ -315,6 +320,65 @@ var appComputedInfo = {
     
     let exclusiveList = {}
     
+    // 我需要先列一個排除的清單
+    let top = {}
+    
+    let addedSpeciesIdList = []
+    Object.keys(this.top1500max).forEach((area) => {
+      if (Array.isArray(top[area]) === false) {
+        top[area] = []
+      }
+      
+      this.top1500max[area].forEach(p => {
+        let isAnotherMax = (p.uStar === '4*')
+        let speciesId = p.speciesId
+        
+        
+        
+        if (isAnotherMax === false) {
+          let isInAnotherRank = (this.top2500[area] && this.top2500[area].filter(p2 => (p2.speciesId === p.speciesId)).length === 1)
+          if (isInAnotherRank === true) {
+            return false
+          }
+        }
+        
+        if (addedSpeciesIdList.indexOf(speciesId) > -1) {
+          return false
+        }
+        addedSpeciesIdList.push(speciesId)
+        top[area].push(p)
+      })
+    })
+    
+    Object.keys(this.top2500max).forEach((area) => {
+      if (Array.isArray(top[area]) === false) {
+        top[area] = []
+      }
+      
+      this.top2500max[area].forEach(p => {
+        let isAnotherMax = (p.gStar === '4*')
+        let speciesId = p.speciesId
+        
+        if (speciesId === 'swampert') {
+          console.log('speciesId', isAnotherMax, p)
+        }
+        
+        if (isAnotherMax === false) {
+          let isInAnotherRank = (this.top1500[area] && this.top1500[area].filter(p2 => (p2.speciesId === p.speciesId)).length === 1)
+          if (isInAnotherRank === true) {
+            return false
+          }
+        }
+        
+        if (addedSpeciesIdList.indexOf(speciesId) > -1) {
+          return false
+        }
+        addedSpeciesIdList.push(speciesId)
+        top[area].push(p)
+      })
+    })
+    
+    /*
     Object.keys(this.top1500max).forEach((area) => {
       this.computedOutOfRankingAddDex(area, this.top1500max[area], exclusiveList)
     })
@@ -322,6 +386,10 @@ var appComputedInfo = {
     //console.log(this.top2500max)
     Object.keys(this.top2500max).forEach((area) => {
       this.computedOutOfRankingAddDex(area, this.top2500max[area], exclusiveList)
+    })
+    */
+    Object.keys(top).forEach((area) => {
+      this.computedOutOfRankingAddDex(area, top[area], exclusiveList)
     })
     
     Object.keys(exclusiveList).forEach(a => {

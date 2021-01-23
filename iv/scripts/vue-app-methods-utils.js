@@ -159,6 +159,13 @@ Please modify "./iv/data/evolution-family.json"`)
     let gStar = this.calcGStar(pokemon)
     let uStar = this.calcUStar(pokemon)
     
+//    if (pokemon.speciesId === 'metagross') {
+//      console.log({
+//        gStar,
+//        uStar
+//      })
+//    }
+    
     return (((gStar === '4*') // 1500不是100%
               && (uStar === '4*'))
               && (isShadow === false)

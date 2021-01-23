@@ -36,6 +36,9 @@ var appMethodsRank = {
       }
 
       if (addedSpeciesIdList.indexOf(speciesId) > -1) {
+//        if (speciesId === 'metagross') {
+//          console.log('已經加入過了')
+//        }
         return true
       }
       addedSpeciesIdList.push(speciesId)
@@ -43,23 +46,41 @@ var appMethodsRank = {
       // ------------
       
       let p = this.speciesIdToData[speciesId]
+      if (speciesId === 'ferrothorn') {
+        console.log('cp', p)
+      }
       
+      let topMaxIncludable = false
+      if (cp === 'cp1500' && p.gStar === '4*') {
+        topMaxIncludable = true
+      }
+      else if (cp === 'cp2500' && p.uStar === '4*') {
+        topMaxIncludable = true
+      }
       
-      if (p.topMaxIncludable === false
+      if (topMaxIncludable === false
               || p.isShadow === true) {
         count++
+//        if (speciesId === 'metagross') {
+//          console.log(p.topMaxIncludable, p.isShadow)
+//        }
         return true
       }
       else if ( (cp === 'cp1500' && this.exclude1500.indexOf(speciesId) > -1) 
               || (cp === 'cp2500' && this.exclude2500.indexOf(speciesId) > -1) ) {
         count++
+        
+//        if (speciesId === 'metagross') {
+//          console.log(this.exclude1500.indexOf(speciesId), this.exclude2500.indexOf(speciesId))
+//        }
         return true
       }
       else {
         //let iv = p.defaultIVs[cp]
         let iv = this.getIV(cp, speciesId)
-//        if (speciesId === 'diggersby') {
-//          console.log('diggersby', iv)
+        
+//        if (speciesId === 'metagross') {
+//          console.log('metagross', iv)
 //        }
         
         if (iv[1] !== 15 
@@ -118,16 +139,21 @@ var appMethodsRank = {
     let includeList = this.include1500
     if (cp === 'cp2500') {
       includeList = this.include2500
+      //console.log(includeList)
     }
+    
     
     for (let i = 0; i < includeList.length; i++) {
       let speciesId = includeList[i]
+//      if (speciesId === 'metagross') {
+//        console.log('metagross')
+//      }
       if (addRanking(speciesId) === false) {
         continue
       }
     }
     
-    //console.log(ranking.normal.filter(p => p.speciesId === 'machamp'))
+//    console.log(ranking.normal.filter(p => p.speciesId === 'metagross'))
     
     return ranking
   },
@@ -151,6 +177,10 @@ var appMethodsRank = {
       
       let p = this.speciesIdToData[speciesId]
       //console.log(p.tags)
+      
+//      if (speciesId === 'metagross') {
+//        console.log(p)
+//      }
       
       if (p.topMaxIncludable === true
             || p.isNotSpecial === false
@@ -221,6 +251,9 @@ var appMethodsRank = {
     
     for (let i = 0; i < includeList.length; i++) {
       let speciesId = includeList[i]
+//      if (speciesId === 'metagross') {
+//        console.log(speciesId)
+//      }
       if (addRanking(speciesId) === false) {
         continue
       }
