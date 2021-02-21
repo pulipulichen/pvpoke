@@ -124,17 +124,17 @@ var appComputedOutput = {
     // ----------------------
     // 來處理排名內，但不在星級內的名單
     
-    let starMap = this.topShadowList.star
+//    let starMap = this.topShadowList.star
     let topRankingStarIncorrPrefixNotTraded = "暗影,淨化&!傳說的寶可夢&!幻&"
     let topRankingStarIncorrPrefixTraded = topRankingStarIncorrPrefixNotTraded
-    
-    this.computedBestIVCellsShadowStarExclusiveMap(rows, starMap, topRankingStarIncorrPrefixNotTraded, topRankingStarIncorrPrefixTraded, outOfRankingPrefixNotTraded)
+//    
+//    this.computedBestIVCellsShadowStarExclusiveMap(rows, starMap, topRankingStarIncorrPrefixNotTraded, topRankingStarIncorrPrefixTraded, outOfRankingPrefixNotTraded)
     
     // -------------------
     // 來處理排名內，符合星級，不過要注意Att是否相符的名單
-    this.outputBestAll(rows)
-    
-    this.insertRowHr(rows)
+//    this.outputBestAll(rows)
+//    
+//    this.insertRowHr(rows)
     
     // ---------------------
     // 找出最後排名用的
@@ -143,6 +143,7 @@ var appComputedOutput = {
     
     this.computedBestIVCellsShadowStarMap(rows, this.topShadowList.star, allRankingStarIncorrPrefixNotTraded, topRankingStarIncorrPrefixTraded, outOfRankingPrefixNotTraded)
     
+    rows.push('暗影&異色&@遷怒\t-\t-\t-\t-\t-\t-\t-\t-\t-')
     
     // -------------------------
     // 最後補上空白

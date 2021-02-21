@@ -18,8 +18,8 @@ let exclude2500 = [
   
   'swampert_shadow', // 巨沼怪 暗影化 <  巨沼怪
   
-  'politoed_shadow', // 蚊香蛙皇 暗影化 < 蚊香蛙皇
-  'poliwrath_shadow', // 蚊香泳士 暗影化 < 蚊香泳士
+  'politoed', // 蚊香蛙皇 暗影化 < 蚊香蛙皇
+  'poliwrath', // 蚊香泳士 暗影化 < 蚊香泳士
   
   'dragonite_shadow', // 快龍 暗影化 < 快龍
   
@@ -51,6 +51,8 @@ let exclude2500 = [
   // 20210112 2500
 
   'hitmonchan_shadow', // 快拳郎 暗影化 < 快拳郎
+  
+  'mamoswine_shadow', // 象牙豬 暗影化 < 象牙豬
   
   // ===============================
   // 已經湊到

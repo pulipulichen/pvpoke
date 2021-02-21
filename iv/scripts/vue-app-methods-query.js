@@ -1,4 +1,4 @@
-/* global postMessageAPI, XLSX, GameMaster */
+/* global postMessageAPI, XLSX, GameMaster, dayInterval */
 
 var appMethodsQuery = {
   computedBuildTopPokemons: function (sourceRankings, cp, limitTrade) {
@@ -22,6 +22,11 @@ var appMethodsQuery = {
     let addRanking = (speciesId) => {
       if (speciesId.endsWith('_xl')) {
         let sId = speciesId.slice(0, -3)
+        
+        if (sId.endsWith('__shadow')) {
+          sId = sId.slice(0, -8) + '_shadow'
+        }
+        
         if (cp === 'cp1500') {
           if (this.hasXL1500.indexOf(sId) === -1) {
             needQueryXL1500.push(sId)
@@ -39,6 +44,10 @@ var appMethodsQuery = {
       if (speciesId.endsWith('_xl')) {
         speciesId = speciesId.slice(0, -3)
         //console.log(speciesId)
+        
+        if (speciesId.endsWith('__shadow')) {
+          speciesId = speciesId.slice(0, -8) + '_shadow'
+        }
       }
       
       if (addedList.indexOf(speciesId) > -1) {
@@ -151,10 +160,10 @@ var appMethodsQuery = {
     if (needQueryXL1500.length > 0 || needQueryXL2500.length > 0) {
       // https://pvpoketw.com/team-builder/?league=1500&id=mr_mime_galarian
       needQueryXL1500.forEach(sID => {
-        console.error(`https://pvpoketw.com/team-builder/?league=1500&id=` + sID)
+        console.error(`https://pvpoke.com/team-builder/?league=1500&id=` + sID)
       })
       needQueryXL2500.forEach(sID => {
-        console.error(`https://pvpoketw.com/team-builder/?league=2500&id=` + sID)
+        console.error(`https://pvpoke.com/team-builder/?league=2500&id=` + sID)
       })
       
       throw Error('Need add XL data to CP1500-IV.csv and CP2500-IV.csv')
@@ -166,6 +175,8 @@ var appMethodsQuery = {
     if (this.ready === false) {
       return {}
     }
+    
+    //SOURCE_RANKINGS = sourceRankings
     
     let ranking = {}
     
@@ -179,18 +190,32 @@ var appMethodsQuery = {
     let addedList = []
     
     let addRanking = (speciesId) => {
+      //console.log(speciesId)
+//      if (speciesId.startsWith('p')) {
+//        console.log(speciesId)
+//      }
       
       if (speciesId.endsWith('_xl')) {
         speciesId = speciesId.slice(0, -3)
         //console.log(speciesId)
+        
+        if (speciesId.endsWith('__shadow')) {
+          speciesId = speciesId.slice(0, -8) + '_shadow'
+        }
       }
       
       if (addedList.indexOf(speciesId) > -1) {
+//        if (speciesId.startsWith('politoed')) {
+//          console.log('已經加入過了 排除')
+//        }
         return true
       }
       addedList.push(speciesId)
       
       if (speciesId.endsWith('_xl') || excludeList.indexOf(speciesId) > -1) {
+//        if (speciesId.startsWith('politoed')) {
+//          console.log('xl 排除')
+//        }
         return true
       }
       
@@ -250,15 +275,27 @@ var appMethodsQuery = {
       let r = sourceRankings[i]
       let speciesId = r.speciesId
       
+//      if (speciesId.startsWith('politoed')) {
+//        console.log(speciesId)
+//      }
+      
       // ---------------
       
       if (speciesId.endsWith('_xl')) {
         speciesId = speciesId.slice(0, -3)
         //console.log(speciesId)
+        
+        if (speciesId.endsWith('__shadow')) {
+          speciesId = speciesId.slice(0, -8) + '_shadow'
+        }
       }
 
       if (speciesId.endsWith('_xl.')) {
         speciesId = speciesId.slice(0, -4)
+        
+        if (speciesId.endsWith('__shadow')) {
+          speciesId = speciesId.slice(0, -8) + '_shadow'
+        }
       }
       
       if (addedSpeciesIdList.indexOf(speciesId) > -1) {
@@ -270,11 +307,27 @@ var appMethodsQuery = {
       
       let p = this.speciesIdToData[speciesId]
       //console.log(r.topIncludable, r.isShadow)
+//      if (speciesId.startsWith('politoed')) {
+//        console.log(p)
+//      }
+      
+      if (typeof p.topIncludable === 'undefined') {
+        //console.log('缺設定資料!?', p.speciesId, p)
+        p.topIncludable = !(p.tags.indexOf('shadow') > -1)
+        p.isShadow = (p.tags.indexOf('shadow') > -1)
+        p.isNotSpecial = !(p.tags.indexOf('legendary') > -1
+              || p.tags.indexOf('untradeable') > -1
+              || p.tags.indexOf('mythical') > -1)
+        //console.log(p.topIncludable)
+      }
       
       let iv = this.getIV(cp, speciesId)
       //if (speciesId === 'gliscor_shadow') {
       //  console.log(iv)
       //}
+//      if (speciesId.startsWith('politoed')) {
+//        console.log(speciesId, iv)
+//      }
       if (iv[1] === 15 
               && iv[2] === 15 
               && iv[3] === 15) {
@@ -285,7 +338,9 @@ var appMethodsQuery = {
       
       if (p.topIncludable === false) {
         count++
-          
+//        if (speciesId.startsWith('politoed')) {
+//          console.log(speciesId, iv)
+//        }
         addRanking(speciesId)
       }
       else {
@@ -644,21 +699,28 @@ var appMethodsQuery = {
       let dayInterval = "&日數0-" + (this.dayInterval + 2)
       let dayIntervalTrade = "&日數1-" + (this.dayInterval + 2)
       
+      if (area !== 'normal') {
+        dayInterval = dayInterval.slice(0, dayInterval.indexOf('-')+1)
+        dayIntervalTrade = dayIntervalTrade.slice(0, dayIntervalTrade.indexOf('-')+1)
+      }
+      
       let distance = "&距離" + this.distanceBase
       
       let ivList = dexList.map(dex => '!' + dex).join('&')
       let areaQuery = this.computedAreaQuery(area)
       
+      let excludeCollection = '&!327&!201'  // 排除晃晃斑跟未知圖騰
+      
       let cells = [
         area,
-        'cO' + this.getMMDD() + ',' + areaQuery + outOfRankingPrefixNotTraded + ivList + distance + dayInterval + '&',
+        'cO' + this.getMMDD() + ',' + areaQuery + outOfRankingPrefixNotTraded + ivList + excludeCollection + distance + dayInterval + '&',
         countName,
-        'tO' + this.getMMDD() + ',' + areaQuery + outOfRankingPrefixTraded + ivList + day,
+        'tO' + this.getMMDD() + ',' + areaQuery + outOfRankingPrefixTraded + ivList + excludeCollection + day,
         countName,
         areaQuery + outOfRankingPrefixTradedBadLucky + ivList + day,
         countName,
         //areaQuery + outOfRankingPrefixAll + ivList + day,
-        'eO' + this.getMMDD() + ',' + areaQuery + outOfRankingPrefixNotTraded + ivList + distance + dayIntervalTrade + '&',
+        'eO' + this.getMMDD() + ',' + areaQuery + outOfRankingPrefixNotTraded + ivList + excludeCollection + distance + dayIntervalTrade + '&',
         countName,
       ].join('\t')
       
@@ -695,9 +757,11 @@ var appMethodsQuery = {
       let ivList = dexList.map(dex => '!' + dex).join('&')
       let areaQuery = this.computedAreaQuery(area)
       
+      let excludeCollection = '&!327&!201'  // 排除晃晃斑跟未知圖騰
+
       let cells = [
         area,
-        'p' + this.getMMDD() +',' + areaQuery + outOfRankingPrefixNotTraded + ivList + day,
+        'p' + this.getMMDD() +',' + areaQuery + outOfRankingPrefixNotTraded + ivList + excludeCollection + day,
         countName,
         '-',
         '-',
@@ -737,6 +801,12 @@ var appMethodsQuery = {
       let day = "&日數0-"
       let dayInterval = day + (this.dayInterval + 1)
       
+      if (area !== 'normal') {
+        dayInterval = dayInterval.slice(0, dayInterval.indexOf('-')+1)
+      }
+      
+      let excludeCollection = '&!327&!201'  // 排除晃晃斑跟未知圖騰
+
       let distance = "&距離" + this.distanceBase
       
       let ivList = dexList.join(',')
@@ -744,13 +814,13 @@ var appMethodsQuery = {
       
       let cells = [
         area,
-        "eR!M" + this.getMMDD() + "," + areaQuery + outOfRankingPrefixNotTraded + ivList + distance + dayInterval + '&',
+        "eR!M" + this.getMMDD() + "," + areaQuery + outOfRankingPrefixNotTraded + ivList + excludeCollection + distance + dayInterval + '&',
         countName,
-        "tR!M" + this.getMMDD() + "," + areaQuery + outOfRankingPrefixTraded + ivList + day,
+        "tR!M" + this.getMMDD() + "," + areaQuery + outOfRankingPrefixTraded + ivList + excludeCollection + day,
         countName,
-        areaQuery + outOfRankingPrefixTradedBadLucky + ivList + day,
+        areaQuery + outOfRankingPrefixTradedBadLucky + ivList + excludeCollection + day,
         countName,
-        areaQuery + outOfRankingPrefixAll + ivList + distance + day,
+        areaQuery + outOfRankingPrefixAll + ivList + excludeCollection + distance + day,
         countName,
       ].join('\t')
       
@@ -787,16 +857,22 @@ var appMethodsQuery = {
         let day = "&日數0-"
         let dayInterval = day + (this.dayInterval + 3)
         
+        if (area !== 'normal') {
+          dayInterval = dayInterval.slice(0, dayInterval.indexOf('-')+1)
+        }
+        
         let ivList = dexList.join(',')
         
         let areaQuery = this.computedAreaQuery(area)
         let starExclusiveQuery = this.computedStarExclusiveQuery(starList)
         
+        let excludeCollection = '&!327&!201'  // 排除晃晃斑跟未知圖騰
+
         let cells = [
           area.slice(0, 1) + ' ' + starList,
-          'e],' + starExclusiveQuery + areaQuery + topRankingStarIncorrPrefixNotTraded + ivList + dayInterval + '&',
+          'e],' + starExclusiveQuery + areaQuery + topRankingStarIncorrPrefixNotTraded + ivList + excludeCollection + dayInterval + '&',
           countName,
-          't],' + starExclusiveQuery + areaQuery + topRankingStarIncorrPrefixTraded + ivList + day,
+          't],' + starExclusiveQuery + areaQuery + topRankingStarIncorrPrefixTraded + ivList + excludeCollection + day,
           countName,
           starExclusiveQuery + areaQuery + topRankingStarIncorrPrefixTradedBadLucky + ivList + day,
           countName,
@@ -831,6 +907,12 @@ var appMethodsQuery = {
         let day = "&日數0-"
         let dayInterval = day + (this.dayInterval + 3)
         
+        if (area !== 'normal') {
+          dayInterval = dayInterval.slice(0, dayInterval.indexOf('-')+1)
+        }
+        
+        let excludeCollection = '&!327&!201'  // 排除晃晃斑跟未知圖騰
+
         let distance = "&距離" + this.distanceBase
         
         let ivList = dexList.join(',')
@@ -838,9 +920,9 @@ var appMethodsQuery = {
         let areaQuery = this.computedAreaQuery(area)
         let cells = [
           area.slice(0, 1) + ' ' + starList,
-          starList + ',' + areaQuery + topRankingStarIncorrPrefixNotTraded + ivList + distance + day,
+          'e' + (new Date()).mmdd() + ',' + areaQuery + starList + '&' + topRankingStarIncorrPrefixNotTraded + ivList + excludeCollection + distance + day,
           countName,
-          starList + ',' + areaQuery + topRankingStarIncorrPrefixTradedBadLucky + ivList + day,
+          'a' + (new Date()).mmdd() + ',' + areaQuery + starList + '&' + topRankingStarIncorrPrefixTradedBadLucky + ivList + excludeCollection + day,
           countName,
           '-',
           '-',
@@ -922,14 +1004,20 @@ var appMethodsQuery = {
         let day = "&日數0-"
         let dayInterval = day + (this.dayInterval + 3)
         
+        if (area !== 'normal') {
+          dayInterval = dayInterval.slice(0, dayInterval.indexOf('-')+1)
+        }
+        
         let ivList = dexList.join(',')
         
         let areaQuery = this.computedAreaQuery(area)
         let starExclusiveQuery = this.computedStarExclusiveQuery(starList)
         
+        let excludeCollection = '&!327&!201'  // 排除晃晃斑跟未知圖騰
+
         let cells = [
           area.slice(0, 1) + ' ' + starList,
-          'p],' + starExclusiveQuery + areaQuery + topRankingStarIncorrPrefixNotTraded + ivList + dayInterval,
+          'p],' + starExclusiveQuery + areaQuery + topRankingStarIncorrPrefixNotTraded + ivList + excludeCollection + dayInterval,
           countName,
           '-',
           '-',
@@ -969,21 +1057,27 @@ var appMethodsQuery = {
         let day = "&日數0-" 
         let dayInterval = day + (this.dayInterval + 4)
         
+        if (area !== 'normal') {
+          dayInterval = dayInterval.slice(0, dayInterval.indexOf('-')+1)
+        }
+        
         let ivList = dexList.join(',') + starExclusiveQuery
         
         let distance = "&距離" + this.distanceBase
         
         let starListTag = starList.split(',').join('')
         
+        let excludeCollection = '&!327&!201'  // 排除晃晃斑跟未知圖騰
+
         let cells = [
           area.slice(0,1) + ' ' + starList,
-          prefix + 'R!' + starListTag + this.getMMDD() + ',' + areaQuery + topRankingStarIncorrPrefixNotTraded + ivList + distance + dayInterval,
+          prefix + 'R!' + starListTag + this.getMMDD() + ',' + areaQuery + topRankingStarIncorrPrefixNotTraded + ivList + excludeCollection + distance + dayInterval,
           countName,
-          'tR!' + starListTag + this.getMMDD() + ',' + areaQuery + topRankingStarIncorrPrefixTraded + ivList + day,
+          'tR!' + starListTag + this.getMMDD() + ',' + areaQuery + topRankingStarIncorrPrefixTraded + ivList + excludeCollection + day,
           countName,
-          areaQuery + topRankingStarIncorrPrefixTradedBadLucky + ivList + day,
+          areaQuery + topRankingStarIncorrPrefixTradedBadLucky + ivList + excludeCollection + day,
           countName,
-          areaQuery + topRankingStarIncorrPrefixNotTradedFilter + ivList + distance + day,
+          areaQuery + topRankingStarIncorrPrefixNotTradedFilter + ivList + excludeCollection + distance + day,
           countName,
         ].join('\t')
 
@@ -1014,21 +1108,27 @@ var appMethodsQuery = {
         let day = "&日數0-"
         let dayInterval = day + (this.dayInterval + 5)
         
+        if (area !== 'normal') {
+          dayInterval = dayInterval.slice(0, dayInterval.indexOf('-')+1)
+        }
+        
         let ivList = dexList.join(',') + "&![" + attList + "]"
         
         let areaQuery = this.computedAreaQuery(area)
         
         let attListTag = attList.split(',').join('') 
         
+        let excludeCollection = '&!327&!201'  // 排除晃晃斑跟未知圖騰
+
         let cells = [
           area.slice(0,1) + ' ' + attList,
-          'cR ' + attListTag + this.getMMDD() + ',' + areaQuery + topRankingStarCorrAttPrefixNotTraded + ivList + dayInterval,
+          'cR ' + attListTag + this.getMMDD() + ',' + areaQuery + topRankingStarCorrAttPrefixNotTraded + ivList + excludeCollection + dayInterval,
           countName,
-          'tcR ' + attListTag + this.getMMDD() + ',' + areaQuery + topRankingStarCorrAttPrefixTraded + ivList + day,
+          'tcR ' + attListTag + this.getMMDD() + ',' + areaQuery + topRankingStarCorrAttPrefixTraded + ivList + excludeCollection + day,
           countName,
-          areaQuery + topRankingStarCorrAttPrefixAllDistance + ivList + day,
+          areaQuery + topRankingStarCorrAttPrefixAllDistance + ivList + excludeCollection + day,
           countName,
-          areaQuery + topRankingStarCorrAttPrefixNotTradedFilter + ivList + day,
+          areaQuery + topRankingStarCorrAttPrefixNotTradedFilter + ivList + excludeCollection + day,
           countName,
         ].join('\t')
 
@@ -1058,21 +1158,26 @@ var appMethodsQuery = {
         let day = "&日數0-"
         let dayInterval = day + (this.dayInterval + 5)
         
+        if (area !== 'normal') {
+          dayInterval = dayInterval.slice(0, dayInterval.indexOf('-')+1)
+        }
+        
         let ivList = dexList.join(',') + "&![" + attList + "]"
         
         let areaQuery = this.computedAreaQuery(area)
         
         let attListTag = attList.split(',').join('') 
-        
+        let excludeCollection = '&!327&!201'  // 排除晃晃斑跟未知圖騰
+
         let cells = [
           area.slice(0,1) + ' ' + attList,
-          'uR ' + attListTag + this.getMMDD() + ',' + areaQuery + topRankingStarCorrAttPrefixNotTraded + ivList + dayInterval,
+          'uR ' + attListTag + this.getMMDD() + ',' + areaQuery + topRankingStarCorrAttPrefixNotTraded + ivList + excludeCollection + dayInterval,
           countName,
-          'tuR ' + attListTag + this.getMMDD() + ',' + areaQuery + topRankingStarCorrAttPrefixTraded + ivList + dayInterval,
+          'tuR ' + attListTag + this.getMMDD() + ',' + areaQuery + topRankingStarCorrAttPrefixTraded + ivList + excludeCollection + dayInterval,
           countName,
-          areaQuery + topRankingStarCorrAttPrefixAllDistance + ivList + day,
+          areaQuery + topRankingStarCorrAttPrefixAllDistance + ivList + excludeCollection + day,
           countName,
-          areaQuery + topRankingStarCorrAttPrefixNotTradedFilter + ivList + day,
+          areaQuery + topRankingStarCorrAttPrefixNotTradedFilter + ivList + excludeCollection + day,
           countName,
         ].join('\t')
 
@@ -1111,11 +1216,13 @@ var appMethodsQuery = {
     ivListAll = ivListAll.join(',')
     let countName = '[' + ivListAll.length + ']'
     
+    let excludeCollection = '&!327&!201'  // 排除晃晃斑跟未知圖騰
+
     let cells = [
-      '全部',
-      allAllDistance + ivListAll,
+      area,
+      allAllDistance + ivListAll + excludeCollection,
       countName,
-      allAllDistance + ivListAll + '&4*',
+      allAllDistance + ivListAll + excludeCollection + '&4*',
       countName,
       '-',
       '-',
@@ -1201,10 +1308,12 @@ var appMethodsQuery = {
         let ivList = areaDexList.join(',') + "&日數0-"
         let countName = this.computedCountName(areaDexList)
         let areaQuery = this.computedAreaQuery(area)
+        
+        let excludeCollection = '&!327&!201'  // 排除晃晃斑跟未知圖騰
 
         let cells = [
           a,
-          areaQuery + topAll + ivList,
+          areaQuery + topAll + ivList + excludeCollection,
           countName,
           '-',
           '-',

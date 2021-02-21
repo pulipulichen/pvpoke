@@ -16,15 +16,26 @@ var appMethodsInit = {
       if (this.gm.data.pokemon) {
         let pokemonName = {}
         
+//        console.log('開始來跑Pokemon')
         this.gm.data.pokemon.forEach(({dex, speciesId, speciesName}, i) => {
           // ------------
           
           if (speciesId.endsWith('_xl')) {
+            //console.log(speciesId)
             speciesId = speciesId.slice(0, -3)
+            //console.log(speciesId)
+            if (speciesId.endsWith('__shadow')) {
+              speciesId = speciesId.slice(0, -8) + '_shadow'
+            }
+            //console.log(speciesId)
           }
           
           if (speciesId.endsWith('_xl.')) {
             speciesId = speciesId.slice(0, -4)
+            
+            if (speciesId.indexOf('__shadow') > -1) {
+              speciesId = speciesId.slice(0, -8) + '_shadow'
+            }
           }
           
           if (addedSpeciesIdList.indexOf(speciesId) > -1) {
@@ -45,7 +56,8 @@ var appMethodsInit = {
             }
           }
           catch (e) {
-            console.error(speciesId + ' lost gIV')
+            throw new Error('1500 IV is not defiend: ' + speciesId + '\n'
+                      + `https://pvpoke.com/team-builder/?league=1500&id=${speciesId}`)
             lostIDList1500.push(speciesId)
           }
           
@@ -56,7 +68,7 @@ var appMethodsInit = {
             lostIDList2500.push(speciesId)
             return false
             throw new Error('2500 IV is not defiend: ' + speciesId + '\n'
-                      + `https://pvpoketw.com/team-builder/?league=2500&id=${speciesId}`)
+                      + `https://pvpoke.com/team-builder/?league=2500&id=${speciesId}`)
           }
           this.gm.data.pokemon[i].gStar = this.calcGStar(this.gm.data.pokemon[i])
           this.gm.data.pokemon[i].uStar = this.calcUStar(this.gm.data.pokemon[i])
@@ -79,10 +91,10 @@ var appMethodsInit = {
         
         if (lostIDList1500.length > 0 || lostIDList2500.length > 0) {
           lostIDList1500.forEach(speciesId => {
-            console.error(`https://pvpoketw.com/team-builder/?league=1500&id=${speciesId}`)
+            console.error(`https://pvpoke.com/team-builder/?league=1500&id=${speciesId}`)
           })
           lostIDList2500.forEach(speciesId => {
-            console.error(`https://pvpoketw.com/team-builder/?league=2500&id=${speciesId}`)
+            console.error(`https://pvpoke.com/team-builder/?league=2500&id=${speciesId}`)
           })
           throw new Error('IV is not defiend')
         }
@@ -97,12 +109,16 @@ var appMethodsInit = {
         return false
       }
       
+      //console.log('go')
+      
       $.getJSON('data/evolution-family.json', (family) => {
         this.evolutionFamily = family
-        
+        //console.log('data/evolution-family.json')
         $.getJSON('data/evolution-family-sort.json', (familySort) => {
         this.evolutionFamilySort = familySort
+        //console.log('data/evolution-family-sort.json')
           $.getJSON('data/pvpoke.tw/gamemaster.json', (data) => {
+            //console.log('data/gamemaster.json')
             let trans = {}
             let dexToID = {}
             data.pokemon.forEach(({dex, speciesName, speciesId}) => {
@@ -118,7 +134,6 @@ var appMethodsInit = {
             })
             this.dexToID = dexToID
             this.pokemonNameTW = trans
-
             $.getJSON('data/lv-stardust-candy.json', (data) => {
               let stardust = {}
               let candy = {}
@@ -132,7 +147,7 @@ var appMethodsInit = {
 
               this.lvStarDust = stardust
               this.lvCandy = candy
-
+              //console.log('initPokemons 初始化完成')
               resolve(true)
             })
           })

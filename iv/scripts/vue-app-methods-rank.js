@@ -29,10 +29,18 @@ var appMethodsRank = {
       
       if (speciesId.endsWith('_xl')) {
         speciesId = speciesId.slice(0, -3)
+        
+        if (speciesId.endsWith('__shadow')) {
+          speciesId = speciesId.slice(0, -8) + '_shadow'
+        }
       }
 
       if (speciesId.endsWith('_xl.')) {
         speciesId = speciesId.slice(0, -4)
+        
+        if (speciesId.endsWith('__shadow')) {
+          speciesId = speciesId.slice(0, -8) + '_shadow'
+        }
       }
 
       if (addedSpeciesIdList.indexOf(speciesId) > -1) {
@@ -46,9 +54,9 @@ var appMethodsRank = {
       // ------------
       
       let p = this.speciesIdToData[speciesId]
-      if (speciesId === 'ferrothorn') {
-        console.log('cp', p)
-      }
+//      if (speciesId === 'ferrothorn') {
+//        console.log('cp', p)
+//      }
       
       let topMaxIncludable = false
       if (cp === 'cp1500' && p.gStar === '4*') {

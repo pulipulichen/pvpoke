@@ -138,7 +138,8 @@ var appComputedInfo = {
     let top = this.computedBuildTopShadowPokemons(this.rankings1500, "cp1500")
     
 //    if (top.normal) {
-//      console.log(top.normal.filter(p => p.speciesId === 'machamp'))
+//      console.log(top.normal)
+//      console.log(top.normal.filter(p => p.speciesId === 'politoed_shadow'))
 //    }
     
     return top
@@ -333,8 +334,6 @@ var appComputedInfo = {
         let isAnotherMax = (p.uStar === '4*')
         let speciesId = p.speciesId
         
-        
-        
         if (isAnotherMax === false) {
           let isInAnotherRank = (this.top2500[area] && this.top2500[area].filter(p2 => (p2.speciesId === p.speciesId)).length === 1)
           if (isInAnotherRank === true) {
@@ -359,9 +358,9 @@ var appComputedInfo = {
         let isAnotherMax = (p.gStar === '4*')
         let speciesId = p.speciesId
         
-        if (speciesId === 'swampert') {
-          console.log('speciesId', isAnotherMax, p)
-        }
+//        if (speciesId === 'swampert') {
+//          console.log('speciesId', isAnotherMax, p)
+//        }
         
         if (isAnotherMax === false) {
           let isInAnotherRank = (this.top1500[area] && this.top1500[area].filter(p2 => (p2.speciesId === p.speciesId)).length === 1)

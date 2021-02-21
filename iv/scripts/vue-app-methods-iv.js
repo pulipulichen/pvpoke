@@ -151,10 +151,18 @@ var appMethodsIV = {
       
       if (id.endsWith('_xl')) {
         id = id.slice(0, -3)
+        
+        if (id.endsWith('__shadow')) {
+          id = id.slice(0, -8) + '_shadow'
+        }
       }
 
       if (id.endsWith('_xl.')) {
         id = id.slice(0, -4)
+        
+        if (id.endsWith('__shadow')) {
+          id = id.slice(0, -8) + '_shadow'
+        }
       }
       
       if (addedSpeciesIdList.indexOf(id) > -1) {
@@ -471,7 +479,7 @@ var appMethodsIV = {
     let data = this.iv1500[speciesId]
     if (!data) {
       throw new Error('1500 iv is not found: ' + speciesId + '. \n'
-              + `https://pvpoketw.com/team-builder/?league=1500&id=${speciesId}`)
+              + `https://pvpoke.com/team-builder/?league=1500&id=${speciesId}`)
       //console.log(`https://pvpoketw.com/battle/1500/${speciesId}/${speciesId}11/1-1-1/1-1-1/`)
     }
     // 	40-15-15-15

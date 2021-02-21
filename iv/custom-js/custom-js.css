@@ -28,3 +28,10 @@ a.rating.extra {
 #compareResultTable td {
 	white-space: nowrap;
 }
+
+#nitro-body-desktop,
+#nitro-sidebar-right,
+#nitro-sidebar-left {
+	display: none;
+	
+}
