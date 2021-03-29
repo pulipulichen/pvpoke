@@ -313,6 +313,10 @@ var appMethodsQuery = {
       
       if (typeof p.topIncludable === 'undefined') {
         //console.log('缺設定資料!?', p.speciesId, p)
+        if (Array.isArray(p.tags) === false) {
+          p.tags = []
+        }
+        
         p.topIncludable = !(p.tags.indexOf('shadow') > -1)
         p.isShadow = (p.tags.indexOf('shadow') > -1)
         p.isNotSpecial = !(p.tags.indexOf('legendary') > -1

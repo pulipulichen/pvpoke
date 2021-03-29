@@ -14,7 +14,7 @@ var appData = {
   pokemonNameTW: {},
   pokemonName: {},
   dexToID: {},
-  distanceBase: '0-8',
+  distanceBase: '0-10',
   dayInterval: 15,
   topLimit: 100,
   area: ['normal', 'alolan', 'galarian'],

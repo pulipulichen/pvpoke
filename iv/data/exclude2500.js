@@ -67,4 +67,5 @@ let exclude2500 = [
   'glaceon', // 冰伊布 < 穿山王 阿羅拉型態
   'magnezone', // 自爆磁怪
   'gengar', // 耿鬼
+  'talonflame', // 烈箭鷹? talonflame
 ]

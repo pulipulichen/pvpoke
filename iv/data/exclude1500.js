@@ -4,7 +4,7 @@ let exclude1500 = [
   
   'gliscor_shadow', // 不用 天蠍王 暗影化 因為比 天蠍王 還差
   
-  'magnezone_shadow', // 不用 自爆磁怪 暗影化 因為比 自爆磁怪 還差
+  'magnezone', // 不用 自爆磁怪 暗影化 因為比 自爆磁怪 還差
   
   'abomasnow', // 不用 暴雪王 因為比 暴雪王 暗影化 還差
   
@@ -32,7 +32,7 @@ let exclude1500 = [
   'dragonite', // 快龍 < 哈克龍 暗影化
   'dragonite_shadow', // 快龍 暗影化 < 哈克龍 暗影化
   
-  'lapras_shadow', // 拉普拉斯 暗影化 < 拉普拉斯
+  'lapras', // 拉普拉斯 暗影化 < 拉普拉斯
   
   'machamp', // 怪力 < 怪力 暗影化
   
@@ -98,4 +98,5 @@ let exclude1500 = [
   'jumpluff', // 毽子棉
   'blaziken', // 火焰雞
   'empoleon', // 帝王拿波
+  'talonflame', // 烈箭鷹? talonflame
 ]

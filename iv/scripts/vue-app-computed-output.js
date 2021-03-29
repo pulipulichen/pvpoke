@@ -9,12 +9,12 @@ var appComputedOutput = {
     let rows = []
     
     // 先處理要移除的全部
-    let outOfRankingPrefixNotTraded = "!交換&!4*&!f&!p&!*&!w&!c&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
+    let outOfRankingPrefixNotTraded = "!交換&!4*&!f&!p&!*&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
     let outOfRankingPrefixTraded = "交換&!4*&!f&!p&!*&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
     //let outOfRankingPrefixTradedBadLucky = "交換&2*&亮晶晶&!f&!p&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
     //let outOfRankingPrefixAll = "!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
-    let outOfRankingPrefixAll = "!暗影&!淨化&!傳說的寶可夢&!幻&!異色&!e&!w&!c&"
-    let outOfRankingPrefixNotTradedFilter = "!e&!t&!f&!c&!w&!*&!交換&!4*&!f&!p&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
+    let outOfRankingPrefixAll = "!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
+    let outOfRankingPrefixNotTradedFilter = "!*&!交換&!4*&!f&!p&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
     
     let header = "臺北(" + this.distanceBase + ")"
     this.computedBestIVCellsOutOfRange(rows, this.outOfRanking, header, outOfRankingPrefixNotTraded, outOfRankingPrefixTraded, outOfRankingPrefixAll, outOfRankingPrefixNotTradedFilter)
@@ -34,10 +34,10 @@ var appComputedOutput = {
     // 來處理排名內，交換了可能有用，但不在星級內的名單
     
     let starMap = this.topNotMaxTradableListReverseStar.star
-    let topRankingStarIncorrPrefixNotTraded = "!交換&!4*&!f&!p&!*&!w&!c&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
+    let topRankingStarIncorrPrefixNotTraded = "!交換&!4*&!f&!p&!*&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
     let topRankingStarIncorrPrefixTraded = "交換&!4*&!f&!p&!*&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
     let topRankingStarIncorrPrefixTradedBadLucky = "交換&2*&亮晶晶&!f&!p&!*&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
-    let topRankingStarIncorrPrefixNotTradedFilter = "!e&!t&!f&!c&!w&!交換&!f&!p&!U&!G&!4*&!*&!w&!c&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
+    let topRankingStarIncorrPrefixNotTradedFilter = "!交換&!f&!p&!U&!G&!4*&!*&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
     
     //this.computedBestIVCellsStarMap(rows, starMap, topRankingStarIncorrPrefixNotTraded, topRankingStarIncorrPrefixTraded, topRankingStarIncorrPrefixTradedBadLucky, topRankingStarIncorrPrefixNotTradedFilter)
     this.computedBestIVCellsStarReverseMap('排名內可換星級不符', 'e'
@@ -69,11 +69,11 @@ var appComputedOutput = {
     // -----------------
     // 列出所有名單，這是為了要找出排除用的
     
-    let allNotTraded = "!交換&!f&!p&!*&!w&!c&!傳說的寶可夢&!幻&"
+    let allNotTraded = "!交換&!f&!*&!傳說的寶可夢&!幻&"
     let allTraded = "交換&!f&!p&!*&!U&!G&!異色&!暗影&!淨化&!傳說的寶可夢&!幻&"
     //let allAllDistance = "!暗影&!淨化&!4*&!傳說的寶可夢&!幻&" // 不可以加上「&!t&!e&!w&!c&」，因為這會讓交換之後的寶可夢無法納入判斷
-    let allAllDistance = "!傳說的寶可夢&!幻&!e&!w&!c&" // 不可以加上「&!t&!e&!w&!c&」，因為這會讓交換之後的寶可夢無法納入判斷
-    let allNotTradedFilter = "!e&!t&!f&!c&!w&!*&!交換&!f&!p&!U&!G&!異色&!暗影&!淨化&!傳說的寶可夢&!幻&"
+    let allAllDistance = "!傳說的寶可夢&!幻&" // 不可以加上「&!t&!e&!w&!c&」，因為這會讓交換之後的寶可夢無法納入判斷
+    let allNotTradedFilter = "!*&!交換&!f&!p&!U&!G&!異色&!暗影&!淨化&!傳說的寶可夢&!幻&"
     
     //  this.computedBestIVCellsAll(rows, attMap, allNotTraded, allTraded, allAllDistance, allNotTradedFilter)
     this.computedBestIVCellsStarMapAll(rows, this.topList.star, allNotTraded, allTraded, allAllDistance, allNotTradedFilter)
@@ -83,7 +83,7 @@ var appComputedOutput = {
     // -------------------
     
     let attMap = this.topList.att
-    let topAll = "!暗影&!淨化&!傳說的寶可夢&!幻&!e&!w&!c&" // 不可以加上「&!t&!e&!w&!c&」，因為這會讓交換之後的寶可夢無法納入判斷
+    let topAll = "!暗影&!淨化&!傳說的寶可夢&!幻&" // 不可以加上「&!t&!e&!w&!c&」，因為這會讓交換之後的寶可夢無法納入判斷
     this.computedQueryNotTopAreaAll(rows, attMap, topAll)
     
     // -------------------
