@@ -99,4 +99,5 @@ let exclude1500 = [
   'blaziken', // 火焰雞
   'empoleon', // 帝王拿波
   'talonflame', // 烈箭鷹? talonflame
+  'diggersby', // 掘地兔
 ]
