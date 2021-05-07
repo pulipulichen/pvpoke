@@ -1,5 +1,5 @@
 let include2500 = [
-  'dragonite'
+  //'dragonite'
   , 'dragonite_shadow'
     , 'venusaur', 'venusaur_shadow'
     , 'ampharos', 'ampharos_shadow'
@@ -37,5 +37,5 @@ let include2500 = [
     // ----------------------
     // 社群日專區
     
-    , 'alakazam'  // 胡地
+    //, 'alakazam'  // 胡地
 ]

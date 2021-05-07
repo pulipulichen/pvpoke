@@ -29,8 +29,8 @@ let exclude1500 = [
   'poliwrath', // 蚊香泳士 < 蚊香泳士 暗影化
   
   'dragonair', // 哈克龍 < 哈克龍 暗影化
+  'dragonair_shadow', // 哈克龍 暗影化 < 快龍 暗影化
   'dragonite', // 快龍 < 哈克龍 暗影化
-  'dragonite_shadow', // 快龍 暗影化 < 哈克龍 暗影化
   
   'lapras', // 拉普拉斯 暗影化 < 拉普拉斯
   

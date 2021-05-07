@@ -331,5 +331,52 @@ Please modify "./iv/data/evolution-family.json"`
   },
   getMMDD () {
     return '' + (new Date()).mmdd()
+  },
+  isEndsWithXLorXS (speciesId) {
+    return (speciesId.endsWith('_xl')
+      || speciesId.endsWith('_xs')
+      || speciesId.endsWith('_xl.')
+      || speciesId.endsWith('_xs.'))
+  },
+  stripXLorXS (speciesId) {
+    if (speciesId.endsWith('_xl')) {
+      //console.log(speciesId)
+      speciesId = speciesId.slice(0, -3)
+      //console.log(speciesId)
+      if (speciesId.endsWith('__shadow')) {
+        speciesId = speciesId.slice(0, -8) + '_shadow'
+      }
+      //console.log(speciesId)
+    }
+
+    if (speciesId.endsWith('_xl.')) {
+      speciesId = speciesId.slice(0, -4)
+
+      if (speciesId.indexOf('__shadow') > -1) {
+        speciesId = speciesId.slice(0, -8) + '_shadow'
+      }
+    }
+    
+    // -----------------
+    
+    if (speciesId.endsWith('_xs')) {
+      //console.log(speciesId)
+      speciesId = speciesId.slice(0, -3)
+      //console.log(speciesId)
+      if (speciesId.endsWith('__shadow')) {
+        speciesId = speciesId.slice(0, -8) + '_shadow'
+      }
+      //console.log(speciesId)
+    }
+
+    if (speciesId.endsWith('_xs.')) {
+      speciesId = speciesId.slice(0, -4)
+
+      if (speciesId.indexOf('__shadow') > -1) {
+        speciesId = speciesId.slice(0, -8) + '_shadow'
+      }
+    }
+    
+    return speciesId
   }
 }

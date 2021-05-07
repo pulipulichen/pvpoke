@@ -15,7 +15,7 @@ var appComputedInfo = {
     this.gm.data.pokemon.forEach(p => {
       let tags = p.tags
       
-      if (p.speciesId.endsWith('_xl')) {
+      if (this.isEndsWithXLorXS(p.speciesId)) {
         return false
       }
       
@@ -292,6 +292,10 @@ var appComputedInfo = {
     
     let exclusiveList = {}
     
+//    let dexList = this.top1500.normal.map(p => p.dex)
+//    dexList.sort()
+//    console.log(dexList)
+    
     Object.keys(this.top1500).forEach((area) => {
       this.computedOutOfRankingAddDex(area, this.top1500[area], exclusiveList)
     })
@@ -323,6 +327,10 @@ var appComputedInfo = {
     
     // 我需要先列一個排除的清單
     let top = {}
+    
+//    let dexList = this.top1500max.normal.map(p => p.dex)
+//    dexList.sort()
+//    console.log(dexList)
     
     let addedSpeciesIdList = []
     Object.keys(this.top1500max).forEach((area) => {

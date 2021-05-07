@@ -25,23 +25,10 @@ var appMethodsRank = {
     let addedSpeciesIdList = []
     
     let addRanking = (speciesId) => {
+      
       // ------------
       
-      if (speciesId.endsWith('_xl')) {
-        speciesId = speciesId.slice(0, -3)
-        
-        if (speciesId.endsWith('__shadow')) {
-          speciesId = speciesId.slice(0, -8) + '_shadow'
-        }
-      }
-
-      if (speciesId.endsWith('_xl.')) {
-        speciesId = speciesId.slice(0, -4)
-        
-        if (speciesId.endsWith('__shadow')) {
-          speciesId = speciesId.slice(0, -8) + '_shadow'
-        }
-      }
+      speciesId = this.stripXLorXS(speciesId)
 
       if (addedSpeciesIdList.indexOf(speciesId) > -1) {
 //        if (speciesId === 'metagross') {
@@ -179,7 +166,7 @@ var appMethodsRank = {
     let count = 0
     
     let addRanking = (speciesId) => {
-      if (speciesId.endsWith('_xl')) {
+      if (this.isEndsWithXLorXS(speciesId)) {
         return true
       }
       

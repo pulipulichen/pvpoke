@@ -27,6 +27,8 @@ var appComputedOutput = {
     let topRankMaxStar012All = outOfRankingPrefixAll.split('&!4*&').join('&!3*&!4*&')
     let topRankMaxStar012NotTradedFilter = outOfRankingPrefixNotTradedFilter.split('&!4*&').join('&!3*&!4*&')
     
+    //console.log(this.topRankingMax)
+    
     this.computedBestIVCellsTopRankMax(rows, this.topRankingMax, '排名100% 0*-2*', topRankMaxStar012NotTraded, topRankMaxStar012Traded, topRankMaxStar012All, topRankMaxStar012NotTradedFilter)
     this.computedBestIVCellsTopRankMax(rows, this.topRankingMax, '排名100% !4*', outOfRankingPrefixNotTraded, outOfRankingPrefixTraded, outOfRankingPrefixAll, outOfRankingPrefixNotTradedFilter)
     

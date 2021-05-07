@@ -20,7 +20,7 @@ var appMethodsQuery = {
     let needQueryXL2500 = []
     
     let addRanking = (speciesId) => {
-      if (speciesId.endsWith('_xl')) {
+      if (this.isEndsWithXLorXS(speciesId)) {
         let sId = speciesId.slice(0, -3)
         
         if (sId.endsWith('__shadow')) {
@@ -41,14 +41,7 @@ var appMethodsQuery = {
         return true
       }
       
-      if (speciesId.endsWith('_xl')) {
-        speciesId = speciesId.slice(0, -3)
-        //console.log(speciesId)
-        
-        if (speciesId.endsWith('__shadow')) {
-          speciesId = speciesId.slice(0, -8) + '_shadow'
-        }
-      }
+      speciesId = this.stripXLorXS(speciesId)
       
       if (addedList.indexOf(speciesId) > -1) {
         return true
@@ -194,15 +187,8 @@ var appMethodsQuery = {
 //      if (speciesId.startsWith('p')) {
 //        console.log(speciesId)
 //      }
-      
-      if (speciesId.endsWith('_xl')) {
-        speciesId = speciesId.slice(0, -3)
-        //console.log(speciesId)
-        
-        if (speciesId.endsWith('__shadow')) {
-          speciesId = speciesId.slice(0, -8) + '_shadow'
-        }
-      }
+            
+      speciesId = this.stripXLorXS(speciesId)
       
       if (addedList.indexOf(speciesId) > -1) {
 //        if (speciesId.startsWith('politoed')) {
@@ -212,7 +198,7 @@ var appMethodsQuery = {
       }
       addedList.push(speciesId)
       
-      if (speciesId.endsWith('_xl') || excludeList.indexOf(speciesId) > -1) {
+      if (this.isEndsWithXLorXS(speciesId) || excludeList.indexOf(speciesId) > -1) {
 //        if (speciesId.startsWith('politoed')) {
 //          console.log('xl 排除')
 //        }
@@ -281,22 +267,7 @@ var appMethodsQuery = {
       
       // ---------------
       
-      if (speciesId.endsWith('_xl')) {
-        speciesId = speciesId.slice(0, -3)
-        //console.log(speciesId)
-        
-        if (speciesId.endsWith('__shadow')) {
-          speciesId = speciesId.slice(0, -8) + '_shadow'
-        }
-      }
-
-      if (speciesId.endsWith('_xl.')) {
-        speciesId = speciesId.slice(0, -4)
-        
-        if (speciesId.endsWith('__shadow')) {
-          speciesId = speciesId.slice(0, -8) + '_shadow'
-        }
-      }
+      speciesId = this.stripXLorXS(speciesId)
       
       if (addedSpeciesIdList.indexOf(speciesId) > -1) {
         continue

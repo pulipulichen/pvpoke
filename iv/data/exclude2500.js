@@ -21,7 +21,7 @@ let exclude2500 = [
   'politoed', // 蚊香蛙皇 暗影化 < 蚊香蛙皇
   'poliwrath', // 蚊香泳士 暗影化 < 蚊香泳士
   
-  'dragonite_shadow', // 快龍 暗影化 < 快龍
+  'dragonite', // 快龍 < 快龍 暗影化
   
   'gyarados_shadow', // 暴鯉龍 暗影化 < 暴鯉龍
   

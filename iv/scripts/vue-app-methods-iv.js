@@ -149,21 +149,7 @@ var appMethodsIV = {
       
       // --------------
       
-      if (id.endsWith('_xl')) {
-        id = id.slice(0, -3)
-        
-        if (id.endsWith('__shadow')) {
-          id = id.slice(0, -8) + '_shadow'
-        }
-      }
-
-      if (id.endsWith('_xl.')) {
-        id = id.slice(0, -4)
-        
-        if (id.endsWith('__shadow')) {
-          id = id.slice(0, -8) + '_shadow'
-        }
-      }
+      id = this.stripXLorXS(id)
       
       if (addedSpeciesIdList.indexOf(id) > -1) {
         continue
@@ -472,8 +458,8 @@ var appMethodsIV = {
 
   },
   get1500IV: function (speciesId) {
-    if (speciesId.endsWith('_xl')) {
-      throw new Error('XL:' + speciesId)
+    if (this.isEndsWithXLorXS(speciesId)) {
+      throw new Error('XL or XS:' + speciesId)
     }
     
     let data = this.iv1500[speciesId]

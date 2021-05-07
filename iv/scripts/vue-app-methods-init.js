@@ -20,23 +20,7 @@ var appMethodsInit = {
         this.gm.data.pokemon.forEach(({dex, speciesId, speciesName}, i) => {
           // ------------
           
-          if (speciesId.endsWith('_xl')) {
-            //console.log(speciesId)
-            speciesId = speciesId.slice(0, -3)
-            //console.log(speciesId)
-            if (speciesId.endsWith('__shadow')) {
-              speciesId = speciesId.slice(0, -8) + '_shadow'
-            }
-            //console.log(speciesId)
-          }
-          
-          if (speciesId.endsWith('_xl.')) {
-            speciesId = speciesId.slice(0, -4)
-            
-            if (speciesId.indexOf('__shadow') > -1) {
-              speciesId = speciesId.slice(0, -8) + '_shadow'
-            }
-          }
+          speciesId = this.stripXLorXS(speciesId)
           
           if (addedSpeciesIdList.indexOf(speciesId) > -1) {
             return false

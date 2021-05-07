@@ -358,7 +358,7 @@ let setupCompareResultTable = async function () {
 				
 				<th>BEST</th>
 				<th>DEFAULT</th>
-				<th>DEFAULT_XL</th>
+				<th>DEFAULT_XS</th>
 				<th>MAX</th>
 				<th>b2x</th>
 				<th>b2d</th>
@@ -481,7 +481,7 @@ let startCompare = async function () {
 	
 	for (let i = start; i < end; i++) {
 		let SpeciesID = options.eq(i).attr('value')
-		if (SpeciesID.endsWith('_xl')) {
+		if (SpeciesID.endsWith('_xs')) {
 			continue
 		}
 		if (excludeSpecies.indexOf(SpeciesID) > -1) {
@@ -625,8 +625,8 @@ let startCompare = async function () {
 		let moveset = getMovesetIndex()
 		tr.find('.movesset').html(moveset)
 		
-		// 取得DEFAULT_XL參數
-		let SpeciesIDXL = SpeciesID + '_xl'
+		// 取得DEFAULT_XS參數
+		let SpeciesIDXL = SpeciesID + '_xs'
 		let defaultXLStats = ''
 		//console.log(SpeciesIDXL)
 	
