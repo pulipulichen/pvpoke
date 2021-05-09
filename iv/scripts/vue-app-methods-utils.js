@@ -420,11 +420,16 @@ Please modify "./iv/data/evolution-family.json"`
     return speciesId
   },
   getArea (speciesId) {
-    speciesId = this.stripXLorXS(speciesId)
-    
-    let p = this.speciesIdToData[speciesId]
-    if (!p) {
-      console.log(speciesId)
+    let p
+    if (speciesId.speciesId) {
+      p = speciesId
+    }
+    else {
+      speciesId = this.stripXLorXS(speciesId)
+      p = this.speciesIdToData[speciesId]
+      if (!p) {
+        console.error("Species ID is invalid: " + speciesId)
+      }
     }
     let tags = p.tags
     

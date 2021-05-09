@@ -108,13 +108,14 @@ var appComputedMax = {
           }
         }
         
-        if (addedSpeciesIdList.indexOf(speciesId) > -1) {
+        if (addedSpeciesIdList.indexOf(area + ',' + speciesId) > -1) {
           return false
         }
-        addedSpeciesIdList.push(speciesId)
+        addedSpeciesIdList.push(area + ',' + speciesId)
         top[area].push(p)
       })
     })
+    
     
     /*
     Object.keys(this.top1500max).forEach((area) => {
@@ -212,6 +213,73 @@ var appComputedMax = {
         top[area].push(p)
       })
     })
+    
+    // --------------------------
+    // 20210509
+    
+    //console.log('1500', this.top1500.normal.map(p => p.dex).sort())
+    //console.log('tradeWorser', this.top1500TradeWorser.normal.map(p => p.dex).sort())
+    //console.log('tradeBetter', this.top1500TradeBetter.normal.map(p => p.dex).sort())
+    Object.keys(this.top1500TradeBetter).forEach((area) => {
+      if (Array.isArray(top[area]) === false) {
+        top[area] = []
+      }
+      
+      this.top1500TradeBetter[area].forEach(p => {
+        if (!p) {
+          throw Error('p is undefined')
+        }
+        
+        if (p.isGBetterAfterTrading === true) {
+          return false
+        } 
+        
+        let isAnotherMax = (p.uStar === '4*')
+        if (isAnotherMax === false) {
+          return false
+        }
+
+        let speciesId = p.speciesId
+
+        if (addedSpeciesIdList.indexOf(speciesId) > -1) {
+          return false
+        }
+
+        let area = this.getArea(p)
+        top[area].push(p)
+      })
+    })
+    
+    
+    Object.keys(this.top2500TradeBetter).forEach((area) => {
+      if (Array.isArray(top[area]) === false) {
+        top[area] = []
+      }
+      
+      this.top2500TradeBetter[area].forEach(p => {
+        
+        if (p.isUBetterAfterTrading === true) {
+          return false
+        } 
+        
+        let isAnotherMax = (p.gStar === '4*')
+        if (isAnotherMax === false) {
+          return false
+        }
+
+        let speciesId = p.speciesId
+
+        if (addedSpeciesIdList.indexOf(speciesId) > -1) {
+          return false
+        }
+
+        let area = this.getArea(p)
+        top[area].push(p)
+      })
+    })
+    
+    // ------------------------
+    
     
     /*
     Object.keys(this.top1500max).forEach((area) => {

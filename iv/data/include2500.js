@@ -16,14 +16,16 @@ let include2500 = [
     , 'salamence'
     , 'blaziken'  // 火焰雞
     , 'swampert', 'swampert_shadow'
-    , 'gardevoir_shadow', 'gallade', 'gallade_shadow'
+    , 'gardevoir_shadow', 
+    //, 'gallade' // 艾路雷朵
+    , 'gallade_shadow'
     , 'torterra', 'torterra_shadow'
     , 'infernape'
     , 'empoleon'
     //, 'flygon'  // 沙漠蜻蜓
     , 'flygon_shadow'
     , 'shiftry', 'shiftry_shadow'
-    , 'gengar'
+    //, 'gengar'
     //, 'emboar'  // 炎武王
     , 'samurott'
     , 'lucario' // 路卡利歐

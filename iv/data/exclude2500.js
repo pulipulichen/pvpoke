@@ -11,6 +11,8 @@ let exclude2500 = [
   
   'primeape', // 火爆猴 20210508 4*
   'altaria', // 七夕青鳥 20210508 4*
+  
+  'gengar', // 梗鬼 20210509 4*
     
 //  'charizard',  // 已經湊到噴火龍
 //  'machamp', // 已經湊到 怪力

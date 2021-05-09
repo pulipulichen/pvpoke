@@ -22,7 +22,7 @@ let include1500 = [
     , 'shiftry', 'shiftry_shadow'
     , 'cherrim_sunny'
     , 'hypno'
-    , 'gengar'
+    //, 'gengar'
     , 'marowak_alolan'
     , 'toxicroak'
     //, 'beedrill' // 已有
