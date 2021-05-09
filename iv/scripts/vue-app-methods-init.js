@@ -61,7 +61,8 @@ var appMethodsInit = {
           this.gm.data.pokemon[i].isNotSpecial = this.isNotSpecial(this.gm.data.pokemon[i])
           this.gm.data.pokemon[i].isShadow = (this.gm.data.pokemon[i].tags && this.gm.data.pokemon[i].tags.indexOf('shadow') > -1)
           
-          this.gm.data.pokemon[i].isBetterAfterTrading = this.isBetterAfterTrading(this.gm.data.pokemon[i])
+          this.gm.data.pokemon[i].isGBetterAfterTrading = this.isBetterAfterTrading(this.gm.data.pokemon[i], '1500')
+          this.gm.data.pokemon[i].isUBetterAfterTrading = this.isBetterAfterTrading(this.gm.data.pokemon[i], '2500')
           //if (this.gm.data.pokemon[i].isNotSpecial === true) {
           //  console.log(this.gm.data.pokemon[i].gIV, this.gm.data.pokemon[i].uIV, this.gm.data.pokemon[i].isNotSpecial, this.gm.data.pokemon[i].isBetterAfterTrading)
           //}

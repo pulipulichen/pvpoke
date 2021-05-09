@@ -1,6 +1,6 @@
 let include1500 = [
     //'raichu', // 雷丘 已經有100%了
-    'raichu_alolan', // 阿羅拉雷丘
+    'raichu_alolan'// 阿羅拉雷丘
     //'dragonair', 'dragonair_shadow', 'dragonite_shadow'
     , 'ivysaur', 'ivysaur_shadow', 'venusaur', 'venusaur_shadow'
     //, 'charizard', 'charizard_shadow'
@@ -11,13 +11,14 @@ let include1500 = [
     , 'typhlosion'
     , 'muk_alolan'
     //, 'sceptile'
-    , 'blaziken'
+    , 'blaziken' // 火焰雞
     , 'vigoroth'
     //, 'marshtomp', 'marshtomp_shadow', 'swampert', 'swampert_shadow'
     , 'gardevoir_shadow'
     , 'grotle', 'grotle_shadow', 'torterra', 'torterra_shadow'
     , 'prinplup' , 'empoleon'
-    , 'flygon', 'flygon_shadow'
+    //, 'flygon'  // 沙漠蜻蜓
+    , 'flygon_shadow'
     , 'shiftry', 'shiftry_shadow'
     , 'cherrim_sunny'
     , 'hypno'
@@ -37,7 +38,7 @@ let include1500 = [
     
     // ----------------------
     // 20210112 新增關注寶可夢
-    , 'excadrill' // 龍頭地鼠
+    //, 'excadrill' // 龍頭地鼠
     , 'zebstrika' // 雷電斑馬
     
   ]

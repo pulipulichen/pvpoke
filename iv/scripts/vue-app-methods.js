@@ -1,4 +1,4 @@
-/* global postMessageAPI, XLSX, GameMaster, appMethodsUI, appMethodsIV, appMethodsInit, appMethodsQuery, appMethodsUtils, appMethodsSearch, appMethodsOutput, appMethodsRank, appMethodsPerfectTable */
+/* global postMessageAPI, XLSX, GameMaster, appMethodsUI, appMethodsIV, appMethodsInit, appMethodsQuery, appMethodsUtils, appMethodsSearch, appMethodsOutput, appMethodsRank, appMethodsPerfectTable, appMethodsRankSelection */
 
 var appMethods = {
           ...appMethodsUtils,
@@ -10,4 +10,5 @@ var appMethods = {
           ...appMethodsUI,
           ...appMethodsSearch,
           ...appMethodsPerfectTable,
+          ...appMethodsRankSelection
 }

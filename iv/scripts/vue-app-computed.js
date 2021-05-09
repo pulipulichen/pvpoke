@@ -1,8 +1,11 @@
-/* global appComputedInfo, appComputedOutput, appComputedPerfectTable */
+/* global appComputedInfo, appComputedOutput, appComputedPerfectTable, appComputedRankings, appComputedTrade, appComputedMax */
 
 var appComputed = {
   ...appComputedInfo,
   ...appComputedOutput,
   ...appComputedPerfectTable,
+  ...appComputedRankings,
+  ...appComputedTrade,
+  ...appComputedMax,
 }
 

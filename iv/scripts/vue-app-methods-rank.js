@@ -25,7 +25,9 @@ var appMethodsRank = {
     let addedSpeciesIdList = []
     
     let addRanking = (speciesId) => {
-      
+      if (typeof(speciesId) !== 'string') {
+        return false
+      }
       // ------------
       
       speciesId = this.stripXLorXS(speciesId)
@@ -166,6 +168,10 @@ var appMethodsRank = {
     let count = 0
     
     let addRanking = (speciesId) => {
+      if (typeof(speciesId) !== 'string') {
+        return false
+      }
+      
       if (this.isEndsWithXLorXS(speciesId)) {
         return true
       }

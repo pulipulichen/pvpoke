@@ -77,7 +77,7 @@ var appMethodsIV = {
     //console.log(gm.data.pokemon.length)
 
     let header = [
-      '[' + (new Date()).mmdd() + ']',
+      '[' + (new Date()).mmddhhmm() + ']',
       'dex',
       'family_tw',
       'g_ivs',
@@ -90,6 +90,7 @@ var appMethodsIV = {
       'shadow',
       'special',
       'in_top',
+      'area',
       'g_rank',
       'g_star',
       'g_exchange',
@@ -121,6 +122,9 @@ var appMethodsIV = {
     let rows = []
     //rows.push(header)
 
+    //let rankings1500 = this.rankings1500Selection
+    //let rankings2500 = this.rankings2500Selection
+    
     let rankings1500 = this.rankings1500
     let rankings2500 = this.rankings2500
     
@@ -210,18 +214,23 @@ var appMethodsIV = {
               )
       */
       let topIncludable = (
-              (isShadow === false)
-              && (isSpecial === false)
+              //(isShadow === false) && 
+              (isSpecial === false)
               )
 
       let glvInfo = gBestIV.level
-      if (glvInfo < 40) {
-        
+      if (glvInfo < 35) {
+        glvInfo = '!' + glvInfo + this.getDustCandy(gBestIV.level)
+      }
+      else if (glvInfo < 40) {
         glvInfo = glvInfo + this.getDustCandy(gBestIV.level)
       }
       
       let ulvInfo = uBestIV.level
       if (ulvInfo < 40) {
+        ulvInfo = '!' + ulvInfo + this.getDustCandy(uBestIV.level)
+      }
+      else if (ulvInfo < 40) {
         ulvInfo = ulvInfo + this.getDustCandy(uBestIV.level)
       }
       
@@ -230,32 +239,92 @@ var appMethodsIV = {
       
       let inTop = false
       
-      if (isSpecial === false) {
+      let pokemonArea = this.getArea(id)
+      let isMega = this.isMega(id)
+      
+      if (isSpecial === false && isMega === false) {
+        
+        let mark = '!'
         if (r15 < this.topLimit + 1 
                 //&& (gBestIV.ivs.atk + gBestIV.ivs.def + gBestIV.ivs.hp) < 45 ) {
                 && (gBestIV.ivs.atk + gBestIV.ivs.def + gBestIV.ivs.hp) < 45 ) {
-          r15 = '!' + r15
+          
+          if (gBestIV.ivs.atk < 5 
+                || gBestIV.ivs.def < 5
+                || gBestIV.ivs.hp < 5) {
+            mark = '@'
+          }
+          
+          r15 = mark + r15
         }
         if (r25 < this.topLimit + 1 
                 && (uBestIV.ivs.atk + uBestIV.ivs.def + uBestIV.ivs.hp) < 45 ) {
-          r25 = '!' + r25
+          
+          if (uBestIV.ivs.atk < 5 
+                || uBestIV.ivs.def < 5
+                || uBestIV.ivs.hp < 5) {
+            mark = '@'
+          }
+          
+          r25 = mark + r25
         }
+        
         
         
         //console.log(this.topMixFamilyDex)
-        for (let area in this.topMixFamilyDex) {
-//          if (dataPokemon.dex === 334) {
-//            let area = 'normal'
-//            console.log(334, area, this.topMixFamilyDex[area].indexOf(dataPokemon.dex),
-//                    this.topMixFamilyDex[area])
-//          }
+        if (isShadow === false) {
+          for (let area in this.topMixFamilyDex) {
+            if (area !== pokemonArea) {
+              continue
+            }
+  //          if (dataPokemon.dex === 334) {
+  //            let area = 'normal'
+  //            console.log(334, area, this.topMixFamilyDex[area].indexOf(dataPokemon.dex),
+  //                    this.topMixFamilyDex[area])
+  //          }
+
+            if (this.topMixFamilyDex[area].indexOf(dataPokemon.dex) > -1) {
+              inTop = true
+              break
+            }
+          }
           
-          if (this.topMixFamilyDex[area].indexOf(dataPokemon.dex) > -1) {
-            inTop = true
-            break
+          if (inTop === false) {
+            for (let area in this.topMixShadowFamilyDex) {
+              if (area !== pokemonArea) {
+                continue
+              }
+    //          if (dataPokemon.dex === 334) {
+    //            let area = 'normal'
+    //            console.log(334, area, this.topMixFamilyDex[area].indexOf(dataPokemon.dex),
+    //                    this.topMixFamilyDex[area])
+    //          }
+
+              if (this.topMixShadowFamilyDex[area].indexOf(dataPokemon.dex) > -1) {
+                inTop = true
+                break
+              }
+            }
           }
         }
-      }
+        else {
+          for (let area in this.topMixShadowFamilyDex) {
+            if (area !== pokemonArea) {
+              continue
+            }
+  //          if (dataPokemon.dex === 334) {
+  //            let area = 'normal'
+  //            console.log(334, area, this.topMixFamilyDex[area].indexOf(dataPokemon.dex),
+  //                    this.topMixFamilyDex[area])
+  //          }
+
+            if (this.topMixShadowFamilyDex[area].indexOf(dataPokemon.dex) > -1) {
+              inTop = true
+              break
+            }
+          }
+        }
+      } // if (isSpecial === false && isMega === false) {
       
       let familyDex = this.getFamilyDex(dataPokemon.dex)
 
@@ -263,7 +332,7 @@ var appMethodsIV = {
       if (typeof(this.pokemonNameTW[dataPokemon.speciesId]) === 'string') {
         name = this.pokemonNameTW[dataPokemon.speciesId]
       }
-
+      
       rows.push([
         name,
         dataPokemon.dex,
@@ -279,6 +348,7 @@ var appMethodsIV = {
         isShadow,
         isSpecial,
         inTop,
+        pokemonArea,
         rank1500,
         gStar,
         this.calcIncludeExchange(gBestIV.ivs),
@@ -425,11 +495,40 @@ var appMethodsIV = {
     */
     // ------------------
 
-    let dexFieldIndex = 38
+    let dexFieldIndex = 39
     let inTopFieldIndex = 12
+    let areaFieldIndex = 13
+    let isShadowFieldIndex = 10
     rows.sort((a, b) => {
+      let rootDexA = Math.floor(Number(a[dexFieldIndex]))
+      let rootDexB = Math.floor(Number(b[dexFieldIndex]))
+      
       if (a[inTopFieldIndex] === b[inTopFieldIndex]) {
-        return Number(a[dexFieldIndex]) - Number(b[dexFieldIndex])
+        if (rootDexA !== rootDexB) {
+          return Number(a[dexFieldIndex]) - Number(b[dexFieldIndex])
+        }
+        else if (a[areaFieldIndex] !== b[areaFieldIndex]) {
+          if (a[areaFieldIndex] === 'normal') {
+            return -1
+          }
+          else if (a[areaFieldIndex] > b[areaFieldIndex]) {
+            return -1
+          }
+          else {
+            return 1
+          }
+        }
+        else if (a[isShadowFieldIndex] !== b[isShadowFieldIndex]) {
+          if (a[isShadowFieldIndex] === true) {
+            return 1
+          }
+          else {
+            return -1
+          }
+        }
+        else {
+          return Number(a[dexFieldIndex]) - Number(b[dexFieldIndex])
+        }
       }
       else {
         if (a[inTopFieldIndex] === true) {

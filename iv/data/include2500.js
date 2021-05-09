@@ -2,7 +2,7 @@ let include2500 = [
   //'dragonite'
   , 'dragonite_shadow'
     , 'venusaur', 'venusaur_shadow'
-    , 'ampharos', 'ampharos_shadow'
+    //, 'ampharos', 'ampharos_shadow' // 電龍
     , 'charizard', 'charizard_shadow'
     , 'blastoise', 'blastoise_shadow'
     , 'ninetales_alolan'  // 阿羅拉 九尾
@@ -10,20 +10,21 @@ let include2500 = [
     , 'meganium'
     , 'metagross'
     , 'typhlosion'
-    , 'feraligatr'
-    , 'mamoswine'
+    //, 'feraligatr'  // 大力鱷
+    //, 'mamoswine' // 象牙豬
     , 'sceptile'
     , 'salamence'
-    , 'blaziken'
+    , 'blaziken'  // 火焰雞
     , 'swampert', 'swampert_shadow'
     , 'gardevoir_shadow', 'gallade', 'gallade_shadow'
     , 'torterra', 'torterra_shadow'
     , 'infernape'
     , 'empoleon'
-    , 'flygon', 'flygon_shadow'
+    //, 'flygon'  // 沙漠蜻蜓
+    , 'flygon_shadow'
     , 'shiftry', 'shiftry_shadow'
     , 'gengar'
-    , 'emboar'
+    //, 'emboar'  // 炎武王
     , 'samurott'
     , 'lucario' // 路卡利歐
           

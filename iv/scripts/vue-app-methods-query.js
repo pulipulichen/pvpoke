@@ -20,6 +20,10 @@ var appMethodsQuery = {
     let needQueryXL2500 = []
     
     let addRanking = (speciesId) => {
+      if (!speciesId) {
+        return false
+      }
+      
       if (this.isEndsWithXLorXS(speciesId)) {
         let sId = speciesId.slice(0, -3)
         
@@ -183,6 +187,10 @@ var appMethodsQuery = {
     let addedList = []
     
     let addRanking = (speciesId) => {
+      if (typeof(speciesId) !== 'string') {
+        return false
+      }
+      
       //console.log(speciesId)
 //      if (speciesId.startsWith('p')) {
 //        console.log(speciesId)
@@ -354,7 +362,7 @@ var appMethodsQuery = {
     //console.log(ranking)
     return ranking
   },
-  filterTradable (top, isTradeBetter) {
+  filterTradable (top, isTradeBetter, cp, traded = false) {
     let result = {}
     for (let r in top) {
       let list = top[r]
@@ -362,15 +370,43 @@ var appMethodsQuery = {
       for (let i = 0; i < list.length; i++) {
         let p = list[i]
         
-        if (p.isBetterAfterTrading === isTradeBetter) {
+//        if (p.dex === 186 && traded === false) {
+//          console.log(isTradeBetter, cp, p)
+//        }
+        
+        let pStar = p.gStar
+        let pTradable = p.isGBetterAfterTrading
+        let pIsMax = (p.uStar === '4*')
+        if (cp === '2500') {
+          pStar = p.uStar
+          pTradable = p.isUBetterAfterTrading
+          pIsMax = (p.gStar === '4*')
+        }
+        
+        //if (isTradeBetter === false && pTradable === false && p.dex === )
+        if (pTradable === isTradeBetter
+                && (isTradeBetter === false && pTradable === false && pIsMax)) {
+          continue
+        }
+        
+        if (traded === true && pStar === '4*') {
+          continue
+        }
+        
+        if (pTradable === isTradeBetter
+                || (traded === false && isTradeBetter === true && pTradable === false && pIsMax)) {
           if (!result[r]) {
             result[r] = []
           }
           result[r].push(p)
         }
+        
+        //if (p.dex === 683 && traded === true) {
+        //  console.log(isTradeBetter, pTradable, (pTradable === isTradeBetter), cp, p)
+        //}
       }
     }
-    //console.log(result, isTradeBetter)
+    //console.log(cp, isTradeBetter, result)
     return result
   },
   computedOutOfRankingAddDex: function (a, top, exclusiveList) {
@@ -407,7 +443,7 @@ var appMethodsQuery = {
       }
     }).join('/')
   },
-  computedTopListAddDex: function (area, dex, star, iv, areaDexStarMap, areaDexIVAttMap) {
+  computedTopListAddDex: function (area, dex, star, iv, areaDexStarMap, areaDexIVAttMap, dexMap, excludeMap = {}) {
     let family = this.evolutionFamily[dex]
     
     if (!iv) {
@@ -415,6 +451,15 @@ var appMethodsQuery = {
     }
 
     family.forEach(d => {
+      //  --------
+      // 先檢查是否有在排除名單內
+      if (excludeMap[area] && excludeMap[area].indexOf(d) > -1) {
+        // 符合排除名單，移除
+        return false
+      }
+      
+      // ---------
+      
       if (!areaDexStarMap[area]) {
         areaDexStarMap[area] = {}
       }
@@ -442,6 +487,16 @@ var appMethodsQuery = {
       //ivGrid = ivGrid.join('/')
       if (areaDexIVAttMap[area][d].indexOf(ivGrid) === -1) {
         areaDexIVAttMap[area][d].push(ivGrid)
+      }
+      
+      // ------------
+      
+      if (!dexMap[area]) {
+        dexMap[area] = []
+      }
+
+      if (dexMap[area].indexOf(d) === -1) {
+        dexMap[area].push(d)
       }
     })
   },
@@ -659,7 +714,7 @@ var appMethodsQuery = {
     })
   },
   computedBestIVCellsOutOfRange: function (rows, outOfRanking, header, outOfRankingPrefixNotTraded, outOfRankingPrefixTraded, outOfRankingPrefixTradedBadLucky, outOfRankingPrefixAll) {
-    rows.push(header + (new Date()).mmdd() + "\t未交換\t數量\t已交換\t數量\t全部\t數量\t可交換\t數量")
+    rows.push(header + (new Date()).mmddhhmm() + "\t未交換\t數量\t已交換\t數量\t全部\t數量\t可交換\t數量")
     
     let rowsToAdd = []
     for (let area in outOfRanking) {
@@ -715,7 +770,7 @@ var appMethodsQuery = {
     this.insertRowHr(rows)
   },
   computedBestIVCellsShadowOutOfRange: function (rows, outOfRanking, header, outOfRankingPrefixNotTraded, outOfRankingPrefixTraded, outOfRankingPrefixTradedBadLucky, outOfRankingPrefixAll) {
-    rows.push(header + (new Date()).mmdd() + "\t未交換\t數量\t已交換\t數量\t全部\t數量\t整理\t數量")
+    rows.push(header + (new Date()).mmddhhmm() + "\t未交換\t數量\t已交換\t數量\t全部\t數量\t整理\t數量")
     
     let rowsToAdd = []
     for (let area in outOfRanking) {
@@ -761,12 +816,13 @@ var appMethodsQuery = {
     //rows.push("") // 空一行
     this.insertRowHr(rows)
   },
-  computedBestIVCellsTopRankMax: function (rows,outOfRanking,  header, outOfRankingPrefixNotTraded, outOfRankingPrefixTraded, outOfRankingPrefixTradedBadLucky, outOfRankingPrefixAll) {
+  computedBestIVCellsTopRankMax: function (rows, outOfRanking, outOfRankingTraded,  header, outOfRankingPrefixNotTraded, outOfRankingPrefixTraded, outOfRankingPrefixTradedBadLucky, outOfRankingPrefixAll) {
     rows.push(header + "\t未交換\t數量\t已交換\t數量\t全部\t數量\t整理\t數量")
     
     let rowsToAdd = []
-    for (let area in outOfRanking) {
+    for (let area in outOfRankingTraded) {
       let dexList = outOfRanking[area]
+      let dexListTraded = outOfRankingTraded[area]
       //console.log(dexList.slice(0,3))
       if (Array.isArray(dexList) === false) {
         throw new Error("dexList is not array")
@@ -785,13 +841,14 @@ var appMethodsQuery = {
       let distance = "&距離" + this.distanceBase
       
       let ivList = dexList.join(',')
+      let ivListTraded = dexListTraded.join(',')
       let areaQuery = this.computedAreaQuery(area)
       
       let cells = [
         area,
         "eR!M" + this.getMMDD() + "," + areaQuery + outOfRankingPrefixNotTraded + ivList + excludeCollection + distance + dayInterval + '&',
         countName,
-        "tR!M" + this.getMMDD() + "," + areaQuery + outOfRankingPrefixTraded + ivList + excludeCollection + day,
+        "tR!M" + this.getMMDD() + "," + areaQuery + outOfRankingPrefixTraded + ivListTraded + excludeCollection + day,
         countName,
         areaQuery + outOfRankingPrefixTradedBadLucky + ivList + excludeCollection + day,
         countName,
@@ -1280,15 +1337,15 @@ var appMethodsQuery = {
           return (topDexList.indexOf(dex) === - 1)
         })
         
-        let ivList = areaDexList.join(',') + "&日數0-"
+        let excludeCollection = '&!327&!201'  // 排除晃晃斑跟未知圖騰
+        
+        let ivList = areaDexList.join(',') + excludeCollection + "&日數0-"
         let countName = this.computedCountName(areaDexList)
         let areaQuery = this.computedAreaQuery(area)
-        
-        let excludeCollection = '&!327&!201'  // 排除晃晃斑跟未知圖騰
 
         let cells = [
           a,
-          areaQuery + topAll + ivList + excludeCollection,
+          areaQuery + topAll + ivList,
           countName,
           '-',
           '-',
@@ -1304,11 +1361,12 @@ var appMethodsQuery = {
         
     }
   },
-  buildTopList (top1500, top2500) {
+  buildTopList (top1500, top2500, includeWorser) {
     if (this.ready === false) {
       return {}
     }
     
+    let dexMap = {}
     let areaDexStarMap = {}
     let areaDexIVAttMap = {}
     
@@ -1317,7 +1375,18 @@ var appMethodsQuery = {
         let iv = pokemon.gIV
         let star = pokemon.gStar
         let dex = pokemon.dex
-        this.computedTopListAddDex(area, dex, star, iv, areaDexStarMap, areaDexIVAttMap)
+        this.computedTopListAddDex(area, dex, star, iv, areaDexStarMap, areaDexIVAttMap, dexMap)
+        
+        // 檢查自己是否有在worser的list中
+        if (includeWorser === true) {
+          let speciesId = pokemon.speciesId
+          
+          if (this.top2500TradeWorserSpeciesIDList.indexOf(speciesId) > -1) {
+            let worserIV = pokemon.uIV
+            let worserStar = pokemon.uStar
+            this.computedTopListAddDex(area, dex, worserStar, worserIV, areaDexStarMap, areaDexIVAttMap, dexMap)
+          }
+        }
       })
     })
     
@@ -1326,7 +1395,22 @@ var appMethodsQuery = {
         let iv = pokemon.uIV
         let star = pokemon.uStar
         let dex = pokemon.dex
-        this.computedTopListAddDex(area, dex, star, iv, areaDexStarMap, areaDexIVAttMap)
+        this.computedTopListAddDex(area, dex, star, iv, areaDexStarMap, areaDexIVAttMap, dexMap)
+        
+        // 檢查自己是否有在worser的list中
+        if (includeWorser === true) {
+          let speciesId = pokemon.speciesId
+          
+          if (this.top1500TradeWorserSpeciesIDList.indexOf(speciesId) > -1) {
+            let worserIV = pokemon.gIV
+            let worserStar = pokemon.gStar
+            this.computedTopListAddDex(area, dex, worserStar, worserIV, areaDexStarMap, areaDexIVAttMap, dexMap)
+          }
+          
+//          if (speciesId === 'aromatisse') {
+//            console.log('aromatisse', pokemon.gIV, pokemon.gStar, this.top1500TradeWorserSpeciesIDList.indexOf(speciesId))
+//          }
+        }
       })
     })
     
@@ -1343,15 +1427,17 @@ var appMethodsQuery = {
     let areaAttDexMap = this.computedTopListBuildAreaAttDexMap(areaDexIVAttMap)
     
     return {
+      dex: dexMap,
       star: areaStarDexMap,
       att: areaAttDexMap
     }
   },
-  buildTopListReverseStar (top1500, top2500) {
+  buildTopListReverseStar (top1500, top2500, includeWorser = false, excludeMap = {}) {
     if (this.ready === false) {
       return {}
     }
     
+    let dexMap = {}
     let areaDexStarMap = {}
     let areaDexIVAttMap = {}
     
@@ -1375,7 +1461,17 @@ var appMethodsQuery = {
         
         
         let dex = pokemon.dex
-        this.computedTopListAddDex(area, dex, star, iv, areaDexStarMap, areaDexIVAttMap)
+        this.computedTopListAddDex(area, dex, star, iv, areaDexStarMap, areaDexIVAttMap, dexMap, excludeMap)
+        
+        // 檢查自己是否有在worser的list中
+        if (includeWorser === true) {
+          let speciesId = pokemon.speciesId
+          if (this.top2500TradeWorserSpeciesIDList.indexOf(speciesId) > -1) {
+            let worserIV = pokemon.uIV
+            let worserStar = pokemon.uStar
+            this.computedTopListAddDex(area, dex, worserStar, worserIV, areaDexStarMap, areaDexIVAttMap, dexMap, excludeMap)
+          }
+        }
       })
     })
     
@@ -1394,7 +1490,22 @@ var appMethodsQuery = {
         
         let star = pokemon.uStar
         let dex = pokemon.dex
-        this.computedTopListAddDex(area, dex, star, iv, areaDexStarMap, areaDexIVAttMap)
+        this.computedTopListAddDex(area, dex, star, iv, areaDexStarMap, areaDexIVAttMap, dexMap, excludeMap)
+        
+        // 檢查自己是否有在worser的list中
+        if (includeWorser === true) {
+          let speciesId = pokemon.speciesId
+          
+          if (this.top1500TradeWorserSpeciesIDList.indexOf(speciesId) > -1) {
+            let worserIV = pokemon.gIV
+            let worserStar = pokemon.gStar
+            this.computedTopListAddDex(area, dex, worserStar, worserIV, areaDexStarMap, areaDexIVAttMap, dexMap, excludeMap)
+          }
+          
+//          if (speciesId === 'aromatisse') {
+//            console.log('aromatisse', pokemon.gIV, pokemon.gStar, this.top1500TradeWorserSpeciesIDList.indexOf(speciesId))
+//          }
+        }
       })
     })
     
@@ -1411,6 +1522,7 @@ var appMethodsQuery = {
     let areaAttDexMap = this.computedTopListBuildAreaAttDexMap(areaDexIVAttMap)
     
     return {
+      dex: dexMap,
       star: areaStarDexMap,
       att: areaAttDexMap
     }

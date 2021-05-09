@@ -102,8 +102,37 @@ Please modify "./iv/data/evolution-family.json"`)
         dexString = '0' + dexString
       }
       
-      return Number(min + '.' + dexString)
+      let familyPosition = familyDex.indexOf(Number(dex))
+      
+      let result = Number(min + '.' + familyPosition + dexString)
+      if (isNaN(result)) {
+        throw Error('Family dex error: ' + dex)
+      }
+      
+      return result
     }
+  },
+  getFamilyRootDex (dex) {
+    if (this.excludeSelection.indexOf(dex) > -1) {
+      return dex
+    }
+    
+    let familyDexList = this.evolutionFamilySort[dex]
+    let rootDex = false
+    if (familyDexList) {
+      rootDex = familyDexList[0]
+    }
+    else {
+      familyDexList = this.evolutionFamily[dex]
+
+      if (!familyDexList) {
+        this.getFamilyDex(dex)
+        return false
+      }
+
+      rootDex = familyDexList[0]
+    }
+    return rootDex
   },
   calcGStar: function (pokemon) {
     //console.log(pokemon.defaultIVs.cp1500.slice(1))
@@ -195,16 +224,17 @@ Please modify "./iv/data/evolution-family.json"`)
               && (isSpecial === false)
               )
   },
-  isBetterAfterTrading: function (pokemon) {
+  isBetterAfterTrading: function (pokemon, cp) {
     if (this.isNotSpecial(pokemon) === false) {
       return false
     }
     
     for (let i = 0; i < 3; i++) {
-      if (pokemon.gIV[i] < 5) {
+      if (cp === '1500' && pokemon.gIV[i] < 5) {
         return false
       }
-      if (pokemon.uIV[i] < 5) {
+      else if (cp === '2500' && pokemon.uIV[i] < 5) {
+        //return false
         return false
       }
     }
@@ -332,13 +362,23 @@ Please modify "./iv/data/evolution-family.json"`
   getMMDD () {
     return '' + (new Date()).mmdd()
   },
+  getMMDDhhmm () {
+    return '' + (new Date()).mmddhhmm()
+  },
   isEndsWithXLorXS (speciesId) {
+    if (typeof(speciesId) !== 'string') {
+      return false
+    }
     return (speciesId.endsWith('_xl')
       || speciesId.endsWith('_xs')
       || speciesId.endsWith('_xl.')
       || speciesId.endsWith('_xs.'))
   },
   stripXLorXS (speciesId) {
+    if (typeof(speciesId) !== 'string') {
+      return false
+    }
+    
     if (speciesId.endsWith('_xl')) {
       //console.log(speciesId)
       speciesId = speciesId.slice(0, -3)
@@ -378,5 +418,47 @@ Please modify "./iv/data/evolution-family.json"`
     }
     
     return speciesId
+  },
+  getArea (speciesId) {
+    speciesId = this.stripXLorXS(speciesId)
+    
+    let p = this.speciesIdToData[speciesId]
+    if (!p) {
+      console.log(speciesId)
+    }
+    let tags = p.tags
+    
+    if (!tags) {
+      return 'normal'
+    }
+    if (tags.indexOf('alolan') > -1) {
+      return 'alolan'
+    }
+    if (tags.indexOf('galarian') > -1) {
+      return 'galarian'
+    }
+    return 'normal'
+  },
+  isShadow (speciesId) {
+    speciesId = this.stripXLorXS(speciesId)
+    
+    let p = this.speciesIdToData[speciesId]
+    let tags = p.tags
+    
+    if (!tags) {
+      return false
+    }
+    return (tags.indexOf('shadow') > -1)
+  },
+  isMega (speciesId) {
+    speciesId = this.stripXLorXS(speciesId)
+    
+    let p = this.speciesIdToData[speciesId]
+    let tags = p.tags
+    
+    if (!tags) {
+      return false
+    }
+    return (tags.indexOf('mega') > -1)
   }
 }
