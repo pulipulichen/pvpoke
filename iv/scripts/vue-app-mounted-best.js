@@ -8,5 +8,9 @@ var appMount = async function () {
   this.initBestCSV()
             
   this.ready = true
+  
+  setTimeout(() => {
+    this.test20210511()
+  }, 1000)
   //this.initBestIV()
 }

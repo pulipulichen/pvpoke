@@ -5,6 +5,12 @@ var appComputedTrade = {
     //return this.
     let result = this.filterTradable(this.top1500NotMax, true, '1500')
     
+    // 20210510 要先排除七夕青鳥
+//    if (result.normal.map(p => p.dex).indexOf(334) > -1) {
+//      console.error('不應該包含334')
+//    }
+    //console.log('better traded', result.normal.map(p => p.dex).sort())
+    
     //console.log('no traded', result.normal.map(p => p.dex).sort())
     //console.log(result)
     return result
@@ -12,7 +18,8 @@ var appComputedTrade = {
   top1500TradeBetterTraded: function () {
     let result = this.filterTradable(this.top1500NotMax, true, '1500', true)
     
-    //console.log('traded', result.normal.map(p => p.dex).sort())
+    // 20210510 要先排除七夕青鳥
+//    console.log('better traded', result.normal.map(p => p.dex).sort())
     
     return result
   },
@@ -45,7 +52,14 @@ var appComputedTrade = {
     return result
   },
   top1500TradeWorser: function () {
-    return this.filterTradable(this.top1500NotMax, false, '1500')
+    let result = this.filterTradable(this.top1500NotMax, false, '1500')
+    
+    if (result.normal.map(p => p.dex).indexOf(334) === -1) {
+      console.error('20210511 worser traded 應該包含334', result.normal.map(p => p.dex).sort())
+    }
+    //console.log('worser traded', result.normal.map(p => p.dex).sort())
+    
+    return result
   },
   top1500TradeWorserSpeciesIDList: function () {
     let result = []
@@ -70,6 +84,8 @@ var appComputedTrade = {
                 && this.top2500TradeBetterSpeciesIDList.indexOf(speciesId) === -1)
       })
     }
+    
+    //console.log('worser traded', result.normal.map(p => p.dex).sort())
     
     return result
   },
@@ -107,9 +123,9 @@ var appComputedTrade = {
     let list = this.buildTopListReverseStar(this.top1500TradeBetter, this.top2500TradeBetter, true)
     //console.log(list)
     
-//    if (list.dex.normal.indexOf(683) === -1) {
-//      throw Error('可交換 應包括 683')
-//    }
+    if (list.dex.normal.indexOf(334) > -1) {
+      console.error('可交換 不應包括 334')
+    }
     
     return list
   },

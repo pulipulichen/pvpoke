@@ -271,11 +271,29 @@ var appComputedInfo = {
       this.computedOutOfRankingAddDex(area, this.top2500max[area], exclusiveList)
     })
     
+//    Object.keys(this.top1500TradeBetter).forEach((area) => {
+//      this.computedOutOfRankingAddDex(area, this.top1500TradeBetter[area], exclusiveList)
+//    })
+//    Object.keys(this.top2500TradeBetter).forEach((area) => {
+//      this.computedOutOfRankingAddDex(area, this.top2500TradeBetter[area], exclusiveList)
+//    })
+//    
+//    Object.keys(this.top1500TradeWorser).forEach((area) => {
+//      this.computedOutOfRankingAddDex(area, this.top1500TradeWorser[area], exclusiveList)
+//    })
+//    Object.keys(this.top2500TradeWorser).forEach((area) => {
+//      this.computedOutOfRankingAddDex(area, this.top2500TradeWorser[area], exclusiveList)
+//    })
+    
     Object.keys(exclusiveList).forEach(a => {
       exclusiveList[a].sort((a, b) => {
         return Number(a) - Number(b)
       })
     })
+    
+//    if (exclusiveList.normal.indexOf(334) === -1) {
+//      console.error('應該要包含334', exclusiveList.normal.sort())
+//    }
     
     return exclusiveList
   },

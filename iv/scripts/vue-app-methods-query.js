@@ -377,15 +377,31 @@ var appMethodsQuery = {
         let pStar = p.gStar
         let pTradable = p.isGBetterAfterTrading
         let pIsMax = (p.uStar === '4*')
+        let pAnotherIsExcluded = (this.exclude2500.indexOf(p.speciesId) > -1)
+        
         if (cp === '2500') {
           pStar = p.uStar
           pTradable = p.isUBetterAfterTrading
           pIsMax = (p.gStar === '4*')
+          pAnotherIsExcluded = (this.exclude1500.indexOf(p.speciesId) > -1)
         }
         
         //if (isTradeBetter === false && pTradable === false && p.dex === )
         if (pTradable === isTradeBetter
-                && (isTradeBetter === false && pTradable === false && pIsMax)) {
+                && (isTradeBetter === false && pTradable === false && pIsMax && !pAnotherIsExcluded)) {
+          continue
+        }
+        
+//        if (p.dex === 334) {
+//          console.log({
+//            isTradeBetter,
+//            pTradable,
+//            pAnotherIsExcluded,
+//            result: (isTradeBetter === true && pTradable === false && pAnotherIsExcluded)
+//          })
+//        }
+        
+        if (isTradeBetter === true && pTradable === false && pAnotherIsExcluded) {
           continue
         }
         
@@ -398,7 +414,19 @@ var appMethodsQuery = {
           if (!result[r]) {
             result[r] = []
           }
+          
+//          if (p.dex === 334) {
+//            console.log({
+//              isTradeBetter,
+//              pTradable,
+//              pAnotherIsExcluded,
+//              result: (isTradeBetter === true && pTradable === false && pAnotherIsExcluded)
+//            })
+//          }
           result[r].push(p)
+//          if (p.dex === 334) {
+//            console.log('加入了')
+//          }
         }
         
         //if (p.dex === 683 && traded === true) {
@@ -406,6 +434,11 @@ var appMethodsQuery = {
         //}
       }
     }
+    
+    //if (result.normal.map(p => p.dex).indexOf(334) > -1) {
+    //  console.error('不應該包含334', result.normal.map(p => p.dex))
+    //}
+    
     //console.log(cp, isTradeBetter, result)
     return result
   },
@@ -1459,6 +1492,9 @@ var appMethodsQuery = {
         
         let star = pokemon.gStar
         
+//        if (speciesId === 'altaria') {
+//          console.log('有', this.top2500TradeWorserSpeciesIDList.indexOf(speciesId))
+//        }
         
         let dex = pokemon.dex
         this.computedTopListAddDex(area, dex, star, iv, areaDexStarMap, areaDexIVAttMap, dexMap, excludeMap)
@@ -1466,6 +1502,7 @@ var appMethodsQuery = {
         // 檢查自己是否有在worser的list中
         if (includeWorser === true) {
           let speciesId = pokemon.speciesId
+          
           if (this.top2500TradeWorserSpeciesIDList.indexOf(speciesId) > -1) {
             let worserIV = pokemon.uIV
             let worserStar = pokemon.uStar
