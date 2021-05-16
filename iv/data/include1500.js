@@ -15,7 +15,8 @@ let include1500 = [
     , 'vigoroth'
     //, 'marshtomp', 'marshtomp_shadow', 'swampert', 'swampert_shadow'
     , 'gardevoir_shadow'
-    , 'grotle', 'grotle_shadow', 'torterra', 'torterra_shadow'
+    //, 'grotle', 'grotle_shadow'
+    //, 'torterra', 'torterra_shadow'
     , 'prinplup' , 'empoleon'
     //, 'flygon'  // 沙漠蜻蜓
     , 'flygon_shadow'

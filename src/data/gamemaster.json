@@ -633,6 +633,18 @@
         "partySize": 3,
         "link": "https://antimatter.gg/nexusleague"
     }, {
+        "name": "johto",
+        "title": "Johto Cup",
+        "include": [{
+            "filterType": "dex",
+            "values": [152, 251]
+        }],
+        "exclude": [{
+            "filterType": "tag",
+            "values": ["mega"]
+        }],
+        "link": "https://antimatter.gg/nexusleague"
+    }, {
         "name": "love",
         "title": "Love Cup",
         "include": [{
@@ -3043,7 +3055,7 @@
         "speciesId": "dugtrio",
         "baseStats": {
             "atk": 167,
-            "def": 136,
+            "def": 134,
             "hp": 111
         },
         "types": ["ground", "none"],
@@ -3087,7 +3099,7 @@
         "speciesId": "dugtrio_shadow",
         "baseStats": {
             "atk": 167,
-            "def": 136,
+            "def": 134,
             "hp": 111
         },
         "types": ["ground", "none"],
@@ -3844,7 +3856,7 @@
             "cp2500": [30, 4, 14, 14]
         },
         "eliteMoves": ["KARATE_CHOP", "STONE_EDGE", "SUBMISSION", "PAYBACK"],
-        "searchPriority": 5,
+        "searchPriority": 10,
         "level25CP": 1893,
         "tags": ["shadoweligible"],
         "buddyDistance": 3,
@@ -7783,6 +7795,7 @@
             "cp1500": [23, 5, 11, 12],
             "cp2500": [45.5, 6, 15, 15]
         },
+		"searchPriority": 15,
         "level25CP": 1494,
         "tags": ["shadoweligible"],
         "eliteMoves": ["EARTHQUAKE"],
@@ -9080,7 +9093,7 @@
             "cp1500": [27, 5, 9, 13],
             "cp2500": [50, 15, 15, 15]
         },
-        "searchPriority": 13,
+        "searchPriority": 5,
         "buddyDistance": 5,
         "thirdMoveCost": 75000,
         "released": true
@@ -9255,7 +9268,7 @@
             "cp2500": [40, 4, 15, 13]
         },
         "eliteMoves": ["WATER_GUN"],
-        "searchPriority": 5,
+        "searchPriority": 12,
         "buddyDistance": 3,
         "thirdMoveCost": 50000,
         "released": true
@@ -10640,6 +10653,7 @@
             "cp1500": [26, 6, 15, 13],
             "cp2500": [50, 15, 15, 15]
         },
+		"searchPriority": 10,
         "buddyDistance": 3,
         "thirdMoveCost": 50000,
         "released": true
@@ -12161,7 +12175,8 @@
         },
         "types": ["dragon", "flying"],
         "fastMoves": ["DRAGON_BREATH", "PECK"],
-        "chargedMoves": ["DAZZLING_GLEAM", "DRAGON_PULSE", "SKY_ATTACK"],
+        "chargedMoves": ["DAZZLING_GLEAM", "DRAGON_PULSE", "SKY_ATTACK", "MOONBLAST"],
+		"eliteMoves": ["MOONBLAST"],
         "defaultIVs": {
             "cp500": [9.5, 5, 14, 10],
             "cp1500": [28.5, 4, 14, 11],
@@ -12172,6 +12187,27 @@
         "thirdMoveCost": 10000,
         "released": true
     }, {
+	    "dex": 334,
+	    "speciesName": "Altaria (Mega)",
+	    "speciesId": "altaria_mega",
+	    "baseStats": {
+	        "atk": 222,
+	        "def": 218,
+	        "hp": 181
+	    },
+	    "types": ["dragon", "fairy"],
+	    "fastMoves": ["DRAGON_BREATH", "PECK"],
+	    "chargedMoves": ["DAZZLING_GLEAM", "DRAGON_PULSE", "SKY_ATTACK", "MOONBLAST"],
+		"eliteMoves": ["MOONBLAST"],
+	    "tags": ["mega"],
+	    "defaultIVs": {
+	        "cp1500": [17.5, 7, 14, 7],
+	        "cp2500": [29, 7, 12, 11]
+	    },
+		"buddyDistance": 1,
+        "thirdMoveCost": 10000,
+		"released": true
+	}, {
         "dex": 335,
         "speciesName": "Zangoose",
         "speciesId": "zangoose",
@@ -15888,6 +15924,7 @@
             "cp1500": [18, 5, 10, 14],
             "cp2500": [30, 4, 15, 9]
         },
+		"searchPriority": 2,
         "level25CP": 1908,
         "tags": ["shadoweligible"],
         "buddyDistance": 5,
@@ -17895,6 +17932,7 @@
             "cp1500": [17, 4, 14, 11],
             "cp2500": [28, 5, 14, 15]
         },
+		"searchPriority": 5,
         "buddyDistance": 3,
         "thirdMoveCost": 50000,
         "released": true
@@ -19265,6 +19303,7 @@
             "cp1500": [24, 4, 12, 15],
             "cp2500": [46.5, 13, 14, 15]
         },
+		"searchPriority": 10,
         "buddyDistance": 3,
         "thirdMoveCost": 50000,
         "released": true
@@ -21198,7 +21237,7 @@
         },
         "buddyDistance": 3,
         "thirdMoveCost": 50000,
-        "released": false
+        "released": true
     }, {
         "dex": 675,
         "speciesName": "Pangoro",
@@ -21211,14 +21250,16 @@
         "types": ["fighting", "dark"],
         "fastMoves": ["LOW_KICK", "SNARL", "BULLET_PUNCH"],
         "chargedMoves": ["CLOSE_COMBAT", "NIGHT_SLASH", "IRON_HEAD", "ROCK_SLIDE"],
-        "defaultIVs": {
+		"defaultIVs": {
             "cp500": [6.5, 7, 14, 11],
-            "cp1500": [19, 5, 12, 15],
+            "cp1500": [20, 4, 5, 4],
             "cp2500": [33, 4, 15, 14]
         },
+		"searchPriority": 5,
+        "levelFloor": 20,
         "buddyDistance": 3,
         "thirdMoveCost": 50000,
-        "released": false
+        "released": true
     }, {
         "dex": 676,
         "speciesName": "Furfrou",
@@ -21303,7 +21344,11 @@
         "dex": 679,
         "speciesName": "Honedge",
         "speciesId": "honedge",
-        "baseStats": {},
+		"baseStats": {
+	      "atk": 135,
+	      "def": 139,
+	      "hp": 128
+	    },
         "types": ["steel", "ghost"],
         "fastMoves": ["TACKLE", "FURY_CUTTER"],
         "chargedMoves": ["IRON_HEAD", "GYRO_BALL"],
@@ -21319,7 +21364,11 @@
         "dex": 680,
         "speciesName": "Doublade",
         "speciesId": "doublade",
-        "baseStats": {},
+		"baseStats": {
+	      "atk": 188,
+	      "def": 206,
+	      "hp": 153
+	    },
         "types": ["steel", "ghost"],
         "fastMoves": ["PSYCHO_CUT", "FURY_CUTTER"],
         "chargedMoves": ["IRON_HEAD", "GYRO_BALL"],
@@ -21722,7 +21771,8 @@
         },
         "types": ["fairy", "none"],
         "fastMoves": ["CHARM", "QUICK_ATTACK"],
-        "chargedMoves": ["MOONBLAST", "DAZZLING_GLEAM", "DRAINING_KISS"],
+        "chargedMoves": ["MOONBLAST", "DAZZLING_GLEAM", "DRAINING_KISS", "LAST_RESORT"],
+		"eliteMoves": ["LAST_RESORT"],
         "defaultIVs": {
             "cp500": [6, 11, 14, 15],
             "cp1500": [18.5, 4, 6, 12],
@@ -21730,7 +21780,7 @@
         },
         "buddyDistance": 5,
         "thirdMoveCost": 75000,
-        "released": false
+        "released": true
     }, {
         "dex": 701,
         "speciesName": "Hawlucha",
@@ -21848,6 +21898,7 @@
             "cp1500": [16, 4, 14, 7],
             "cp2500": [26, 7, 13, 14]
         },
+		"searchPriority": 5,
         "buddyDistance": 5,
         "thirdMoveCost": 75000,
         "released": true
@@ -22069,9 +22120,10 @@
             "cp1500": [14.5, 4, 13, 15],
             "cp2500": [23.5, 11, 15, 15]
         },
+		"searchPriority": 10,
         "buddyDistance": 20,
         "thirdMoveCost": 100000,
-        "released": false
+        "released": true
     }, {
         "dex": 718,
         "speciesName": "Zygarde",

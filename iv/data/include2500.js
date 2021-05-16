@@ -13,14 +13,14 @@ let include2500 = [
     //, 'feraligatr'  // 大力鱷
     //, 'mamoswine' // 象牙豬
     , 'sceptile'
-    , 'salamence'
+    //, 'salamence' // 暴飛龍
     , 'blaziken'  // 火焰雞
     , 'swampert', 'swampert_shadow'
     , 'gardevoir_shadow', 
     //, 'gallade' // 艾路雷朵
     , 'gallade_shadow'
-    , 'torterra', 'torterra_shadow'
-    , 'infernape'
+    //, 'torterra', 'torterra_shadow' // 土台龜
+    //, 'infernape'   // infernape 已經有4*了
     , 'empoleon'
     //, 'flygon'  // 沙漠蜻蜓
     , 'flygon_shadow'

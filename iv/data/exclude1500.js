@@ -8,6 +8,7 @@ let exclude1500 = [
   'flygon', // 沙漠蜻蜓 flygon 20210508 4*
   
   'empoleon', // 帝王拿波 empoleon 4*
+  'wigglytuff', // 胖可丁 wigglytuff 4* 20210516
   
 //  'jumpluff', // 毽子棉
 //  'blaziken', // 火焰雞
