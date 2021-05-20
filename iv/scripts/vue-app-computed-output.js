@@ -19,7 +19,7 @@ var appComputedOutput = {
     let outOfRankingPrefixNotTradedFilter = "!*&!交換&!4*&!f&!p&!U&!G&!暗影&!淨化&!傳說的寶可夢&!幻&!異色&"
     
     let header = "臺北(" + this.distanceBase + ")"
-    this.computedBestIVCellsOutOfRange(rows, this.outOfRanking, header, outOfRankingPrefixNotTraded, outOfRankingPrefixTraded, outOfRankingPrefixAll, outOfRankingPrefixNotTradedFilter)
+    this.computedBestIVCellsOutOfRange(rows, this.outOfRanking, this.outOfRankingTraded, header, outOfRankingPrefixNotTraded, outOfRankingPrefixTraded, outOfRankingPrefixAll, outOfRankingPrefixNotTradedFilter)
     
     // ----------------------
     // 來處理排名內，100%的

@@ -63,13 +63,16 @@ var appMethodsRank = {
 //        }
         return true
       }
-      else if ( (cp === 'cp1500' && this.exclude1500.indexOf(speciesId) > -1) 
-              || (cp === 'cp2500' && this.exclude2500.indexOf(speciesId) > -1) ) {
+      else if ( cp === 'cp1500' && this.exclude1500.indexOf(speciesId) > -1 
+              && !(p.uStar !== "4*" && p.isUBetterAfterTrading === false) ) {
+        // 請幫我確認另一個是否是位於 1. 非 max; 2. 交換後會worser
         count++
-        
-//        if (speciesId === 'metagross') {
-//          console.log(this.exclude1500.indexOf(speciesId), this.exclude2500.indexOf(speciesId))
-//        }
+        return true
+      }
+      else if ( cp === 'cp2500' && this.exclude2500.indexOf(speciesId) > -1 
+              && !(p.gStar !== "4*" && p.isGBetterAfterTrading === false) ) {
+        // 請幫我確認另一個是否是位於 1. 非 max; 2. 交換後會worser
+        count++
         return true
       }
       else {

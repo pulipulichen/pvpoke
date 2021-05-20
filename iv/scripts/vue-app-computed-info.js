@@ -298,6 +298,23 @@ var appComputedInfo = {
     return exclusiveList
   },
   
+  outOfRankingTraded: function () {
+    let output = {}
+    
+    Object.keys(this.outOfRanking).forEach(area => {
+      if (!this.topRankingMaxTraded[area]) {
+        output[area] = this.outOfRanking[area]
+        return false
+      }
+      
+      output[area] = this.outOfRanking[area].filter(dex => {
+        // dex必須不在topRankingMaxTraded
+        return (this.topRankingMaxTraded[area].indexOf(dex) === -1)
+      })
+    })
+    
+    return output
+  },
   outOfRankingShadow: function () {
     if (this.ready === false) {
       return {}

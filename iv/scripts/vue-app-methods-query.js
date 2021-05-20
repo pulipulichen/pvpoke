@@ -746,18 +746,23 @@ var appMethodsQuery = {
       rows.push(i + ":" + row.cells)
     })
   },
-  computedBestIVCellsOutOfRange: function (rows, outOfRanking, header, outOfRankingPrefixNotTraded, outOfRankingPrefixTraded, outOfRankingPrefixTradedBadLucky, outOfRankingPrefixAll) {
+  computedBestIVCellsOutOfRange: function (rows, outOfRanking, outOfRankingTraded, header, outOfRankingPrefixNotTraded, outOfRankingPrefixTraded, outOfRankingPrefixTradedBadLucky, outOfRankingPrefixAll) {
     rows.push(header + (new Date()).mmddhhmm() + "\t未交換\t數量\t已交換\t數量\t全部\t數量\t可交換\t數量")
     
     let rowsToAdd = []
     for (let area in outOfRanking) {
       let dexList = outOfRanking[area]
+      let dexListTraded = outOfRankingTraded[area]
       //console.log(dexList.slice(0,3))
       if (Array.isArray(dexList) === false) {
         throw new Error("dexList is not array")
       }
       let count = dexList.length
       let countName = this.computedCountName(dexList)
+      
+      let countTraded = dexListTraded.length
+      let countNameTraded = this.computedCountName(dexListTraded)
+      
       let day = "&日數0-"
       let dayInterval = "&日數0-" + (this.dayInterval + 2)
       let dayIntervalTrade = "&日數1-" + (this.dayInterval + 2)
@@ -770,6 +775,8 @@ var appMethodsQuery = {
       let distance = "&距離" + this.distanceBase
       
       let ivList = dexList.map(dex => '!' + dex).join('&')
+      let ivListTraded = dexListTraded.map(dex => '!' + dex).join('&')
+      
       let areaQuery = this.computedAreaQuery(area)
       
       let excludeCollection = '&!327&!201'  // 排除晃晃斑跟未知圖騰
@@ -778,7 +785,7 @@ var appMethodsQuery = {
         area,
         'cO' + this.getMMDD() + ',' + areaQuery + outOfRankingPrefixNotTraded + ivList + excludeCollection + distance + dayInterval + '&',
         countName,
-        'tO' + this.getMMDD() + ',' + areaQuery + outOfRankingPrefixTraded + ivList + excludeCollection + day,
+        'tO' + this.getMMDD() + ',' + areaQuery + outOfRankingPrefixTraded + ivListTraded + excludeCollection + day,
         countName,
         areaQuery + outOfRankingPrefixTradedBadLucky + ivList + day,
         countName,

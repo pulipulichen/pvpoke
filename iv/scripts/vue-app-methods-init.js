@@ -13,6 +13,9 @@ var appMethodsInit = {
       this.gm = GameMaster.getInstance()
       let lostIDList1500 = []
       let lostIDList2500 = []
+      
+      let errors1500 = []
+      let errors2500 = []
       if (this.gm.data.pokemon) {
         let pokemonName = {}
         
@@ -40,8 +43,12 @@ var appMethodsInit = {
             }
           }
           catch (e) {
-            throw new Error('1500 IV is not defiend: ' + speciesId + '\n'
-                      + `https://pvpoke.com/team-builder/?league=1500&id=${speciesId}`)
+            let errorMessage = '1500 IV is not defiend: ' + speciesId + '\n'
+                      + `https://pvpoke.com/team-builder/?league=1500&id=${speciesId}`
+            //throw new Error()
+            errors1500.push(errorMessage)
+            return false
+            
             lostIDList1500.push(speciesId)
           }
           
@@ -49,10 +56,16 @@ var appMethodsInit = {
             this.gm.data.pokemon[i].uIV = this.get2500IV(speciesId).slice(1)
           }
           catch (e) {
-            lostIDList2500.push(speciesId)
+            //lostIDList2500.push(speciesId)
+            //return false
+            //throw new Error('2500 IV is not defiend: ' + speciesId + '\n'
+            //          + `https://pvpoke.com/team-builder/?league=2500&id=${speciesId}`)
+              
+            let errorMessage = '2500 IV is not defiend: ' + speciesId + '\n'
+                      + `https://pvpoke.com/team-builder/?league=2500&id=${speciesId}`
+            //throw new Error()
+            errors2500.push(errorMessage)
             return false
-            throw new Error('2500 IV is not defiend: ' + speciesId + '\n'
-                      + `https://pvpoke.com/team-builder/?league=2500&id=${speciesId}`)
           }
           this.gm.data.pokemon[i].gStar = this.calcGStar(this.gm.data.pokemon[i])
           this.gm.data.pokemon[i].uStar = this.calcUStar(this.gm.data.pokemon[i])
@@ -72,7 +85,17 @@ var appMethodsInit = {
           //}
           
           pokemonName[speciesId] = speciesName
-        })
+        })  // this.gm.data.pokemon.forEach(({dex, speciesId, speciesName}, i) => {
+        
+        if (errors1500.length > 0) {
+          console.error(errors1500.join('\n\n'))
+        }
+        if (errors2500.length > 0) {
+          console.error(errors2500.join('\n\n'))
+        }
+        if (errors1500.length > 0 || errors2500.length > 0) {
+          throw new Error('Please check errors.')
+        }
         
         if (lostIDList1500.length > 0 || lostIDList2500.length > 0) {
           lostIDList1500.forEach(speciesId => {

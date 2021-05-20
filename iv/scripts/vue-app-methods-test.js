@@ -1,13 +1,31 @@
 var appMethodsTest = {
   test20210511: function () {
     
-    // 七夕青鳥 334 altaria
-    if (this.outOfRanking.normal.indexOf(334) === -1) {
-      console.error('應該要包含334', this.outOfRanking.normal.sort())
-    }
     
     // --------------------
     this.test20210511politoed()
+    this.test20210519altaria()
+    this.test20210519outOfRangeTraded()
+  },
+  test20210519outOfRangeTraded () {
+    
+    // 七夕青鳥 334 altaria
+    if (this.outOfRankingTraded.normal.indexOf(334) > -1) {
+      console.error('outOfRankingTraded 不應該要包含334', this.outOfRankingTraded.normal.sort())
+    }
+    
+  },
+  test20210519altaria () {
+    
+    // 七夕青鳥 334 altaria
+    if (this.outOfRanking.normal.indexOf(334) === -1) {
+      console.error('outOfRanking 應該要包含334', this.outOfRanking.normal.sort())
+    }
+    
+    // 七夕青鳥 334 altaria
+    if (this.topRankingMaxTraded.normal.indexOf(334) === -1) {
+      console.error('topRankingMaxTraded 應該要包含334', this.topRankingMaxTraded.normal.sort())
+    }
   },
   test20210511politoed () {
     
