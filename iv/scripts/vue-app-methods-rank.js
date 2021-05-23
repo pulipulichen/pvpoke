@@ -43,6 +43,7 @@ var appMethodsRank = {
       // ------------
       
       let p = this.speciesIdToData[speciesId]
+      let area = this.getArea(speciesId)
 //      if (speciesId === 'ferrothorn') {
 //        console.log('cp', p)
 //      }
@@ -55,6 +56,12 @@ var appMethodsRank = {
         topMaxIncludable = true
       }
       
+      
+//      if (speciesId === 'gyarados') {
+//        console.log(cp, this.exclude2500.indexOf(speciesId) > -1, p.gStar, p.isGBetterAfterTrading)
+//      }
+        
+      
       if (topMaxIncludable === false
               || p.isShadow === true) {
         count++
@@ -63,17 +70,24 @@ var appMethodsRank = {
 //        }
         return true
       }
-      else if ( cp === 'cp1500' && this.exclude1500.indexOf(speciesId) > -1 
-              && !(p.uStar !== "4*" && p.isUBetterAfterTrading === false) ) {
+      else if ( cp === 'cp1500' && this.exclude1500.indexOf(speciesId) > -1) {
         // 請幫我確認另一個是否是位於 1. 非 max; 2. 交換後會worser
-        count++
-        return true
+        if (!(p.uStar !== "4*" && p.isUBetterAfterTrading === false) 
+                || !this.top2500[area] 
+                || this.top2500[area].map(p => p.speciesId).indexOf(speciesId) === -1) {
+          count++
+          return true
+        }
       }
-      else if ( cp === 'cp2500' && this.exclude2500.indexOf(speciesId) > -1 
-              && !(p.gStar !== "4*" && p.isGBetterAfterTrading === false) ) {
-        // 請幫我確認另一個是否是位於 1. 非 max; 2. 交換後會worser
-        count++
-        return true
+      else if ( cp === 'cp2500' && this.exclude2500.indexOf(speciesId) > -1) {
+        // 請幫我確認另一個是否是位於 1. 非 max; 2. 交換後會worser; 3. 是否是在另一個top裡面
+        
+        if (!(p.gStar !== "4*" && p.isGBetterAfterTrading === false)
+                || !this.top1500[area] 
+                || this.top1500[area].map(p => p.speciesId).indexOf(speciesId) === -1) {
+          count++
+          return true
+        }
       }
       else {
         //let iv = p.defaultIVs[cp]

@@ -4,7 +4,7 @@ let exclude2500 = [
 
   'gengar', // 耿鬼 20210508  4*
   'steelix', // 大鋼蛇 20210508 4*
-  'gyarados', // 暴鯉龍 20210508 4*
+  'gyarados', // 暴鯉龍 20210508 4* 130
   'talonflame', // 烈箭鷹? 20210508 talonflame 4*
   
   'drifblim', //隨風球 20210508 4*

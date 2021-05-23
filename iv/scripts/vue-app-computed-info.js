@@ -264,6 +264,8 @@ var appComputedInfo = {
       this.computedOutOfRankingAddDex(area, this.top2500[area], exclusiveList)
     })
     
+//    console.log(this.top2500.normal.map(p => p.dex))
+    
     Object.keys(this.top1500max).forEach((area) => {
       this.computedOutOfRankingAddDex(area, this.top1500max[area], exclusiveList)
     })
