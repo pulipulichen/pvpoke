@@ -1,6 +1,6 @@
 let include2500 = [
   //'dragonite'
-  , 'dragonite_shadow'
+  //, 'dragonite_shadow'
     , 'venusaur', 'venusaur_shadow'
     //, 'ampharos', 'ampharos_shadow' // 電龍
     , 'charizard', 'charizard_shadow'
@@ -14,7 +14,7 @@ let include2500 = [
     //, 'mamoswine' // 象牙豬
     , 'sceptile'
     //, 'salamence' // 暴飛龍
-    , 'blaziken'  // 火焰雞
+    //, 'blaziken'  // 火焰雞
     , 'swampert', 'swampert_shadow'
     , 'gardevoir_shadow', 
     //, 'gallade' // 艾路雷朵

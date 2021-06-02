@@ -156,6 +156,8 @@ var appComputedMax = {
 //    console.log(dexList)
     
     let addedSpeciesIdList = []
+    
+    
     Object.keys(this.top1500max).forEach((area) => {
       if (Array.isArray(top[area]) === false) {
         top[area] = []
@@ -278,8 +280,71 @@ var appComputedMax = {
       })
     })
     
-    // ------------------------
+    // --------------------------
+    // 20210602
     
+    Object.keys(this.top1500TradeWorser).forEach((area) => {
+      if (Array.isArray(top[area]) === false) {
+        top[area] = []
+      }
+      
+      this.top1500TradeWorser[area].forEach(p => {
+        if (!p) {
+          throw Error('p is undefined')
+        }
+        
+        if (p.isGBetterAfterTrading === true) {
+          return false
+        } 
+        
+        let isAnotherInRank = (this.top2500[area].map(tp => tp.dex).indexOf(p.dex) > -1)
+        if (isAnotherInRank === true) {
+          return false
+        }
+        
+        let speciesId = p.speciesId
+
+        if (addedSpeciesIdList.indexOf(speciesId) > -1) {
+          return false
+        }
+
+        //let area = this.getArea(p)
+        top[area].push(p)
+      })
+    })
+    
+    
+    Object.keys(this.top2500TradeWorser).forEach((area) => {
+      if (Array.isArray(top[area]) === false) {
+        top[area] = []
+      }
+      
+      this.top2500TradeWorser[area].forEach(p => {
+        if (!p) {
+          throw Error('p is undefined')
+        }
+        
+        if (p.isUBetterAfterTrading === true) {
+          return false
+        } 
+        
+        let isAnotherInRank = (this.top1500[area].map(tp => tp.dex).indexOf(p.dex) > -1)
+        if (isAnotherInRank === true) {
+          return false
+        }
+        
+        let speciesId = p.speciesId
+
+        if (addedSpeciesIdList.indexOf(speciesId) > -1) {
+          return false
+        }
+
+        //let area = this.getArea(p)
+        top[area].push(p)
+      })
+    })
+    
+    // -------------------------
     
     /*
     Object.keys(this.top1500max).forEach((area) => {

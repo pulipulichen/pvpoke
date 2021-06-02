@@ -10,6 +10,12 @@ let exclude1500 = [
   'empoleon', // 帝王拿波 empoleon 4*
   'wigglytuff', // 胖可丁 wigglytuff 4* 20210516
   
+  'pidgeot', // 大比鳥 4* 20210602
+  'beedrill', // 大針蜂 4* 20210602
+  'machamp', // 怪力 20210602 4*
+  'steelix', // 大岩蛇 20210602 4*
+  'gyarados', // 暴鯉龍 20210602 4*
+  
 //  'jumpluff', // 毽子棉
 //  'blaziken', // 火焰雞
 //  'empoleon', // 帝王拿波

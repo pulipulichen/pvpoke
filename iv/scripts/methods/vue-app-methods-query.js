@@ -462,6 +462,47 @@ var appMethodsQuery = {
       })
     })
   },
+  computedOutOfRankingAddDexTraded: function (a, top, exclusiveList, cp) {
+    if (!top) {
+      return false
+    }
+    top.forEach(pokemon => {
+      // 確認pokemon的family
+      let dex = pokemon.dex
+      
+      // 要先確定現在的自己適不適合交換
+      let isCurrentTradeBetter = pokemon.isGBetterAfterTrading
+      let isCurrentPerfect = (pokemon.gStar === '4*')
+      let isAnotherTradeBetter = pokemon.isUBetterAfterTrading
+      let isAnotherPerfect = (pokemon.uStar === '4*')
+      if (cp === 'cp2500') {
+        isCurrentTradeBetter = pokemon.isUBetterAfterTrading
+        isCurrentPerfect = (pokemon.uStar === '4*')
+        isAnotherTradeBetter = pokemon.isGBetterAfterTrading
+        isAnotherPerfect = (pokemon.gStar === '4*')
+      }
+      
+      if (isCurrentTradeBetter === false
+              && isAnotherPerfect === true) {
+          return false
+      }
+      
+      // ----------------------
+      
+      
+      let family = this.evolutionFamily[dex]
+
+      family.forEach(d => {
+        if (Array.isArray(exclusiveList[a]) === false) {
+          exclusiveList[a] = []
+        }
+
+        if (exclusiveList[a].indexOf(d) === -1) {
+          exclusiveList[a].push(d)
+        }
+      })
+    })
+  },
   computedBuildIVGrid: function (iv) {
     //iv = iv.slice(0,2) // 攻擊,防禦
     return iv.map((i) => {
