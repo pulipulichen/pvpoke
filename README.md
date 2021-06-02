@@ -1,5 +1,5 @@
 替換資料：
-last update: 2021/5/19
+last update: 2021/6/3
 
 1. 注意data的更新時間：
 https://github.com/pvpoke/pvpoke/tree/master/src/data/rankings/all/overall
