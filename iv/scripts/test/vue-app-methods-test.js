@@ -24,6 +24,16 @@ var appMethodsTest = {
     }
     
     // 七夕青鳥 334 altaria
+    if (this.top1500max.normal.indexOf(334) !== -1) {
+      console.error('top1500max 應該不要包含334', this.top1500max.normal.sort())
+    }
+    
+    // 七夕青鳥 334 altaria
+    if (this.top2500max.normal.indexOf(334) !== -1) {
+      console.error('top2500max 應該不要包含334', this.top2500max.normal.sort())
+    }
+    
+    // 七夕青鳥 334 altaria
     if (this.topRankingMaxTraded.normal.indexOf(334) === -1) {
       console.error('topRankingMaxTraded 應該要包含334', this.topRankingMaxTraded.normal.sort())
     }

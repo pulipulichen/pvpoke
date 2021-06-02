@@ -61,6 +61,20 @@ var appMethodsRank = {
 //        console.log(cp, this.exclude2500.indexOf(speciesId) > -1, p.gStar, p.isGBetterAfterTrading)
 //      }
         
+//        if (p.speciesId === 'altaria') {
+//            console.log(cp
+//            
+//            , this.exclude1500.indexOf(speciesId)
+//            , !(p.uStar !== "4*" && p.isUBetterAfterTrading === false) 
+//            , p.uStar, p.isUBetterAfterTrading
+//            , this.top2500[area]
+//            , this.top2500[area].map(p => p.speciesId).indexOf(speciesId)
+//            
+//            , this.exclude2500.indexOf(speciesId)
+//            , p.gStar, p.isGBetterAfterTrading
+//            , this.top1500[area]
+//            , this.top1500[area].map(p => p.speciesId).indexOf(speciesId))
+//        }
       
       if (topMaxIncludable === false
               || p.isShadow === true) {
@@ -81,6 +95,7 @@ var appMethodsRank = {
       }
       else if ( cp === 'cp2500' && this.exclude2500.indexOf(speciesId) > -1) {
         // 請幫我確認另一個是否是位於 1. 非 max; 2. 交換後會worser; 3. 是否是在另一個top裡面
+        
         
         if (!(p.gStar !== "4*" && p.isGBetterAfterTrading === false)
                 || !this.top1500[area] 
