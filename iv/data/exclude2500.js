@@ -19,6 +19,7 @@ let exclude2500 = [
   'magnezone', // 自爆磁怪 20210602 4*
   'steelix', // 大岩蛇 20210602 4*
   'flygon', // 沙漠蜻蜓 20210602 4*
+  'charizard', // 噴火龍 20210603 4*
     
 //  'charizard',  // 已經湊到噴火龍
 //  'machamp', // 已經湊到 怪力
