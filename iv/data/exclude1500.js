@@ -16,6 +16,8 @@ let exclude1500 = [
   'steelix', // 大岩蛇 20210602 4*
   'gyarados', // 暴鯉龍 20210602 4*
   
+  'pidgeot', // 大比鳥 20210703 4*
+  
 //  'jumpluff', // 毽子棉
 //  'blaziken', // 火焰雞
 //  'empoleon', // 帝王拿波
