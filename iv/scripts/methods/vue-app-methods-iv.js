@@ -561,17 +561,26 @@ var appMethodsIV = {
       throw new Error('XL or XS:' + speciesId)
     }
     
+    if (this.ivPredefined.cp1500[speciesId]) {
+      return this.ivPredefined.cp1500[speciesId]
+    }
+    
     let data = this.iv1500[speciesId]
     if (!data) {
       throw new Error('1500 iv is not found: ' + speciesId + '. \n'
               + `https://pvpoke.com/team-builder/?league=1500&id=${speciesId}`)
       //console.log(`https://pvpoketw.com/battle/1500/${speciesId}/${speciesId}11/1-1-1/1-1-1/`)
     }
+    
     // 	40-15-15-15
     return data
   },
   get2500IV: function (speciesId) {
     let data = this.iv2500[speciesId]
+    
+    if (this.ivPredefined.cp2500[speciesId]) {
+      return this.ivPredefined.cp2500[speciesId]
+    }
     
     // 	40-15-15-15
     return data

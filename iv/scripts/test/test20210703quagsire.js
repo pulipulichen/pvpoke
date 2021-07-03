@@ -1,8 +1,27 @@
 function test20210703quagsire () {
   
     // 沼王 195 quagsire
+    if (this.top1500NotMax.normal.map(p => p.dex).indexOf(195) === -1) {
+      console.error('top1500NotMax normal 應該包含195 沼王', this.top1500NotMax.normal.map(p => p.dex))
+    }
+    
+    //console.log(this.top1500TradeBetter)
+    if (this.top1500TradeBetter.normal.map(p => p.dex).indexOf(195) > -1) {
+      console.error('top1500TradeBetter normal 不應該包含195 沼王', this.top1500TradeBetter.normal.map(p => p.dex))
+    }
+    
+    //if (this.top1500NotMax.star.normal['0*'].indexOf(195) > -1) {
+    //  console.error('topNotMaxTradableListReverseStar 0* 不應該包含195 沼王', this.topNotMaxTradableListReverseStar.star.normal['0*'].sort())
+    //}
+    
     if (this.topNotMaxTradableListReverseStar.star.normal['0*'].indexOf(195) > -1) {
       console.error('topNotMaxTradableListReverseStar 0* 不應該包含195 沼王', this.topNotMaxTradableListReverseStar.star.normal['0*'].sort())
+    }
+    
+    // ------------------------
+    //console.log(this.top1500TradeBetter)
+    if (this.top1500TradeWorser.normal.map(p => p.dex).indexOf(195) === -1) {
+      console.error('top1500TradeWorser normal 應該包含195 沼王', this.top1500TradeWorser.normal.map(p => p.dex))
     }
     
     // 沼王 195 quagsire

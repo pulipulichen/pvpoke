@@ -11,7 +11,7 @@ let include1500 = [
     , 'typhlosion'
     , 'muk_alolan'
     //, 'sceptile'
-    , 'blaziken' // 火焰雞
+    //, 'blaziken' // 火焰雞
     , 'vigoroth'
     //, 'marshtomp', 'marshtomp_shadow', 'swampert', 'swampert_shadow'
     , 'gardevoir_shadow'

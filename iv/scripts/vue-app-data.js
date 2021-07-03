@@ -1,4 +1,4 @@
-/* global exclude2500, exclude1500, include2500, include1500, excludeSelection */
+/* global exclude2500, exclude1500, include2500, include1500, excludeSelection, ivPredefined */
 
 var appData = {
   ready: false,
@@ -34,6 +34,7 @@ var appData = {
   include2500: include2500,
   exclude2500: exclude2500,
   excludeSelection: excludeSelection,
+  ivPredefined: ivPredefined,
   evolutionFamily: {},
   evolutionFamilySort: {},
   lvStarDust: {},

@@ -376,19 +376,45 @@ var appMethodsQuery = {
         
         let pStar = p.gStar
         let pTradable = p.isGBetterAfterTrading
-        let pIsMax = (p.uStar === '4*')
+        let pAnotherIsMax = (p.uStar === '4*')
+        let pAnotherIsTop = this.isIncludeTopByLeague(p, 'cp2500')
         let pAnotherIsExcluded = (this.exclude2500.indexOf(p.speciesId) > -1)
         
         if (cp === '2500') {
           pStar = p.uStar
           pTradable = p.isUBetterAfterTrading
-          pIsMax = (p.gStar === '4*')
+          pAnotherIsMax = (p.gStar === '4*')
+          pAnotherIsTop = this.isIncludeTopByLeague(p, 'cp1500')
           pAnotherIsExcluded = (this.exclude1500.indexOf(p.speciesId) > -1)
         }
         
         //if (isTradeBetter === false && pTradable === false && p.dex === )
         if (pTradable === isTradeBetter
-                && (isTradeBetter === false && pTradable === false && pIsMax && !pAnotherIsExcluded)) {
+                && (isTradeBetter === false && pTradable === false && pAnotherIsMax && pAnotherIsTop && !pAnotherIsExcluded)) {
+//          if (p.dex === 195) {
+//            console.log({
+//              isTradeBetter,
+//              pTradable,
+//              pAnotherIsExcluded,
+//              pAnotherIsMax,
+//              result: (isTradeBetter === true && pTradable === false && pAnotherIsExcluded)
+//            })
+//          }
+          continue
+        }
+        
+        if (isTradeBetter === true 
+                && pTradable !== isTradeBetter
+                && (isTradeBetter === true && pTradable === false && pAnotherIsMax && !pAnotherIsTop)) {
+//          if (p.dex === 195) {
+//            console.log({
+//              isTradeBetter,
+//              pTradable,
+//              pAnotherIsExcluded,
+//              pAnotherIsMax,
+//              result: (isTradeBetter === true && pTradable === false && pAnotherIsExcluded)
+//            })
+//          }
           continue
         }
         
@@ -410,16 +436,17 @@ var appMethodsQuery = {
         }
         
         if (pTradable === isTradeBetter
-                || (traded === false && isTradeBetter === true && pTradable === false && pIsMax)) {
+                || (traded === false && isTradeBetter === true && pTradable === false && pAnotherIsMax)) {
           if (!result[r]) {
             result[r] = []
           }
           
-//          if (p.dex === 334) {
+//          if (p.dex === 195) {
 //            console.log({
 //              isTradeBetter,
 //              pTradable,
 //              pAnotherIsExcluded,
+//              pAnotherIsMax,
 //              result: (isTradeBetter === true && pTradable === false && pAnotherIsExcluded)
 //            })
 //          }

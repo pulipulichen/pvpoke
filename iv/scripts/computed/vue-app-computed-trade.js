@@ -54,9 +54,9 @@ var appComputedTrade = {
   top1500TradeWorser: function () {
     let result = this.filterTradable(this.top1500NotMax, false, '1500')
     
-    if (result.normal.map(p => p.dex).indexOf(334) === -1) {
-      console.error('20210511 worser traded 應該包含334', result.normal.map(p => p.dex).sort())
-    }
+//    if (result.normal.map(p => p.dex).indexOf(334) === -1) {
+//      console.error('20210511 worser traded 應該包含334', result.normal.map(p => p.dex).sort())
+//    }
     //console.log('worser traded', result.normal.map(p => p.dex).sort())
     
     return result

@@ -201,6 +201,35 @@ Please modify "./iv/data/evolution-family.json"`)
               && (isSpecial === false)
               )
   },
+  isIncludeTopByLeague: function (pokemon, league = 'cp1500') {
+    // 首先要確認這個pokemon的area
+    let area = this.getArea(pokemon.speciesId)
+    let isShadow = this.isShadow(pokemon.speciesId)
+    
+    let top
+    if (!isShadow) {
+      if (league === 'cp1500') {
+        top = this.top1500
+      }
+      else if (league === 'cp2500') {
+        top = this.top2500
+      }
+    }
+    else {
+      if (league === 'cp1500') {
+        top = this.top1500Shadow
+      }
+      else if (league === 'cp2500') {
+        top = this.top2500Shadow
+      }
+    }
+    
+    if (Array.isArray(top[area]) === false) {
+      return false
+    }
+    
+    return (top[area].map(({speciesId}) => speciesId).indexOf(pokemon.speciesId) > -1)
+  },
   isNotSpecial: function (pokemon) {
     let isShadow = false
     let isSpecial = false
